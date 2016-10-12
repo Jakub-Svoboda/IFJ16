@@ -12,7 +12,7 @@
 
 /*
 
-	
+	musim udelat doubly a rozpoznavani exponentu,,
 
 char *relationalOperators[] = {"==", "<", ">", "!=", ">=", "<="};
 
