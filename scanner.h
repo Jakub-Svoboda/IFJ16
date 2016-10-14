@@ -1,3 +1,5 @@
+#include <stdio.h>			//TODO check if this is ok or BS
+
 typedef enum{
 	token_identifier,
     token_invalid,
@@ -55,3 +57,6 @@ typedef struct _Token {
     Token_type type;
     //ptr hashtable
 } Token;
+
+Token *getToken(FILE *f);
+

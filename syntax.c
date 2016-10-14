@@ -68,6 +68,7 @@ int runPrecedenceAnalysis(FILE *f){
 	tStack *stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
 	Token *tokenPtr = getToken(f);
+	tokenPtr=tokenPtr;					//TODO deleteme
 	
 	
 	
