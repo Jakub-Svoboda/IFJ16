@@ -16,4 +16,5 @@ project: $(OBJ)
 clean:
 	rm *o project
 
-test: project test0.java
+test: project
+	./project test0.java
