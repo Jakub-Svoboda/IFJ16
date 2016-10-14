@@ -66,6 +66,7 @@ Token *tokenInit() {
 }
 
 Token *getToken(FILE *f) {
+	
 	//printf("AYA");
 	Token *t = tokenInit();
 	char buff[1024];
@@ -78,6 +79,7 @@ Token *getToken(FILE *f) {
 		printf("Invalid token\n");
 		return t;
 	}
+	
 
 	while(1) {
 		c = fgetc(f);
@@ -267,7 +269,7 @@ Token *getToken(FILE *f) {
 
 }
 
-
+/*
 int main(int argc, char *argv[]) {
 
 	FILE *f;
@@ -325,4 +327,5 @@ int main(int argc, char *argv[]) {
 	fclose(f);
 	printf("\n");
 	return 1;
-}
+	
+}*/
