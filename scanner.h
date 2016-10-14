@@ -50,13 +50,18 @@ typedef enum{
     token_quotesDouble,
     token_string,
     token_intNumber,
-    token_doubleNumber
+    token_doubleNumber,
+	
+	token_dollar				//Kuba has added this
 } Token_type;
 
-typedef struct _Token {
+typedef struct {				//Kuba-edit
     Token_type type;
     //ptr hashtable
 } Token;
 
+
+
 Token *getToken(FILE *f);
+Token *tokenInit();
 

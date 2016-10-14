@@ -68,7 +68,7 @@ Token *tokenInit() {
 Token *getToken(FILE *f) {
 	
 	//printf("AYA");
-	Token *t = tokenInit();
+	Token *t = tokenInit();	//TODO Kuba-edit
 	char buff[1024];
     int c, position = 0, tempc, readingIdentifier = false, kwIndex, readingString = false, readingNumber = false;
 	
@@ -81,7 +81,7 @@ Token *getToken(FILE *f) {
 	}
 	
 
-	while(1) {
+	while(1) {					//TODO ?
 		c = fgetc(f);
 		//printf("%c,",c);
 		if(readingIdentifier) {
@@ -261,6 +261,7 @@ Token *getToken(FILE *f) {
 					position++;
 					break;
 			}
+			
 		}
 
 	}

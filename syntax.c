@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "syntax.h"
-#include "scanner.h"
-
 
 char precedence_table[14][14]={					//TODO Why is the range 14 though? 
 //input 	
@@ -33,12 +29,12 @@ char precedence_table[14][14]={					//TODO Why is the range 14 though?
 // }
 
 
-void stackPush(tStack *s,struct Token *Token){
+void stackPush(tStack* s,Token* Token){
 	s->top=s->top+1;
 	s->arr[s->top]=Token;	
 }
 
-void stackPop(tStack *s){
+void stackPop(tStack* s){
 	if(stackEmpty(s)){													//check for empty stack
 		fprintf(stderr,"StackPop requested but stack is empty.\n");
 	}else{
@@ -47,7 +43,7 @@ void stackPop(tStack *s){
 	}	
 }
 
-void stackTop(tStack *s, struct Token *Token){
+void stackTop(tStack* s,Token* Token){
 	if(stackEmpty(s)){													//check for empty stack
 		fprintf(stderr,"StackTop requested but stack is empty.\n");
 	}else{
@@ -56,34 +52,28 @@ void stackTop(tStack *s, struct Token *Token){
 	Token = Token;		//TODO check wtf is wrong with this. Something causes warning without this.
 }
 
-int stackEmpty (tStack *s){
+int stackEmpty (tStack* s){
 	return(MAX_STACK-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE *f){
-//	char vysledek[100]  ="";
-//	char simulatedStack[100] ="";
-//	char input[100] ="";
-//	char inputChar[100];
+int runPrecedenceAnalysis(FILE* f){
 	
-	tStack *stack=malloc(sizeof(tStack));	//initialize stack
+	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
-	Token *tokenPtr = getToken(f);
-	tokenPtr=tokenPtr;					//TODO deleteme
+
+	Token* tokenPtr = tokenInit();			//init for the first $
+	tokenPtr->type=token_dollar;
+	stackPush(stack,tokenPtr);
+	free(tokenPtr);
+	
+	for(int i=0; i<=8 ;i++){				//TODO temporary testing loop
+		 tokenPtr= getToken(f);
+		 stackPush(stack,tokenPtr);
+		 free(tokenPtr);
+	}
 	
 	
-	
-//	while(1) {
-//		printf("what is input?\n");
-//		scanf("%s", input);
-//		printf("what is our stack?\n");
-//		scanf("%s", simulatedStack);
-//		printf("what is vysledek?\n");
-//		scanf("%s", vysledek);
-	
-//	}
-	
-	
-	free(stack);			
+	free(stack);
+		
 	return 0;
 }
