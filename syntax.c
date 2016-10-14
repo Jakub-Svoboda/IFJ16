@@ -53,6 +53,7 @@ void stackTop(tStack *s, struct Token *Token){
 	}else{
 		Token=s->arr[s->top];
 	}	
+	Token = Token;		//TODO check wtf is wrong with this. Something causes warning without this.
 }
 
 int stackEmpty (tStack *s){
