@@ -6,7 +6,7 @@ OBJ=main.o syntax.o scanner.o
 
 all: project
 
-project: $(OBJ)
+project: $(OBJ) $(DEPS)
 	$(CC) $(OBJ) -o project -I.
 
 %.o: %.c $(DEPS)
