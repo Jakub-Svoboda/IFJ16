@@ -32,6 +32,8 @@ char precedence_table[14][14]={					//TODO Why is the range 14 though?
 void stackPush(tStack* s,Token* Token){
 	s->top=s->top+1;
 	s->arr[s->top]=Token;	
+	printf("A token has been pushed: ");		//TODO test-output,delete later
+	printf("%d\n",Token->type);					//TODO test-output,delete later
 }
 
 void stackPop(tStack* s){

@@ -98,7 +98,7 @@ Token *getToken(FILE *f) {
 					t->type = kwIndex + typeOffset;
 					//printf("repete %d ",kwIndex+typeOffset);
 				}else {
-					printf("ID'%s'\n",buff);						//TODO delete later
+				//	printf("ID'%s'\n",buff);						//TODO delete later
 					t->type = token_identifier;
 				}
 				position = 0;

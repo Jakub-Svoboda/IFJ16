@@ -52,7 +52,7 @@ typedef enum{
     token_intNumber,
     token_doubleNumber,
 	
-	token_dollar				//Kuba has added this
+	token_dollar				//Kuba added this
 } Token_type;
 
 typedef struct {				//Kuba-edit
