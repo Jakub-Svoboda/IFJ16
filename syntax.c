@@ -1,6 +1,6 @@
 #include "syntax.h"
 
-char precedence_table[14][14]={					//TODO Why is the range 14 though? 
+char precedence_table[14][14]={					
 //input 	
 //+   -   *   /   <   >  <=  >=  ==  !=	  (	  )   i   $ 	  
 {'>','>','<','<','>','>','>','>','>','>','<','>','<','>'},	// +	

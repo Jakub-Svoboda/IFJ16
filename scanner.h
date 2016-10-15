@@ -1,7 +1,25 @@
 #include <stdio.h>			//TODO check if this is ok or BS
 
 typedef enum{
+	//ArOp
+	token_add,
+	token_subtract,
+    token_multiply,
+    token_divide,	
+
+	//RelOp
+	token_less,
+    token_greater,
+    token_equal,
+	token_lessEqual,
+    token_greaterEqual,
+    token_notEqual,
+	token_bracketLeftRound,
+    token_bracketRightRound,
 	token_identifier,
+	token_dollar,				//Kuba added this
+
+	
     token_invalid,
     token_assign,
     token_EOF,
@@ -23,22 +41,9 @@ typedef enum{
     token_true,
     token_void,
     token_while,
-    //RelOp
-    token_equal,
-    token_greater,
-    token_less,
-    token_notEqual,
-    token_greaterEqual,
-    token_lessEqual,
-    //ArOp
-    token_add,
-    token_subtract,
-    token_multiply,
-    token_divide,
+
     //Delimiters
     token_dot,
-    token_bracketLeftRound,
-    token_bracketRightRound,
     token_comma,
     token_bracketLeftCurly,
     token_bracketRightCurly,
@@ -50,13 +55,14 @@ typedef enum{
     token_quotesDouble,
     token_string,
     token_intNumber,
-    token_doubleNumber,
+    token_doubleNumber
 	
-	token_dollar				//Kuba added this
 } Token_type;
 
+
+
 typedef struct {				//Kuba-edit
-    Token_type type;
+    Token_type type; 
     //ptr hashtable
 } Token;
 
