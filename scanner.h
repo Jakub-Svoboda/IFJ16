@@ -18,6 +18,7 @@ typedef enum{
     token_bracketRightRound,
 	token_identifier,
 	token_dollar,				//Kuba added this
+	token_expression,			//Kubba added this, not sure if needed?
 
 	
     token_invalid,
@@ -55,8 +56,10 @@ typedef enum{
     token_quotesDouble,
     token_string,
     token_intNumber,
-    token_doubleNumber
+    token_doubleNumber,
 	
+	token_leftHandle,	//Kuba added this
+	token_rightHandle	//Kuba added this
 } Token_type;
 
 

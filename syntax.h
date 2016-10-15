@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "scanner.h"
+#include <string.h>
 
 
 typedef struct{
@@ -11,7 +12,8 @@ typedef struct{
 
 void stackPush(tStack *s,Token *Token);
 void stackPop(tStack* s);
-void stackTop(tStack *s, Token *Token);
+Token* stackTop(tStack *s, Token *stackTopPtr);
 int stackEmpty(tStack* s);
 int runPrecedenceAnalysis();
-void reduction(char c[]);
+void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack);
+int whatRule(tStack* stack,Token* stackTopPtr);
