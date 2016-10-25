@@ -1,5 +1,5 @@
 typedef enum{
-	token_identifier,
+		token_identifier,
     token_invalid,
     token_assign,
     token_EOF,
@@ -50,6 +50,13 @@ typedef enum{
     token_intNumber,
     token_doubleNumber
 } Token_type;
+
+typedef enum {
+	state_default,
+	state_readingNumber,
+	state_readingIdentifier,
+	state_readingString,
+} State_type;
 
 typedef struct _Token {
     Token_type type;
