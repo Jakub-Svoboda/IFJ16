@@ -295,9 +295,15 @@ int runPrecedenceAnalysis(FILE* f){
 }
 
 
-
-
-
+void printStack(tStack* s)
+{
+	int i=0;
+	while(i<=s->top)
+	{
+		printf("%d", s->arr[i]->type);
+		i++;
+	}
+}
 
 
 
