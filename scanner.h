@@ -1,12 +1,6 @@
 #include <stdio.h>			//TODO check if this is ok or BS
 
 typedef enum{
-
-//		token_identifier,
-//    token_invalid,
-//    token_assign,
-//    token_EOF,
-
 	//ArOp
 	token_add,			//0
 	token_subtract,			//1
@@ -25,11 +19,10 @@ typedef enum{
 	token_dollar,			//13	Kuba added this
 	token_expression,		//14	Kubba added this, not sure if needed?
 
-
+	
     token_invalid,			//15
     token_assign,			//16
     token_EOF,				//17
-
     //Keywords
     token_boolean,			//18
     token_break,			//19
@@ -63,38 +56,20 @@ typedef enum{
     token_string,			//44
     token_intNumber,			//45
     token_doubleNumber,			//46
-
+	
 	token_leftHandle,		//47	Kuba added this
 	token_rightHandle		//48	Kuba added this
 } Token_type;
 
 
-typedef enum {
-	state_default,
-	state_readingNumber,
-	state_readingIdentifier,
-	state_readingString,
-} State_type;
 
-typedef struct _Token {
-    Token_type type;
-//typedef struct {				//Kuba-edit
-//    Token_type type;
+typedef struct {				//Kuba-edit
+    Token_type type; 
     //ptr hashtable
 } Token;
 
-typedef struct _List_Elem {                 /* prvek dvousměrně vázaného seznamu */
-        Token token;                                            /* užitečná data */
-        struct _List_Elem *prev;          /* ukazatel na předchozí prvek seznamu */
-        struct _List_Elem *next;        /* ukazatel na následující prvek seznamu */
-} *Token_List_Elem;
-
-typedef struct _Token_List{                                  /* dvousměrně vázaný seznam */
-    Token_List_Elem first;                      /* ukazatel na první prvek seznamu */
-    Token_List_Elem act;                     /* ukazatel na aktuální prvek seznamu */
-    Token_List_Elem last;                    /* ukazatel na posledni prvek seznamu */
-} Token_List;
 
 
 Token *getToken(FILE *f);
 Token *tokenInit();
+
