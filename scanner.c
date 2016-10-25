@@ -133,14 +133,11 @@ Token *getToken(FILE *f) {
 					buff[position] = c;
 					position++;
 				}else {
-<<<<<<< HEAD
 					state = state_default;
 					//readingIdentifier = false;
 					ungetc(c,f);
-=======
 				//	printf("ID'%s'\n",buff);						//TODO delete later
 					t->type = token_identifier;
->>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
 				}
 				if(state == state_default) {
 					buff[position] = '\0';
@@ -338,14 +335,8 @@ Token *getToken(FILE *f) {
 		}
 	}
 
-
-<<<<<<< HEAD
-=======
-
-}
-
 /*
->>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
+
 int main(int argc, char *argv[]) {
 
 	FILE *f;
@@ -403,9 +394,5 @@ int main(int argc, char *argv[]) {
 	fclose(f);
 	printf("\n");
 	return 1;
-<<<<<<< HEAD
 }
-=======
-
-}*/
->>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
+*/

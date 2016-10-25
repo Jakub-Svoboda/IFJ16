@@ -1,12 +1,12 @@
 #include <stdio.h>			//TODO check if this is ok or BS
 
 typedef enum{
-<<<<<<< HEAD
-		token_identifier,
-    token_invalid,
-    token_assign,
-    token_EOF,
-=======
+
+//		token_identifier,
+//    token_invalid,
+//    token_assign,
+//    token_EOF,
+
 	//ArOp
 	token_add,			//0
 	token_subtract,			//1
@@ -25,11 +25,11 @@ typedef enum{
 	token_dollar,			//13	Kuba added this
 	token_expression,		//14	Kubba added this, not sure if needed?
 
-	
+
     token_invalid,			//15
     token_assign,			//16
     token_EOF,				//17
->>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
+
     //Keywords
     token_boolean,			//18
     token_break,			//19
@@ -63,12 +63,12 @@ typedef enum{
     token_string,			//44
     token_intNumber,			//45
     token_doubleNumber,			//46
-	
+
 	token_leftHandle,		//47	Kuba added this
 	token_rightHandle		//48	Kuba added this
 } Token_type;
 
-<<<<<<< HEAD
+
 typedef enum {
 	state_default,
 	state_readingNumber,
@@ -78,12 +78,12 @@ typedef enum {
 
 typedef struct _Token {
     Token_type type;
-=======
 
 
-typedef struct {				//Kuba-edit
-    Token_type type; 
->>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
+
+//typedef struct {				//Kuba-edit
+//    Token_type type;
+
     //ptr hashtable
 } Token;
 
@@ -91,4 +91,3 @@ typedef struct {				//Kuba-edit
 
 Token *getToken(FILE *f);
 Token *tokenInit();
-
