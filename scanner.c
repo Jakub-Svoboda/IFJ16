@@ -97,6 +97,20 @@ int isKeyword(char *string) {
     return -1;
 }
 
+
+void tokenListDispose (Token_List *L) {
+    Token_List_Elem pom;
+
+    while(L->first != NULL) {
+        pom = L->first;             //ulozeni itemu
+        L->first = L->first->next;  //posunuti o item v listu
+        free(pom);                  //uvolneni itemu
+    }
+    L->act = NULL;
+    L->last = NULL;
+
+}
+
 Token *tokenInit() {
 	Token *t = (Token *)malloc(sizeof(Token));
 	if(t == NULL) {
@@ -106,13 +120,52 @@ Token *tokenInit() {
 	return t;
 }
 
+void runThrough() {
+/*	Token_List *tList = (Token_List *)malloc(sizeof(struct _Token_List));
+	tList->act = NULL;
+	tList->first = NULL;
+	tList->last = NULL;
+*/
+	int i = 0;
+
+	FILE *f;
+	f = fopen("double.java", "r");
+	Token *tempTok = getToken(f);
+/*	Token_List_Elem firstTle = malloc(sizeof(struct _List_Elem));
+	firstTle->prev = NULL;
+	firstTle->next = NULL;
+	firstTle->token = *tempTok;
+	tList->first = firstTle;
+	tList->act = firstTle; */
+	printf("Pocud ok\n");
+	while(tempTok->type != token_EOF) {
+		/*Token_List_Elem pomTle = malloc(sizeof(struct _List_Elem));
+		pomTle->prev = tList->act;
+		tList->act->next = pomTle;
+		pomTle->next = NULL;
+		pomTle->token = *tempTok;
+
+
+		tList->act = tList->act->next;
+*/
+		tempTok = getToken(f);
+		i++;
+		printf("%d\n", i);
+	}
+//	tList->last = tList->act;
+//	tList->act = tList->first;
+
+	fclose(f);
+
+//	tokenListDispose(tList);
+}
+
 Token *getToken(FILE *f) {
 
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
 	char buff[1024];
 	int c, position = 0, tempc, kwIndex;
-	//int readingIdentifier = false, readingString = false, readingNumber = false,
 	int isDouble = false;
 	State_type state = state_default;
 	//t = malloc(sizeof(Token));
@@ -142,7 +195,7 @@ Token *getToken(FILE *f) {
 				if(state == state_default) {
 					buff[position] = '\0';
 					if((kwIndex = isKeyword(buff)) != -1) {
-						t->type = kwIndex + typeOffset;
+						t->type = kwIndex;// + typeOffset;
 						//printf("repete %d ",kwIndex+typeOffset);
 					}else {
 						printf("ID'%s'",buff);
@@ -340,7 +393,7 @@ Token *getToken(FILE *f) {
 int main(int argc, char *argv[]) {
 
 	FILE *f;
-	f = fopen("double.java", "r");
+	f = fopen("test.java", "r");
 	Token *tempTok = getToken(f);
 	while(tempTok->type != token_EOF) {
 		printf("%d",tempTok->type);
@@ -393,6 +446,12 @@ int main(int argc, char *argv[]) {
 	}
 	fclose(f);
 	printf("\n");
+	return 1;
+}
+*/
+/*
+int main() {
+	runThrough();
 	return 1;
 }
 */

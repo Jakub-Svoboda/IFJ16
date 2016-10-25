@@ -89,10 +89,10 @@ typedef struct _List_Elem {                 /* prvek dvousměrně vázaného sez
         struct _List_Elem *next;        /* ukazatel na následující prvek seznamu */
 } *Token_List_Elem;
 
-typedef struct {                                  /* dvousměrně vázaný seznam */
-    Token_List_Elem First;                      /* ukazatel na první prvek seznamu */
-    Token_List_Elem Act;                     /* ukazatel na aktuální prvek seznamu */
-    Token_List_Elem Last;                    /* ukazatel na posledni prvek seznamu */
+typedef struct _Token_List{                                  /* dvousměrně vázaný seznam */
+    Token_List_Elem first;                      /* ukazatel na první prvek seznamu */
+    Token_List_Elem act;                     /* ukazatel na aktuální prvek seznamu */
+    Token_List_Elem last;                    /* ukazatel na posledni prvek seznamu */
 } Token_List;
 
 
