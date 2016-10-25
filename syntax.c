@@ -239,10 +239,10 @@ int whatRule(tStack* stack){
 	return rule;
 }	
 
-Token* stackTopTerminal(tStack* s){
+Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 	Token* stackTopPtr=NULL;
 	int i = s->top;
-	stackTopPtr = s->arr[i];
+	stackTopPtr = s->arr[i];		// i is assigned TOP
 	if(stackEmpty(s)){													//check for empty stack
 		fprintf(stderr,"StackTop requested but stack is empty.\n");
 	}else{
@@ -269,52 +269,59 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			exit(1);	//TODO delete
 		}	
 	}
-	Token *toBePushed = malloc(sizeof(Token));
+	Token *toBePushed = malloc(sizeof(Token));	
 	
 	while(1){
-		stackTopPtr=stackTopTerminal(stack);
-		char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];
+		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
+		char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];	//check precedence table 
 		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
 		printf("stack top is %d\n", stackTopPtr->type);
 		printf("What to do is: %c\n\n",whatToDo);	
 			
-		if(whatToDo == '<'){
-			stackTopPtr=stackTop(stack);
-			if (stackTopPtr->type == token_expression){
-				Token* tmpPtr = stackTopPtr;
+		if(whatToDo == '<'){				//When table returns <
+			stackTopPtr=stackTop(stack);	//check what is the very top of stack
+			if (stackTopPtr->type == token_expression){		//if E is on top
+				Token* tmpPtr = stackTopPtr;				//then we pop it and save it to temporary ptr
 				stackPop(stack);
-				toBePushed -> type = token_leftHandle;
+				toBePushed -> type = token_leftHandle;		//push left handle
 				stackPush(stack, toBePushed);
-				stackPush(stack, tmpPtr);
-				stackPush(stack, tokenPtr);	
+				stackPush(stack, tmpPtr);					//push E back from temporary ptr
+				stackPush(stack, tokenPtr);					//push input token
 				
 			}else{
-				toBePushed -> type = token_leftHandle;
-				stackPush(stack, toBePushed);
+				toBePushed -> type = token_leftHandle;		//IF E is not top token
+				stackPush(stack, toBePushed);				//push left handle and input TOken
 				stackPush(stack, tokenPtr);	
 			}
 			printStack(stack);
-			break;
-		}else{
-			if(whatToDo == '>' || whatToDo=='='){
-				toBePushed -> type = token_rightHandle;
-				stackPush(stack,toBePushed);
-				printStack(stack);
-				whatRule(stack);	//TODO assign somewhere
-				if (tokenPtr->type != token_semicolon){	//NOT Semicolon 
-					Token * toBePushedE;
-					toBePushedE->type = token_expression;		//if not ; push E
-					stackPush(stack, toBePushedE);
-					printStack(stack);
-					}else{
-					if(stack->top == 0 && stack->arr[stack->top]->type == token_dollar){	//semicolon on input
-						fprintf(stderr,"Predictive syntax analysis is over\n");		//TODO return
-					}else{
-						fprintf(stderr,"Semicolon on input but stack not empty! \n"); 
-					}	
-				}			
-			}
+			break;											//Break the cycle to get new token
 		}
+		if(whatToDo == '>'|| (whatToDo=='=')){				//IF precedence table returns >, we reduce	
+			if(whatToDo=='='){
+				stackPush(stack,tokenPtr);
+				whatToDo='>';
+			}
+			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
+			stackPush(stack,toBePushed);
+			printStack(stack);	//TODO delete
+			whatRule(stack);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
+			if (tokenPtr->type != token_semicolon){	//NOT Semicolon 
+				Token * toBePushedE = malloc(sizeof(Token));
+				toBePushedE->type = token_expression;		//if not ; push E
+				stackPush(stack, toBePushedE);
+				printStack(stack);
+				}else{
+				if(stack->top == 0 && stack->arr[stack->top]->type == token_dollar){	//semicolon on input
+					fprintf(stderr,"Predictive syntax analysis is over\n");		//TODO return
+				}else{
+					fprintf(stderr,"Semicolon on input but stack not empty! \n"); 
+				}	
+			
+			}			
+			
+		}
+	
+		
 	}
 	
 
@@ -359,7 +366,7 @@ int runPrecedenceAnalysis(FILE* f){
 	stackPush(stack,tokenPtrTmp);
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
 	Token* tokenPtr=NULL;	
-	for(int i=0; i<=8 ;i++){				//TODO temporary testing loop
+	for(int i=0; i<=9 ;i++){				//TODO temporary testing loop
 		tokenPtr= getToken(f);
 		stackTopPtr = stackTop(stack);
 		reduction(tokenPtr, stackTopPtr, stack);	
