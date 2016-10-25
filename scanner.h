@@ -78,15 +78,22 @@ typedef enum {
 
 typedef struct _Token {
     Token_type type;
-
-
-
 //typedef struct {				//Kuba-edit
 //    Token_type type;
-
     //ptr hashtable
 } Token;
 
+typedef struct _List_Elem {                 /* prvek dvousměrně vázaného seznamu */
+        Token token;                                            /* užitečná data */
+        struct _List_Elem *prev;          /* ukazatel na předchozí prvek seznamu */
+        struct _List_Elem *next;        /* ukazatel na následující prvek seznamu */
+} *Token_List_Elem;
+
+typedef struct {                                  /* dvousměrně vázaný seznam */
+    Token_List_Elem First;                      /* ukazatel na první prvek seznamu */
+    Token_List_Elem Act;                     /* ukazatel na aktuální prvek seznamu */
+    Token_List_Elem Last;                    /* ukazatel na posledni prvek seznamu */
+} Token_List;
 
 
 Token *getToken(FILE *f);
