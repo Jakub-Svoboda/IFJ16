@@ -19,6 +19,18 @@ char precedence_table[14][14]={
 {'<','<','<','<','<','<','<','<','<','<','<','0','<','0'},	//$       	stack
 };
 //Returns int representing the reduction rule. Also pops the whole rule out of stack. Good luck reverse engineering this.
+void printStack(tStack* s)
+{
+	int i=0;
+	while(i<=s->top)
+	{
+		fprintf(stderr,"%d ", s->arr[i]->type);
+		i++;
+		
+	}
+	fprintf(stderr,"\n");
+}
+
 int whatRule(tStack* stack){
 	int rule;	
 	tStack* bufferStack = malloc(sizeof(tStack));				//temporar stack where we push the tokens to be reduced
@@ -190,6 +202,7 @@ int whatRule(tStack* stack){
 					rule= 12;												// rule 12 <i>
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
+					printStack(stack);
 				}
 				break;
 			case token_bracketRightRound:	
@@ -208,43 +221,104 @@ int whatRule(tStack* stack){
 				break;
 			default:
 				fprintf(stderr,"Unexpected token\n");
+				
 				break;
 			
 		}	
 	}else{
 		fprintf(stderr,"First token to be reduced is not right handle\n");
 		
+		
 	}		
 	
+	fprintf(stderr,"rule is: %d\n\n",rule);
+
+	//free(tokenPtr);
 	
-	free(tokenPtr);
 	free(bufferStack);
 	return rule;
 }	
 
+Token* stackTopTerminal(tStack* s){
+	Token* stackTopPtr=NULL;
+	int i = s->top;
+	stackTopPtr = s->arr[i];
+	if(stackEmpty(s)){													//check for empty stack
+		fprintf(stderr,"StackTop requested but stack is empty.\n");
+	}else{
+		while(stackTopPtr -> type == token_leftHandle || stackTopPtr -> type == token_expression){		
+			stackTopPtr = s->arr[i];
+			i--;
+			if(i<0){
+				break;
+			}
+		}
+	}	
+
+	return stackTopPtr;
+}
+
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
-	stackTopPtr=stackTop(stack);
-	char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];
-	printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
-	printf("stack top is %d\n", stackTopPtr->type);
-	printf("What to do is: %c\n\n",whatToDo);	
+	static int depth=0;	//Defines how many brackets are yet to come to finish expression
+	if (tokenPtr->type == token_bracketLeftRound){depth++;printf("inkrementuji %d\n",depth);}	
+	if (tokenPtr->type == token_bracketRightRound){
+		depth--;
+		if (depth<0){
+			
+			fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
+			exit(1);	//TODO delete
+		}	
+	}
 	Token *toBePushed = malloc(sizeof(Token));
-	if(whatToDo == '<'){
-		toBePushed -> type = token_leftHandle;
-		stackPush(stack, toBePushed);
-		stackPush(stack, tokenPtr);
-	}
-	if(whatToDo == '>'){
-		toBePushed -> type = token_rightHandle;
-		stackPush(stack,toBePushed);
-		whatRule(stack);
-	}
-	if(whatToDo == '='){
-		toBePushed -> type = token_leftHandle;	//TODO make sure its ok
+	
+	while(1){
+		stackTopPtr=stackTopTerminal(stack);
+		char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];
+		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
+		printf("stack top is %d\n", stackTopPtr->type);
+		printf("What to do is: %c\n\n",whatToDo);	
+			
+		if(whatToDo == '<'){
+			stackTopPtr=stackTop(stack);
+			if (stackTopPtr->type == token_expression){
+				Token* tmpPtr = stackTopPtr;
+				stackPop(stack);
+				toBePushed -> type = token_leftHandle;
+				stackPush(stack, toBePushed);
+				stackPush(stack, tmpPtr);
+				stackPush(stack, tokenPtr);	
+				
+			}else{
+				toBePushed -> type = token_leftHandle;
+				stackPush(stack, toBePushed);
+				stackPush(stack, tokenPtr);	
+			}
+			printStack(stack);
+			break;
+		}else{
+			if(whatToDo == '>' || whatToDo=='='){
+				toBePushed -> type = token_rightHandle;
+				stackPush(stack,toBePushed);
+				printStack(stack);
+				whatRule(stack);	//TODO assign somewhere
+				if (tokenPtr->type != token_semicolon){	//NOT Semicolon 
+					Token * toBePushedE;
+					toBePushedE->type = token_expression;		//if not ; push E
+					stackPush(stack, toBePushedE);
+					printStack(stack);
+					}else{
+					if(stack->top == 0 && stack->arr[stack->top]->type == token_dollar){	//semicolon on input
+						fprintf(stderr,"Predictive syntax analysis is over\n");		//TODO return
+					}else{
+						fprintf(stderr,"Semicolon on input but stack not empty! \n"); 
+					}	
+				}			
+			}
+		}
 	}
 	
-	
-	free(toBePushed);
+
+	//free(toBePushed);
 }
 
 void stackPush(tStack* s,Token* Token){
@@ -295,15 +369,7 @@ int runPrecedenceAnalysis(FILE* f){
 }
 
 
-void printStack(tStack* s)
-{
-	int i=0;
-	while(i<=s->top)
-	{
-		printf("%d", s->arr[i]->type);
-		i++;
-	}
-}
+
 
 
 

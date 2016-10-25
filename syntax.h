@@ -18,3 +18,4 @@ int runPrecedenceAnalysis();
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack);
 int whatRule(tStack* stack);
 void printStack(tStack* s);
+Token* stackTopTerminal(tStack* s);
