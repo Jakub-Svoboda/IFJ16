@@ -1,56 +1,74 @@
+#include <stdio.h>			//TODO check if this is ok or BS
+
 typedef enum{
+<<<<<<< HEAD
 		token_identifier,
     token_invalid,
     token_assign,
     token_EOF,
+=======
+	//ArOp
+	token_add,			//0
+	token_subtract,			//1
+    token_multiply,			//2
+    token_divide,			//3
+	//RelOp
+	token_less,			//4
+    token_greater,			//5
+    token_equal,			//6
+	token_lessEqual,		//7
+    token_greaterEqual,			//8
+    token_notEqual,			//9
+	token_bracketLeftRound,		//10
+    token_bracketRightRound,		//11
+	token_identifier,		//12
+	token_dollar,			//13	Kuba added this
+	token_expression,		//14	Kubba added this, not sure if needed?
+
+	
+    token_invalid,			//15
+    token_assign,			//16
+    token_EOF,				//17
+>>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
     //Keywords
-    token_boolean,
-    token_break,
-    token_class,
-    token_continue,
-    token_do,
-    token_double,
-    token_else,
-    token_false,
-    token_for,
-    token_if,
-    token_int,
-    token_return,
-    token_String,
-    token_static,
-    token_true,
-    token_void,
-    token_while,
-    //RelOp
-    token_equal,
-    token_greater,
-    token_less,
-    token_notEqual,
-    token_greaterEqual,
-    token_lessEqual,
-    //ArOp
-    token_add,
-    token_subtract,
-    token_multiply,
-    token_divide,
+    token_boolean,			//18
+    token_break,			//19
+    token_class,			//20
+    token_continue,			//21
+    token_do,				//22
+    token_double,			//23
+    token_else,				//24
+    token_false,			//25
+    token_for,				//26
+    token_if,				//27
+    token_int,				//28
+    token_return,			//29
+    token_String,			//30
+    token_static,			//31
+    token_true,				//32
+    token_void,				//33
+    token_while,			//34
+
     //Delimiters
-    token_dot,
-    token_bracketLeftRound,
-    token_bracketRightRound,
-    token_comma,
-    token_bracketLeftCurly,
-    token_bracketRightCurly,
-    token_semicolon,
-    token_bracketLeftSquare,
-    token_bracketRightSquare,
+    token_dot,				//35
+    token_comma,			//36
+    token_bracketLeftCurly,		//37
+    token_bracketRightCurly,		//38
+    token_semicolon,			//39
+    token_bracketLeftSquare,		//40
+    token_bracketRightSquare,		//41
     //"" ''
-    token_quotesSingle,
-    token_quotesDouble,
-    token_string,
-    token_intNumber,
-    token_doubleNumber
+    token_quotesSingle,			//42
+    token_quotesDouble,			//43
+    token_string,			//44
+    token_intNumber,			//45
+    token_doubleNumber,			//46
+	
+	token_leftHandle,		//47	Kuba added this
+	token_rightHandle		//48	Kuba added this
 } Token_type;
 
+<<<<<<< HEAD
 typedef enum {
 	state_default,
 	state_readingNumber,
@@ -60,5 +78,17 @@ typedef enum {
 
 typedef struct _Token {
     Token_type type;
+=======
+
+
+typedef struct {				//Kuba-edit
+    Token_type type; 
+>>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
     //ptr hashtable
 } Token;
+
+
+
+Token *getToken(FILE *f);
+Token *tokenInit();
+

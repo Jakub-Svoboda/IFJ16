@@ -18,8 +18,7 @@ tržítkem, nebo dolarem.
 lenými tečkou (’ . ’) (bez jakýchkoli prázdných znaků), kde první označuje třídu a
 druhý proměnnou nebo funkci.
 
- kekel rypel
-	musim udelat doubly a rozpoznavani exponentu,,
+
 
 char *relationalOperators[] = {"==", "<", ">", "!=", ">=", "<="};
 
@@ -108,8 +107,9 @@ Token *tokenInit() {
 }
 
 Token *getToken(FILE *f) {
+
 	//printf("AYA");
-	Token *t = tokenInit();
+	Token *t = tokenInit();	//TODO Kuba-edit
 	char buff[1024];
 	int c, position = 0, tempc, kwIndex;
 	//int readingIdentifier = false, readingString = false, readingNumber = false,
@@ -123,7 +123,8 @@ Token *getToken(FILE *f) {
 		return t;
 	}
 
-	while(1) {
+
+	while(1) {					//TODO ?
 		c = fgetc(f);
 		//printf("%c,",c);
 		switch (state) {
@@ -132,9 +133,14 @@ Token *getToken(FILE *f) {
 					buff[position] = c;
 					position++;
 				}else {
+<<<<<<< HEAD
 					state = state_default;
 					//readingIdentifier = false;
 					ungetc(c,f);
+=======
+				//	printf("ID'%s'\n",buff);						//TODO delete later
+					t->type = token_identifier;
+>>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
 				}
 				if(state == state_default) {
 					buff[position] = '\0';
@@ -328,10 +334,18 @@ Token *getToken(FILE *f) {
 				}
 				break;
 			}
+
 		}
 	}
 
 
+<<<<<<< HEAD
+=======
+
+}
+
+/*
+>>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
 int main(int argc, char *argv[]) {
 
 	FILE *f;
@@ -389,4 +403,9 @@ int main(int argc, char *argv[]) {
 	fclose(f);
 	printf("\n");
 	return 1;
+<<<<<<< HEAD
 }
+=======
+
+}*/
+>>>>>>> 35d77675bc6ee6a905372160dc9370e272cb10dd
