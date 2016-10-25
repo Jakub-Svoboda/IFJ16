@@ -19,29 +19,29 @@ char precedence_table[14][14]={
 {'<','<','<','<','<','<','<','<','<','<','<','0','<','0'},	//$       	stack
 };
 //Returns int representing the reduction rule. Also pops the whole rule out of stack. Good luck reverse engineering this.
-int whatRule(tStack* stack, Token* stackTopPtr){
+int whatRule(tStack* stack){
 	int rule;	
 	tStack* bufferStack = malloc(sizeof(tStack));				//temporar stack where we push the tokens to be reduced
 	Token* tokenPtr = malloc(sizeof(Token));
 	
-	tokenPtr = stackTop(stack, stackTopPtr);				//read top of the stack
+	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 	
 	if( (tokenPtr -> type)==token_rightHandle){
-		tokenPtr = stackTop(stack, stackTopPtr);							//read top of the stack
+		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
 		switch (tokenPtr -> type){
 			case token_expression:											//2nd token is E
-				tokenPtr = stackTop(stack, stackTopPtr);					//read top of the stack
+				tokenPtr = stackTop(stack);					//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				
 				switch (tokenPtr -> type){									// E>
 				
 					case token_add:											// +E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E+E>
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 1;									//rule 1 <E+E>
@@ -52,10 +52,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 					
 					case token_subtract:										// -E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E-E>
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 2;									//rule 2 <E-E>
@@ -66,10 +66,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 					
 					case token_multiply:										// *E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E*E>
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 3;									//rule 3 <E*E>
@@ -80,10 +80,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 					
 					case token_divide:										// /E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E/E>
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 4;									//rule 4 <E/E>
@@ -94,10 +94,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 				
 					case token_less:										// <E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E<E>
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 5;									//rule 5 <E<E>
@@ -108,10 +108,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 					
 					case token_greater:										// >E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E>E>
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 6;									//rule 6 <E>E>
@@ -122,10 +122,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 									
 					case token_lessEqual:										// ==E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 7;									//rule 7 <E<=E>
@@ -136,10 +136,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 								
 					case token_greaterEqual:										// >=E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 8;									//rule 8 <E>=E>
@@ -150,10 +150,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;
 										
 					case token_equal:										// ==E>
-						tokenPtr = stackTop(stack, stackTopPtr);			
+						tokenPtr = stackTop(stack);			
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack, stackTopPtr);		
+							tokenPtr = stackTop(stack);		
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 9;									//rule 9 <E!=E>
@@ -164,10 +164,10 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 						break;	
 								
 					case token_notEqual:	
-						tokenPtr = stackTop(stack, stackTopPtr);			//read top of the stack
+						tokenPtr = stackTop(stack);			//read top of the stack
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack, stackTopPtr);		//read top of the stack
+							tokenPtr = stackTop(stack);		//read top of the stack
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 10;									// rule 10 <E!=E>
@@ -184,7 +184,7 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 				}
 				break;
 			case token_identifier:											//2nd token is i	
-				tokenPtr = stackTop(stack,stackTopPtr);						//read top of the stack
+				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
 					rule= 12;												// rule 12 <i>
@@ -193,13 +193,13 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 				}
 				break;
 			case token_bracketRightRound:	
-				tokenPtr = stackTop(stack,stackTopPtr);						//read top of the stack
+				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if( tokenPtr -> type  == token_expression){
-					tokenPtr = stackTop(stack,stackTopPtr);					//read top of the stack
+					tokenPtr = stackTop(stack);					//read top of the stack
 					stackPop(stack);										//pop the token we dont need
 					if( tokenPtr -> type  == token_bracketLeftRound){
-						tokenPtr = stackTop(stack,stackTopPtr);				//read top of the stack
+						tokenPtr = stackTop(stack);				//read top of the stack
 						stackPop(stack);									//pop the token we dont need
 						if(tokenPtr -> type  == token_leftHandle)
 							rule= 11;										//rule 11 <(E)>
@@ -213,6 +213,7 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 		}	
 	}else{
 		fprintf(stderr,"First token to be reduced is not right handle\n");
+		
 	}		
 	
 	
@@ -222,27 +223,35 @@ int whatRule(tStack* stack, Token* stackTopPtr){
 }	
 
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
+	stackTopPtr=stackTop(stack);
 	char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];
+	printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
+	printf("stack top is %d\n", stackTopPtr->type);
 	printf("What to do is: %c\n\n",whatToDo);	
 	Token *toBePushed = malloc(sizeof(Token));
 	if(whatToDo == '<'){
 		toBePushed -> type = token_leftHandle;
+		stackPush(stack, toBePushed);
+		stackPush(stack, tokenPtr);
 	}
 	if(whatToDo == '>'){
 		toBePushed -> type = token_rightHandle;
+		whatRule(stack);
 	}
 	if(whatToDo == '='){
-		toBePushed -> type = token_leftHandle;
+		toBePushed -> type = token_leftHandle;	//TODO make sure its ok
 	}
 	
-	//stackPush();
+	
 	free(toBePushed);
 }
 
 void stackPush(tStack* s,Token* Token){
 	s->top=s->top+1;
 	s->arr[s->top]=Token;	
-	//printf("A token has been pushed: ");		//TODO test-output,delete later
+//	Token* stackTop;
+	
+//	printf("A token has been pushed: %d\n", stackTop->type);		//TODO test-output,delete later
 }
 
 void stackPop(tStack* s){
@@ -254,7 +263,8 @@ void stackPop(tStack* s){
 	}	
 }
 
-Token* stackTop(tStack* s,Token* stackTopPtr){
+Token* stackTop(tStack* s){
+	Token* stackTopPtr=NULL;
 	if(stackEmpty(s)){													//check for empty stack
 		fprintf(stderr,"StackTop requested but stack is empty.\n");
 	}else{
@@ -264,35 +274,23 @@ Token* stackTop(tStack* s,Token* stackTopPtr){
 }
 
 int stackEmpty (tStack* s){
-	return(MAX_STACK-1 == s->top);
+	return(-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE* f){
-	
+int runPrecedenceAnalysis(FILE* f){	
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
-
-	Token* stackTopPtr;	//initialize stack pointer	
 	Token* tokenPtr = tokenInit();			//init for the first $
 	tokenPtr->type=token_dollar;
 	stackPush(stack,tokenPtr);
+	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
 	free(tokenPtr);
 	
 	
 	for(int i=0; i<=8 ;i++){				//TODO temporary testing loop
-			
-		Token* tokenPtr= getToken(f);\
-		printf("foo\n");
+		Token* tokenPtr= getToken(f);
+		stackTopPtr = stackTop(stack);
 		reduction(tokenPtr, stackTopPtr, stack);
-		stackPush(stack,tokenPtr);
-			
-		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
-		 
-		stackTopPtr = stackTop(stack, stackTopPtr);
-		printf("stack top is %d\n", stackTopPtr->type);
-		 
-			
-		 
 		free(tokenPtr);
 	}
 	free(stack);	

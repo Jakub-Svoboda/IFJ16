@@ -12,8 +12,8 @@ typedef struct{
 
 void stackPush(tStack *s,Token *Token);
 void stackPop(tStack* s);
-Token* stackTop(tStack *s, Token *stackTopPtr);
+Token* stackTop(tStack *s);
 int stackEmpty(tStack* s);
 int runPrecedenceAnalysis();
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack);
-int whatRule(tStack* stack,Token* stackTopPtr);
+int whatRule(tStack* stack);
