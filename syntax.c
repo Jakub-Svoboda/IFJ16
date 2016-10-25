@@ -189,7 +189,7 @@ int whatRule(tStack* stack){
 				if (tokenPtr -> type  == token_leftHandle){
 					rule= 12;												// rule 12 <i>
 				}else{
-					fprintf(stderr,"Error: Someting i >\n");
+					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
 				}
 				break;
 			case token_bracketRightRound:	
@@ -236,6 +236,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 	}
 	if(whatToDo == '>'){
 		toBePushed -> type = token_rightHandle;
+		stackPush(stack,toBePushed);
 		whatRule(stack);
 	}
 	if(whatToDo == '='){
@@ -249,9 +250,8 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 void stackPush(tStack* s,Token* Token){
 	s->top=s->top+1;
 	s->arr[s->top]=Token;	
-//	Token* stackTop;
-	
-//	printf("A token has been pushed: %d\n", stackTop->type);		//TODO test-output,delete later
+//	Token* stackTop= stackTop(s);
+//	fprintf(stderr,"A token has been pushed: %d, s Top is: %d\n",Token ->type,s->top);		//TODO test-output,delete later
 }
 
 void stackPop(tStack* s){
@@ -280,19 +280,47 @@ int stackEmpty (tStack* s){
 int runPrecedenceAnalysis(FILE* f){	
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
-	Token* tokenPtr = tokenInit();			//init for the first $
-	tokenPtr->type=token_dollar;
-	stackPush(stack,tokenPtr);
+	Token* tokenPtrTmp = tokenInit();			//init for the first $
+	tokenPtrTmp->type=token_dollar;
+	stackPush(stack,tokenPtrTmp);
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
-	free(tokenPtr);
-	
-	
+	Token* tokenPtr=NULL;	
 	for(int i=0; i<=8 ;i++){				//TODO temporary testing loop
-		Token* tokenPtr= getToken(f);
+		tokenPtr= getToken(f);
 		stackTopPtr = stackTop(stack);
-		reduction(tokenPtr, stackTopPtr, stack);
-		free(tokenPtr);
+		reduction(tokenPtr, stackTopPtr, stack);	
 	}
 	free(stack);	
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
