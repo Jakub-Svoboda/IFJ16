@@ -21,7 +21,7 @@ typedef enum{
 	token_dollar,			//13	Kuba added this
 	token_expression,		//14	Kubba added this, not sure if needed?
 
-	
+
     token_invalid,			//15
     token_assign,			//16
     token_EOF,				//17
@@ -58,7 +58,7 @@ typedef enum{
     token_string,			//44
     token_intNumber,			//45
     token_doubleNumber,			//46
-	
+
 	token_leftHandle,		//47	Kuba added this
 	token_rightHandle		//48	Kuba added this
 } Token_type;
@@ -66,12 +66,16 @@ typedef enum{
 
 
 typedef struct {				//Kuba-edit
-    Token_type type; 
+    Token_type type;
     //ptr hashtable
 } Token;
 
-
+typedef enum {
+	state_default,
+	state_readingNumber,
+	state_readingIdentifier,
+	state_readingString,
+} State_type;
 
 Token *getToken(FILE *f);
 Token *tokenInit();
-

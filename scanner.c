@@ -9,41 +9,7 @@
 #define false 0
 
 
-/*
-
-	musim udelat doubly a rozpoznavani exponentu,,
-
-char *relationalOperators[] = {"==", "<", ">", "!=", ">=", "<="};
-
-char arithmeticalOperators[] = {'+','-','*','/'};
-
-char delimiters[] = {'.', '(', ')', ',', '{', '}', ';', '[', ']'};
-
-
-int get__Token(FILE *f) {
-	Token kekel;
-    unsigned count = 0, i;
-    char buff[1024];
-    int c;
-
-    while((c = fgetc(f)) != ' ' && c != EOL && c!= EOF && c!= TAB) {
-        buff[count] = c;
-        count++;
-    }
-	if(c != ' ' && c!= TAB && c!= EOF ){
-
-		buff[count] = '\0';
-		printf("%s||",buff);
-	}
-
-	if(c == EOF) {
-		return 0;
-	}
-    return 1;
-}
-*/
-
-char *keywords[] = {"boolean", "break", "class", "continue", "do", "double", 
+char *keywords[] = {"boolean", "break", "class", "continue", "do", "double",
 	"else", "false", "for", "if", "int", "return", "String", "static", "true","void","while"};
 
 int isKeyword(char *string) {
@@ -65,12 +31,12 @@ Token *tokenInit() {
 }
 
 Token *getToken(FILE *f) {
-	
+
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
 	char buff[1024];
-    int c, position = 0, tempc, readingIdentifier = false, kwIndex, readingString = false, readingNumber = false;
-	
+    int c, position = 0, tempc, kwIndex;
+	State_type state = state_default;
 	//t = malloc(sizeof(Token));
 	//tokenInit(t);
 	//t->type = token_invalid;
@@ -78,195 +44,191 @@ Token *getToken(FILE *f) {
 		printf("Invalid token\n");
 		return t;
 	}
-	
+
 
 	while(1) {					//TODO ?
 		c = fgetc(f);
 		//printf("%c,",c);
-		if(readingIdentifier) {
-			if(isalpha(c) || isdigit(c)){
-				buff[position] = c;
-				position++;
-			}else {
-				readingIdentifier = false;
-				ungetc(c,f);
-			}
-			if(readingIdentifier == false) {
-				buff[position] = '\0';
-				if((kwIndex = isKeyword(buff)) != -1) {
-					t->type = kwIndex + KEYWORD_OFFSET;
-					//printf("repete %d ",kwIndex+typeOffset);
+		switch (state) {
+			case state_readingIdentifier:
+				if(isalpha(c) || isdigit(c)){
+					buff[position] = c;
+					position++;
 				}else {
-				//	printf("ID'%s'\n",buff);						//TODO delete later
-					t->type = token_identifier;
+					state = state_default;
+					ungetc(c,f);
 				}
-				position = 0;
-				return t;
-			}
-		}else if(readingString){
-			buff[position] = c;
-			position++;
-			if(c == '\"' && buff[position-2] != '\\') {
-				readingString = false;
-			}
-			if(readingString == false) {
-				buff[position] = '\0';
-				t->type = token_string;
-					printf("'%s'",buff);
-				position = 0;
-				return t;
-				
-			}
-		}else if(readingNumber) {
-			//buff[position] = c;
-			position++;
-			if(isdigit(c)) {
+				if(state == state_default) {
+					buff[position] = '\0';
+					if((kwIndex = isKeyword(buff)) != -1) {
+						t->type = kwIndex + KEYWORD_OFFSET;
+					}else {
+						t->type = token_identifier;
+					}
+					position = 0;
+					return t;
+				}
+				break;
+			case state_readingString:
 				buff[position] = c;
 				position++;
-			}else { //Osetrit double
-				ungetc(c,f);
-				readingNumber = false;
-			}
-			if(readingNumber == false) {
-				buff[position] = '\0';
-				t->type = token_intNumber;
-					printf("'%s'",buff);
-				position = 0;
-				return t;
-				
-			}
-		}else {
-			switch (c) {
-				case ' ':
-					break;
-				case '\n':
-					break;
-				case '\t':
-					break;
-				//ArOp
-				case '+':
-					t->type = token_add;
+				if(c == '\"' && buff[position-2] != '\\') {
+					state = state_default;
+				}
+				if(state == state_default) {
+					buff[position] = '\0';
+					t->type = token_string;
+						printf("'%s'",buff);
+					position = 0;
 					return t;
-				case '-':
-					t->type = token_subtract;
+				}
+				break;
+			case state_readingNumber:
+				//buff[position] = c;
+				position++;
+				if(isdigit(c)) {
+					buff[position] = c;
+					position++;
+				}else { //Osetrit double
+					ungetc(c,f);
+					state = state_default;
+				}
+				if(state == state_default) {
+					buff[position] = '\0';
+					t->type = token_intNumber;
+						printf("'%s'",buff);
+					position = 0;
 					return t;
-				case '*':
-					t->type = token_multiply;
-					return t;
-				//Division or Comments
-				case '/':
-					c = fgetc(f);
-					if(c == '/') {
-						while((c=fgetc(f)) != '\n'){
-							;
-						}
+				}
+				break;
+			case state_default:
+				switch (c) {
+					case ' ':
 						break;
-					}else if(c == '*') {
-						//printf("K");
-						tempc = ' ';
-						while(((c=fgetc(f)) != '/') || (tempc != '*')) {
-							tempc = c;
+					case '\n':
+						break;
+					case '\t':
+						break;
+					//ArOp
+					case '+':
+						t->type = token_add;
+						return t;
+					case '-':
+						t->type = token_subtract;
+						return t;
+					case '*':
+						t->type = token_multiply;
+						return t;
+					//Division or Comments
+					case '/':
+						c = fgetc(f);
+						if(c == '/') {
+							while((c=fgetc(f)) != '\n'){
+								;
+							}
+							break;
+						}else if(c == '*') {
+							//printf("K");
+							tempc = ' ';
+							while(((c=fgetc(f)) != '/') || (tempc != '*')) {
+								tempc = c;
+							}
+							break;
+						}else {
+							ungetc(c,f);
+							t->type = token_divide;
+							return t;
 						}
-						break;		
-					}else {
+					case '\'':
+						break;
+					case '\"':
+						state = state_readingString;
+						buff[position] = c;
+						position++;
+						break;
+					//Delimiters
+					case '.':
+						t->type = token_dot;
+						return t;
+					case '(':
+						t->type = token_bracketLeftRound;
+						return t;
+					case ')':
+						t->type = token_bracketRightRound;
+						return t;
+					case ',':
+						t->type = token_comma;
+						return t;
+					case '{':
+						t->type = token_bracketLeftCurly;
+						return t;
+					case '}':
+						t->type = token_bracketRightCurly;
+						return t;
+					case ';':
+						t->type = token_semicolon;
+						return t;
+					case '[':
+						t->type = token_bracketLeftSquare;
+						return t;
+					case ']':
+						t->type = token_bracketRightSquare;
+						return t;
+					//assign =, equal ==
+					case '=':
+						c = fgetc(f);
+						if(c == '=') {
+							t->type = token_equal;
+							return t;
+						}
 						ungetc(c,f);
-						t->type = token_divide;
+						t->type = token_assign;
 						return t;
-					}
-				case '\'':
-					break;
-				case '\"':
-					readingString = true;
-					buff[position] = c;
-					position++;
-					break;
-				//Delimiters
-				case '.':
-					t->type = token_dot;
-					return t;
-				case '(':
-					t->type = token_bracketLeftRound;
-					return t;
-				case ')':
-					t->type = token_bracketRightRound;
-					return t;
-				case ',':
-					t->type = token_comma;
-					return t;
-				case '{':
-					t->type = token_bracketLeftCurly;
-					return t;
-				case '}':
-					t->type = token_bracketRightCurly;
-					return t;
-				case ';':
-					t->type = token_semicolon;
-					return t;
-				case '[':
-					t->type = token_bracketLeftSquare;
-					return t;
-				case ']':
-					t->type = token_bracketRightSquare;
-					return t;
-				//assign =, equal ==
-				case '=':
-					c = fgetc(f);
-					if(c == '=') {
-						t->type = token_equal;
+					//notEqual
+					case '!':
+						tempc = c;
+						c=fgetc(f);
+						if(c == '=') {
+							t->type = token_notEqual;
+							return t;
+						}
+						t->type = token_invalid;	//invalid combination !xx
 						return t;
-					}
-					ungetc(c,f);
-					t->type = token_assign;
-					return t;
-				//notEqual
-				case '!':
-					tempc = c;
-					c=fgetc(f);
-					if(c == '=') {
-						t->type = token_notEqual;
+					//RelOp
+					case '<':
+						c = fgetc(f);
+						if(c == '=') {
+							t->type = token_lessEqual;
+							return t;
+						}
+						ungetc(c,f);
+						t->type = token_less;
 						return t;
-					}
-					t->type = token_invalid;	//invalid combination !xx
-					return t;
-				//RelOp
-				case '<':
-					c = fgetc(f);
-					if(c == '=') {
-						t->type = token_lessEqual;
+					case '>':
+						c = fgetc(f);
+						if(c == '=') {
+							t->type = token_greaterEqual;
+							return t;
+						}
+						ungetc(c,f);
+						t->type = token_greater;
 						return t;
-					}
-					ungetc(c,f);
-					t->type = token_less;
-					return t;
-				case '>':
-					c = fgetc(f);
-					if(c == '=') {
-						t->type = token_greaterEqual;
+					case EOF:
+						t->type = token_EOF;
 						return t;
-					}
-					ungetc(c,f);
-					t->type = token_greater;
-					return t;
-				case EOF:
-					t->type = token_EOF;
-					return t;
-				default:
-					if(isdigit(c)){
-						readingNumber = true;
-					}else {
-						readingIdentifier = true;
-					}
-					buff[position] = c;
-					position++;
-					break;
-			}
-			
+					default:
+						if(isdigit(c)){
+							state = state_readingNumber;
+						}else {
+							state = state_readingIdentifier;
+						}
+						buff[position] = c;
+						position++;
+						break;
+				}
+				break;
 		}
-
-	}
-
-
-
+	}	//while 1 ends here
 }
 
 /*
@@ -327,5 +289,6 @@ int main(int argc, char *argv[]) {
 	fclose(f);
 	printf("\n");
 	return 1;
-	
-}*/
+
+}
+*/
