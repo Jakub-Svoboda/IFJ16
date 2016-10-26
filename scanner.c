@@ -35,7 +35,7 @@ Token *getToken(FILE *f) {
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
 	char buff[1024];
-    int c, position = 0, tempc, kwIndex;
+    int c, position = 0, tempc, kwIndex, isDouble;
 	State_type state = state_default;
 	//t = malloc(sizeof(Token));
 	//tokenInit(t);
@@ -84,20 +84,32 @@ Token *getToken(FILE *f) {
 				}
 				break;
 			case state_readingNumber:
-				//buff[position] = c;
-				position++;
-				if(isdigit(c)) {
+				if(c == '.' || c == 'e' || c == 'E') {
+					isDouble = true;
+				}
+
+				if(isdigit(c)){
+					buff[position] = c;
+					position++;
+				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;
 					position++;
 				}else { //Osetrit double
 					ungetc(c,f);
 					state = state_default;
+					//readingNumber = false;
 				}
 				if(state == state_default) {
 					buff[position] = '\0';
-					t->type = token_intNumber;
-						printf("'%s'",buff);
+					if(isDouble) {
+						t->type = token_doubleNumber;
+						printf("DABL'%s'",buff);
+					}else {
+						t->type = token_intNumber;
+						printf("INT'%s'",buff);
+					}
 					position = 0;
+					isDouble = false;
 					return t;
 				}
 				break;
