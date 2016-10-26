@@ -4,19 +4,19 @@
 
 typedef enum{
 	//ArOp
-	token_add,			//0
+	token_add,				//0
 	token_subtract,			//1
     token_multiply,			//2
     token_divide,			//3
 	//RelOp
-	token_less,			//4
+	token_less,				//4
     token_greater,			//5
     token_equal,			//6
 	token_lessEqual,		//7
-    token_greaterEqual,			//8
+    token_greaterEqual,		//8
     token_notEqual,			//9
 	token_bracketLeftRound,		//10
-    token_bracketRightRound,		//11
+    token_bracketRightRound,	//11
 	token_identifier,		//12
 	token_dollar,			//13	Kuba added this
 	token_expression,		//14	Kubba added this, not sure if needed?
@@ -48,16 +48,16 @@ typedef enum{
     token_dot,				//35
     token_comma,			//36
     token_bracketLeftCurly,		//37
-    token_bracketRightCurly,		//38
+    token_bracketRightCurly,	//38
     token_semicolon,			//39
-    token_bracketLeftSquare,		//40
-    token_bracketRightSquare,		//41
+    token_bracketLeftSquare,	//40
+    token_bracketRightSquare,	//41
     //"" ''
-    token_quotesSingle,			//42
-    token_quotesDouble,			//43
+    token_quotesSingle,		//42
+    token_quotesDouble,		//43
     token_string,			//44
-    token_intNumber,			//45
-    token_doubleNumber,			//46
+    token_intNumber,		//45
+    token_doubleNumber,		//46
 
 	token_leftHandle,		//47	Kuba added this
 	token_rightHandle		//48	Kuba added this
@@ -74,8 +74,9 @@ typedef enum {
 	state_default,
 	state_readingNumber,
 	state_readingIdentifier,
-	state_readingString,
+	state_readingString
 } State_type;
 
 Token *getToken(FILE *f);
 Token *tokenInit();
+Token *lookAhead(FILE *f, int steps);  // Choose 0/1 steps ahead , check usage
