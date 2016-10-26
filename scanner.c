@@ -31,6 +31,20 @@ Token *tokenInit() {
 }
 
 Token *lookAhead(FILE *f, int steps) { //TODO : Is there better way of passing FILE?
+	//-------------------------------------------------------------------------------------------------
+	//
+	// I know it's not the same to call lookAhead(f,0) instead of getToken(f)so solution may be:
+	//
+	// A)
+	//   -- #define getToken() lookAhead(f,0)
+	//   -- #define lookAhead() lookAhead(f,1)
+	// B)
+	//	 -- using global static *nextTok but I thought globals are big NO NO
+	// C)
+	//	 -- deal with it
+	//
+	//-------------------------------------------------------------------------------------------------
+
 /* USAGE:
 *	Token *tempTok = lookAhead(f, 0);
 *	Token *nextTok = lookAhead(f, 1);
