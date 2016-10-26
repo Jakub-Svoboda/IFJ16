@@ -7,7 +7,6 @@
 
 #define true 1
 #define false 0
-#define typeOffset 4
 
 
 /*
@@ -95,7 +94,7 @@ Token *getToken(FILE *f) {
 			if(readingIdentifier == false) {
 				buff[position] = '\0';
 				if((kwIndex = isKeyword(buff)) != -1) {
-					t->type = kwIndex + typeOffset;
+					t->type = kwIndex + KEYWORD_OFFSET;
 					//printf("repete %d ",kwIndex+typeOffset);
 				}else {
 				//	printf("ID'%s'\n",buff);						//TODO delete later
