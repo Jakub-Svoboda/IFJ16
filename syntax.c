@@ -261,7 +261,7 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 	static int depth=0;	//Defines how many brackets are yet to come to finish expression
 	if (tokenPtr->type == token_bracketLeftRound){depth++;
-		fprintf(stderr,"inkrementuji %d\n",depth);
+		//fprintf(stderr,"inkrementuji %d\n",depth);
 	}	
 	if (tokenPtr->type == token_bracketRightRound){
 		depth--;
@@ -374,7 +374,7 @@ int runPrecedenceAnalysis(FILE* f){
 	stackPush(stack,tokenPtrTmp);
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
 	Token* tokenPtr=NULL;	
-	for(int i=0; i<=9 ;i++){				//TODO temporary testing loop
+	for(int i=0; i<=15 ;i++){				//TODO temporary testing loop
 		tokenPtr= getToken(f);
 		stackTopPtr = stackTop(stack);
 		reduction(tokenPtr, stackTopPtr, stack);	
