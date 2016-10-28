@@ -76,6 +76,7 @@ Token *lookAhead(FILE *f, int steps) { //TODO : Is there better way of passing F
 		default:
 			break;
 	}
+	return NULL;
 }
 
 Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Call lookAhead instead of getToken();
@@ -340,7 +341,6 @@ void identifyToken(Token *tempTok) {
 	if(tempTok->type == token_intNumber) printf("intNumber ");
 	if(tempTok->type == token_doubleNumber) printf("doubleNumber ");
 }
-
 
 int main(int argc, char *argv[]) {
 
