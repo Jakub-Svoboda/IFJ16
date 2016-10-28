@@ -266,7 +266,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 		printf("stack top is %d\n", stackTopPtr->type);
 		printf("What to do is: %c\n\n",whatToDo);	
 		if(whatToDo == '$'){
-			return 0;
+			return;
 		}	
 		if(whatToDo == '<'){				//When table returns <
 			stackTopPtr=stackTop(stack);	//check what is the very top of stack

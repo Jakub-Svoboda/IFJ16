@@ -21,7 +21,6 @@ typedef enum{
 	token_dollar,			//13	Kuba added this
 	token_expression,		//14	Kubba added this, not sure if needed?
 
-
     token_invalid,			//15
     token_assign,			//16
     token_EOF,				//17
