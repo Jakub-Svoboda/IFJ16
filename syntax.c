@@ -20,16 +20,16 @@ char precedence_table[14][14]={
 };
 //Returns int representing the reduction rule. Also pops the whole rule out of stack. Good luck reverse engineering this.
 void printStack(tStack* s)
-{
-	int i=0;
-	while(i<=s->top)
 	{
-		fprintf(stderr,"%d ", s->arr[i]->type);
-		i++;
-		
+		int i=0;
+		while(i<=s->top)
+		{
+			fprintf(stderr,"%d ", s->arr[i]->type);
+			i++;
+			
+		}
+		fprintf(stderr,"\n");
 	}
-	fprintf(stderr,"\n");
-}
 
 int whatRule(tStack* stack){
 	int rule;	
@@ -260,11 +260,12 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 	static int depth=0;	//Defines how many brackets are yet to come to finish expression
-	if (tokenPtr->type == token_bracketLeftRound){depth++;printf("inkrementuji %d\n",depth);}	
+	if (tokenPtr->type == token_bracketLeftRound){depth++;
+		fprintf(stderr,"inkrementuji %d\n",depth);
+	}	
 	if (tokenPtr->type == token_bracketRightRound){
 		depth--;
 		if (depth<0){
-			
 			fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
 			exit(1);	//TODO delete
 		}	
@@ -296,11 +297,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			printStack(stack);
 			break;											//Break the cycle to get new token
 		}
-		if(whatToDo == '>'|| (whatToDo=='=')){				//IF precedence table returns >, we reduce	
-			if(whatToDo=='='){
-				stackPush(stack,tokenPtr);
-				whatToDo='>';
-			}
+		if(whatToDo == '>'){				//IF precedence table returns >, we reduce	
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
 			printStack(stack);	//TODO delete
@@ -313,15 +310,26 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 				}else{
 				if(stack->top == 0 && stack->arr[stack->top]->type == token_dollar){	//semicolon on input
 					fprintf(stderr,"Predictive syntax analysis is over\n");		//TODO return
+					printStack(stack);
+					break;
 				}else{
 					fprintf(stderr,"Semicolon on input but stack not empty! \n"); 
 				}	
 			
-			}			
-			
+			}	
 		}
-	
-		
+		if(whatToDo == '='){
+			stackPush(stack,tokenPtr);
+			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
+			stackPush(stack,toBePushed);
+			printStack(stack);
+			whatRule(stack);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
+			//printStack(stack);
+			Token * toBePushedE = malloc(sizeof(Token));
+			toBePushedE->type = token_expression;		// push E
+			stackPush(stack, toBePushedE);
+			break;		
+		}		
 	}
 	
 
