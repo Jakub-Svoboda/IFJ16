@@ -7,14 +7,14 @@ OBJ=main.o syntax.o scanner.o
 all: project
 
 project: $(OBJ) $(DEPS)
-	$(CC) $(OBJ) -o project -I.
+	$(CC) $(OBJ)       -g -o project -I.
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -g -c -o $@ $< $(CFLAGS)
 
 
 clean:
 	rm *o project
 
 test: project
-	./project test0.java
+	./project ./tests/test0.java
