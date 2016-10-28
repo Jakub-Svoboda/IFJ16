@@ -38,7 +38,7 @@ int whatRule(tStack* stack){
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 	
-	if( (tokenPtr -> type)==token_rightHandle){
+	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
 		switch (tokenPtr -> type){
