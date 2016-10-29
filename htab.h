@@ -5,7 +5,7 @@
 #define HTAB_SIZE 5
 
 typedef struct thtabItem{
-	char* key;
+	const char* key;
 //	int length;  needed?
 	struct thtabItem* next;
 } thtabItem;
@@ -13,14 +13,10 @@ typedef struct thtabItem{
 
 typedef thtabItem* thTable[HTAB_SIZE];
 
-int hashFun(char* key);
+int hashFun(const char* key);
 void htabInit(thtabItem* htab[]);
-thtabItem* htabSearch(thtabItem* htab[], char* key);
-void htabInsert(thtabItem* htab[], char* key);
-char* htabRead(thtabItem* htab[], char* key);
-void htabDelete(thtabItem* htab[], char* key);
+thtabItem* htabSearch(thtabItem* htab[], const char* key);
+void htabInsert(thtabItem* htab[], const char* key);
+const char* htabRead(thtabItem* htab[], const char* key);
+void htabDelete(thtabItem* htab[], const char* key);
 void htabDispose(thtabItem* htab[]);
-//TODO
-
-
-//void htClearAll ( tHTable* ptrht );

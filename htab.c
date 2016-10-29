@@ -1,6 +1,6 @@
 #include "htab.h"
 
-int hashFun(char* key) {                                    //Drugs are fun
+int hashFun(const char* key) {                                    //Drugs are fun
     int hash = 0;
     for(int i = 0; i < strlen(key); i++) {
         hash += key[i];                                     //sum of ord. value of each char
@@ -14,7 +14,7 @@ void htabInit(thtabItem* htab[]) {
     }
 }
 
-thtabItem* htabSearch(thtabItem* htab[], char* key) {
+thtabItem* htabSearch(thtabItem* htab[], const char* key) {
 
     if (htab == NULL || htab[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         return NULL;
@@ -30,7 +30,7 @@ thtabItem* htabSearch(thtabItem* htab[], char* key) {
 
 }
 
-void htabInsert(thtabItem* htab[], char* key) {
+void htabInsert(thtabItem* htab[], const char* key) {
     if (htab == NULL) {
         ;
     }else {
@@ -54,11 +54,11 @@ void htabInsert(thtabItem* htab[], char* key) {
     }
 }
 
-char* htabRead (thtabItem* htab[], char* key) {
+const char* htabRead (thtabItem* htab[], const char* key) {
     ; //used to read length of string etc if needed,
 }
 
-void htabDelete (thtabItem* htab[], char* key) {
+void htabDelete (thtabItem* htab[], const char* key) {
     thtabItem* prevItem = htab[hashFun(key)];
     if (htab == NULL || prevItem == NULL) {
         ;
@@ -108,7 +108,7 @@ int main() {
     thtabItem* htab[HTAB_SIZE];
     htabInit(htab);
 
-    char* kocka = "kocka";
+    const char* kocka = "kocka";
     printf("HASH KOCKA %d\n", hashFun(kocka));                          //test hashFun
 
     htabInsert(htab, "kaock");                                          //few tests of insert
