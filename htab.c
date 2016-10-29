@@ -8,13 +8,13 @@ int hashFun(const char* key) {                                    //Drugs are fu
     return hash % HTAB_SIZE;                                //return sum % (number of rows in hashtable)
 }
 
-void htabInit(thtabItem* htab[]) {
+void htabInit(thTable htab) {
     for (int i = 0; i < HTAB_SIZE; i++) {
         htab[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
     }
 }
 
-thtabItem* htabSearch(thtabItem* htab[], const char* key) {
+thtabItem* htabSearch(thTable htab, const char* key) {
 
     if (htab == NULL || htab[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         return NULL;
@@ -30,7 +30,7 @@ thtabItem* htabSearch(thtabItem* htab[], const char* key) {
 
 }
 
-void htabInsert(thtabItem* htab[], const char* key) {
+void htabInsert(thTable htab, const char* key) {
     if (htab == NULL) {
         ;
     }else {
@@ -54,11 +54,11 @@ void htabInsert(thtabItem* htab[], const char* key) {
     }
 }
 
-const char* htabRead (thtabItem* htab[], const char* key) {
+const char* htabRead (thTable htab, const char* key) {
     ; //used to read length of string etc if needed,
 }
 
-void htabDelete (thtabItem* htab[], const char* key) {
+void htabDelete (thTable htab, const char* key) {
     thtabItem* prevItem = htab[hashFun(key)];
     if (htab == NULL || prevItem == NULL) {
         ;
@@ -78,7 +78,7 @@ void htabDelete (thtabItem* htab[], const char* key) {
     }
 }
 
-void htabDispose(thtabItem* htab[]) {
+void htabDispose(thTable htab) {
     for (int i = 0; i< HTAB_SIZE; i++) {
         thtabItem* tempItem = htab[i];
         thtabItem* delItem;
@@ -91,7 +91,7 @@ void htabDispose(thtabItem* htab[]) {
     }
 }
 
-void printHtab(thtabItem* htab[]) {
+void printHtab(thTable htab) {
     for (int i = 0; i< HTAB_SIZE; i++) {
         printf("|ROW %d|",i);
         thtabItem* temp = htab[i];
@@ -105,7 +105,7 @@ void printHtab(thtabItem* htab[]) {
 
 
 int main() {
-    thtabItem* htab[HTAB_SIZE];
+    thTable htab;
     htabInit(htab);
 
     const char* kocka = "kocka";
