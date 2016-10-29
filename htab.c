@@ -2,7 +2,8 @@
 
 int hashFun(const char* key) {                                    //Drugs are fun
     int hash = 0;
-    for(int i = 0; i < strlen(key); i++) {
+    int length = strlen(key);
+    for(int i = 0; i < length; i++) {
         hash += key[i];                                     //sum of ord. value of each char
     }
     return hash % HTAB_SIZE;                                //return sum % (number of rows in hashtable)
@@ -54,9 +55,10 @@ void htabInsert(thTable htab, const char* key) {
     }
 }
 
-const char* htabRead (thTable htab, const char* key) {
-    ; //used to read length of string etc if needed,
-}
+//commented because of warnings
+//const char* htabRead (thTable htab, const char* key) {
+//    ; //used to read length of string etc if needed,
+//}
 
 void htabDelete (thTable htab, const char* key) {
     thtabItem* prevItem = htab[hashFun(key)];
@@ -103,7 +105,7 @@ void printHtab(thTable htab) {
     }
 }
 
-
+/* for testing purposes
 int main() {
     thTable htab;
     htabInit(htab);
@@ -139,3 +141,4 @@ int main() {
     printHtab(htab);
     return 0;
 }
+*/
