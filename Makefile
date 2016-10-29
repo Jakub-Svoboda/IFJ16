@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -pedantic -std=c99 -I.
 DEPS=scanner.h precedence.h syntax.h htab.h
-FILES=main.c precedence.c syntax.c scanner.c htab.c
-OBJ=main.o precedence.o scanner.o syntax.o htab.o
+FILES=main.c precedence.c syntax.c scanner.c 
+OBJ=main.o precedence.o scanner.o syntax.o 
 
 all: project
 
@@ -32,5 +32,5 @@ test4: project
 	./project ./tests/test4.java
 
 cleantest: project
-	./project ./tests/test.java
+	./project ./tests/test0.java
 	rm *o project

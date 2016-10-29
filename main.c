@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "syntax.h"
-#include "htab.h"
+//#include "htab.h"
 
 int main(int argc, char *argv[]){
 	if(argc==2)
