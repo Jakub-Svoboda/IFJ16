@@ -4,7 +4,7 @@
 
 #define HTAB_SIZE 5
 
-typedef struct {
+typedef struct thtabItem{
 	char* key;
 //	int length;  needed?
 	struct thtabItem* next;
