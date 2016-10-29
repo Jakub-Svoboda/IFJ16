@@ -1,6 +1,7 @@
 #include <stdio.h>			//TODO check if this is ok or BS
 
 #define KEYWORD_OFFSET 18;  //Change if more types added before token_boolean
+#define BUFFER_SIZE 32;
 
 typedef enum{
 	//ArOp

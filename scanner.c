@@ -80,10 +80,15 @@ Token *lookAhead(FILE *f, int steps) { //TODO : Is there better way of passing F
 }
 
 Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Call lookAhead instead of getToken();
+	int buffSize = BUFFER_SIZE;
+	char *buff = (char*) malloc(buffSize * sizeof(char));
+
+//	buffSize *= 2;
+//    buff = realloc(buff, buffSize);
 
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
-	char buff[1024];
+//	char buff[1024];
     int c, position = 0, tempc, kwIndex, isDouble;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
 	State_type state = state_default;					//choose between states
 	//t = malloc(sizeof(Token));
@@ -103,6 +108,10 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				if(isalpha(c) || isdigit(c)){			//id's may contain numbers and characters
 					buff[position] = c;
 					position++;
+					if(position+2 == buffSize) {
+						buffSize *= 2;
+					    buff = realloc(buff, buffSize);
+					}
 				}else {									//end of allowed chars
 					state = state_default;				//set state to default so we'll know we are not reading id anymore
 					ungetc(c,f);						//back 1 char
@@ -122,6 +131,10 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 			case state_readingString:
 				buff[position] = c;
 				position++;
+				if(position+2 == buffSize) {
+					buffSize *= 2;
+					buff = realloc(buff, buffSize);
+				}
 				if(c == '\"' && buff[position-2] != '\\') {		//looking for " but only if previous char is not '\', so '\"' is not matching
 					state = state_default;						//if found, end reading
 				}
@@ -142,9 +155,17 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				if(isdigit(c)){							//not sure why I did if and else if,.. when it does the same thing
 					buff[position] = c;
 					position++;
+					if(position+2 == buffSize) {
+						buffSize *= 2;
+						buff = realloc(buff, buffSize);
+					}
 				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;
 					position++;
+					if(position+2 == buffSize) {
+						buffSize *= 2;
+						buff = realloc(buff, buffSize);
+					}
 				}else { //Osetrit double				//is this OK now?
 					ungetc(c,f);
 					state = state_default;				//end reading state
@@ -296,7 +317,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 }
 
 
-/*  ///TESTING SECTION DON'T DELETE
+  ///TESTING SECTION DON'T DELETE
 void identifyToken(Token *tempTok) {
 	if(tempTok->type == token_identifier) printf("id ");
 	if(tempTok->type == token_invalid) printf("invalid ");
@@ -348,27 +369,9 @@ void identifyToken(Token *tempTok) {
 int main(int argc, char *argv[]) {
 
 	FILE *f;
-	f = fopen("test2.java", "r");
+	f = fopen("tests/buffertest.java", "r");
 	Token *tempTok = lookAhead(f, 0);
-	//Token *firstTok = lookAhead(f, 0);
-//
-	identifyToken(tempTok);
-	Token *nextTok = lookAhead(f, 1);
-	identifyToken(nextTok);
-	tempTok = lookAhead(f, 0);
-	identifyToken(tempTok);
-	nextTok = lookAhead(f, 1);
-	identifyToken(nextTok);
-	tempTok = lookAhead(f, 0);
-	identifyToken(tempTok);
-	tempTok = lookAhead(f, 0);
-	identifyToken(tempTok);
-	tempTok = lookAhead(f, 0);
-	identifyToken(tempTok);
-	nextTok = lookAhead(f, 1);
-	identifyToken(nextTok);
-	tempTok = lookAhead(f, 0);
-	identifyToken(tempTok);
+
 
 	while(tempTok->type != token_EOF) {
 		printf("%d",tempTok->type);
@@ -380,4 +383,3 @@ int main(int argc, char *argv[]) {
 	return 1;
 
 }
- */
