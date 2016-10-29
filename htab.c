@@ -54,6 +54,43 @@ void htabInsert(thtabItem* htab[], char* key) {
     }
 }
 
+char* htabRead (thtabItem* htab[], char* key) {
+    ; //used to read length of string etc if needed,
+}
+
+void htabDelete (thtabItem* htab[], char* key) {
+    thtabItem* prevItem = htab[hashFun(key)];
+    if (htab == NULL || prevItem == NULL) {
+        ;
+    }else {
+        thtabItem* tempItem = htabSearch(htab, key);        //ellegant solution via htabSearch, why is this banned in IAL??
+        if (tempItem != NULL) {
+            if (prevItem == tempItem) {                     //item is first in row
+                htab[hashFun(key)] = tempItem->next;
+            }else {
+                while(prevItem->next != tempItem) {
+                    prevItem = prevItem->next;
+                }
+                prevItem->next = tempItem->next;
+            }
+            free(tempItem);
+        }
+    }
+}
+
+void htabDispose(thtabItem* htab[]) {
+    for (int i = 0; i< HTAB_SIZE; i++) {
+        thtabItem* tempItem = htab[i];
+        thtabItem* delItem;
+        while(tempItem != NULL) {
+            delItem = tempItem;
+            tempItem = tempItem->next;
+            free(delItem);
+        }
+        htab[i] = NULL;
+    }
+}
+
 void printHtab(thtabItem* htab[]) {
     for (int i = 0; i< HTAB_SIZE; i++) {
         printf("|ROW %d|",i);
@@ -85,6 +122,20 @@ int main() {
 
     if(htabSearch(htab, kocka) != NULL) printf("Kocka je tam\n");       //test search
 
+    printHtab(htab);
+    printf("\n");
+    htabDelete(htab, "televiza");
+    printHtab(htab);
+    printf("\n");
+    htabDelete(htab, "kaock");
+    printHtab(htab);
+
+    htabInsert(htab, "kaock");
+    printf("\n");
+    printHtab(htab);
+
+    printf("\n");
+    htabDispose(htab);
     printHtab(htab);
     return 0;
 }

@@ -12,3 +12,15 @@ typedef struct thtabItem{
 
 
 typedef thtabItem* thTable[HTAB_SIZE];
+
+int hashFun(char* key);
+void htabInit(thtabItem* htab[]);
+thtabItem* htabSearch(thtabItem* htab[], char* key);
+void htabInsert(thtabItem* htab[], char* key);
+char* htabRead(thtabItem* htab[], char* key);
+void htabDelete(thtabItem* htab[], char* key);
+void htabDispose(thtabItem* htab[]);
+//TODO
+
+
+//void htClearAll ( tHTable* ptrht );
