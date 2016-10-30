@@ -54,509 +54,368 @@ void printType(Token* tokenPtr){
 	}
 }
 
-int syntaxCheck (int state, FILE *f,Token* tokenPtr){
-	int result;
-	switch (state){
-		
-//***************classBlock*******************//		
-		case 0:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_class:
-					printType(tokenPtr);
-					result=syntaxCheck(1,f,tokenPtr);	//to class
-					break;
-				case token_EOF:	//TODO check for first token EOF
-					printType(tokenPtr);
-					fprintf(stderr,"\nSyntax OK!\n\n");
-					break;	
-				default:
-					fprintf(stderr, "0: invalid token, class expected, got %d \n",tokenPtr ->type);
-					break;
-			}		
-			return result;
-			break;
-			
-//******************class*******************//
-		case 1:
-			tokenPtr = getToken(f);
-			if (tokenPtr->type == token_identifier){
-				printType(tokenPtr);
-				result=syntaxCheck(2,f,tokenPtr);	//to className
-			}else{ 
-				fprintf(stderr, "1: invalid token, identifier (of class) expected\n");
-			}
-			return result;
-			break;
-			
-//******************className*******************//			
-		case 2:
-			tokenPtr = getToken(f);
-			if (tokenPtr->type == token_bracketLeftCurly){
-				printType(tokenPtr);
-				result=syntaxCheck(3,f,tokenPtr);	//to classBody
-			}else{
-				fprintf(stderr, "2: invalid token, { expected, got %d\n",tokenPtr-> type);
-			}
-			return result;
-			break;
-			
-//******************classBody*******************//		
-		case 3:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketRightCurly:
-					printType(tokenPtr);
-					result=syntaxCheck(0,f,tokenPtr);	//back to classBlock
-					break;
-				case token_static:
-					printType(tokenPtr);
-					result=syntaxCheck(4,f,tokenPtr);	//to staticDeclaration
-					break;
-				
-				default:			
-					fprintf(stderr, "3: invalid token, got %d\n",tokenPtr-> type);
-					break;
-			}		
-			return result;
-			break;
-			
-//******************staticDeclaration*******************//		
-		case 4:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_int:
-					printType(tokenPtr);
-					result=syntaxCheck(17,f,tokenPtr);	//to staticName
-					break;
-				case token_double:
-					printType(tokenPtr);
-					result=syntaxCheck(17,f,tokenPtr);	//to staticName
-					break;
-				case token_String:
-					printType(tokenPtr);
-					result=syntaxCheck(17,f,tokenPtr);	//to staticName
-					break;
-				case token_void:
-					printType(tokenPtr);
-					result=syntaxCheck(5,f,tokenPtr);	//to functionName		
-					break;
-				default:	
-					printType(tokenPtr);
-					fprintf(stderr, "4: invalid token, got %d, expected type\n",tokenPtr-> type);
-					break;
-			}		
-			return result;
-			break;
-			
-//******************functionName*******************//		
-		case 5:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_identifier:
-					printType(tokenPtr);
-					result=syntaxCheck(6,f,tokenPtr);	//to functionArgumentsLeftBracket
-					break;
-				
-				default:			
-					fprintf(stderr, "5: invalid token, got %d, expected id\n",tokenPtr-> type);
-					break;
-			}		
-			return result;
-			break;		
-		
-//******************functionArgumentsLeftBracket*******************//			
-		case 6:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketLeftRound:
-					printType(tokenPtr);
-					result=syntaxCheck(7,f,tokenPtr);	//to functionArguments
-					break;
-				default:			
-						fprintf(stderr, "6: invalid token, got %d, expected left round bracket\n",tokenPtr-> type);
-						break;
-			}
-			return result;
-			break;
-				
-//******************functionArguments*******************//			
-		case 7:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketRightRound:
-					printType(tokenPtr);
-					result=syntaxCheck(10,f,tokenPtr);	//to functionBodyLeftBracket
-					break;
-				case token_int:
-					printType(tokenPtr);
-					result=syntaxCheck(8,f,tokenPtr);	//to functionArgumentsIdentifier
-					break;
-				case token_double:
-					printType(tokenPtr);
-					result=syntaxCheck(8,f,tokenPtr);	//to functionArgumentsIdentifier
-					break;		
-				case token_String:
-					printType(tokenPtr);
-					result=syntaxCheck(8,f,tokenPtr);	//to functionArgumentsIdentifier
-					break;									
-				default:			
-						fprintf(stderr, "7: invalid token, got %d, expected type or ) \n",tokenPtr-> type);
-						break;
-			}	
-			return result;
-			break;	
-				
-//******************functionArgumentsIdentifier*******************//			
-		case 8:		
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_identifier:
-					printType(tokenPtr);
-					result=syntaxCheck(9,f,tokenPtr);	//to functionArgumentsComma
-					break;
-				case token_bracketLeftRound:
-					printType(tokenPtr);
-					result=syntaxCheck(9,f,tokenPtr);	//to functionBody
-					break;	
-				default:
-					fprintf(stderr, "8: invalid token, got %d, expected identifier \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;
-			
-//******************functionArgumentsComma*******************//
-		case 9:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_comma:
-					printType(tokenPtr);
-					result=syntaxCheck(7,f,tokenPtr);	//to functionArguments
-					break;
-				case token_bracketRightRound:
-					printType(tokenPtr);
-					result=syntaxCheck(21,f,tokenPtr);	//to functionBodyLeftBracketExpected
-					break;	
-				default:
-					fprintf(stderr, "9: invalid token, got %d, expected identifier \n",tokenPtr-> type);
-					break;
-				
-			}
-			return result;
-			break;
-		
-//******************functionArgumentsRightBracket*******************//		
-		case 10:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketLeftCurly:
-					printType(tokenPtr);
-					result=syntaxCheck(11,f,tokenPtr);	//to functionBody
-					break;
-				default:			
-					fprintf(stderr, "10: invalid token, got %d, expected left curly bracket\n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;	
-				
-//******************functionBodyLeftBracket*******************//
-		case 11:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketRightCurly:
-					printType(tokenPtr);
-					result=syntaxCheck(3,f,tokenPtr);	//to classBody
-					break;
-				case token_int:
-					printType(tokenPtr);
-					result=syntaxCheck(12,f,tokenPtr);	//to localVarDeclaration
-					break;	
-				case token_double:
-					printType(tokenPtr);
-					result=syntaxCheck(12,f,tokenPtr);	//to localVarDeclaration
-					break;
-				case token_String:
-					printType(tokenPtr);
-					result=syntaxCheck(12,f,tokenPtr);	//to localVarDeclaration
-					break;	
-			//	case token_boolean:						//ROZSIRENI
-			//		printType(tokenPtr);
-			//		result=syntaxCheck(12,f,tokenPtr);	//to localVarDeclaration
-			//		break;	
-				case token_identifier:
-					printType(tokenPtr);
-					result=syntaxCheck(15,f,tokenPtr);	//to idInFunction
-					break;
-				case token_while:
-					printType(tokenPtr);
-					result=syntaxCheck(22,f,tokenPtr);	//to while
-					break;	
-				default:			
-					fprintf(stderr, "11: invalid token, got %d, expected }, type, id, function call\n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;	
-	
-//******************localVarDeclaration*******************//
-		case 12:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_identifier:
-					printType(tokenPtr);
-					result=syntaxCheck( 13,f,tokenPtr);	//to localVariableDecAssign
-					break;			
-				default:			
-					fprintf(stderr, "12: invalid token, got %d, expected ID\n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;	
-
-//******************localVariableDecAssign*******************//
-		case 13:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_assign:
-					printType(tokenPtr);
-					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
-					result=syntaxCheck( 14,f,tokenPtr);	//to semicollon
-					break;		
-				case token_semicolon:
-					printType(tokenPtr);				
-					result=syntaxCheck( 11,f,tokenPtr);	//to functionBody(leftBracket)
-					break;			
-				default:			
-					fprintf(stderr, "13: invalid token, got %d, expected = or ; \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;
-			
-//******************semicolon*******************//
-		case 14:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_semicolon:
-					printType(tokenPtr);
-					result=syntaxCheck( 11,f,tokenPtr);	//to functionBody(leftBracket)
-					break;			
-				default:			
-					fprintf(stderr, "14: invalid token, got %d, expected ; \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;
-
-//******************idInFunction*******************//
-		case 15:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_dot:
-					printType(tokenPtr);
-					result=syntaxCheck( 16,f,tokenPtr);	//to globalID.
-					break;		
-				case token_assign:
-					printType(tokenPtr);
-					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
-					result=syntaxCheck( 14,f,tokenPtr);	//to semicolon
-					break;
-				default:			
-					fprintf(stderr, "15: invalid token, got %d, expected . or = \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;
-
-//******************globalID*******************//
-		case 16:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_identifier:
-					printType(tokenPtr);
-					result=syntaxCheck( 18,f,tokenPtr);	//to fullIDVarAssign
-					break;		
-				default:			
-					fprintf(stderr, "16: invalid token, got %d, expected ID \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;
-			
-//******************staticName*******************//	
-		case 17:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_identifier:	
-					printType(tokenPtr);	//TODO EXPRESSION
-					result=syntaxCheck( 19,f,tokenPtr);	//to staticFuncOrVar
-					break;		
-				default:			
-					fprintf(stderr, "17: invalid token, got %d, expected = \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;			
-
-//******************fullIDVarAssign*******************//
-		case 18:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_assign:
-					printType(tokenPtr);		//TODO EXPRESSION OR FUNC CALL
-					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
-					result=syntaxCheck( 14,f,tokenPtr);	//to semicolon
-					break;		
-
-				default:			
-					fprintf(stderr, "18: invalid token, got %d, expected = \n",tokenPtr-> type);
-					break;
-				}
-			return result;
-			break;
-
-//******************staticFuncOrVar*******************//	
-		case 19:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_semicolon:	
-					printType(tokenPtr);
-					result=syntaxCheck( 3,f,tokenPtr);	//to classBody
-					break;		
-				case token_bracketLeftRound:	
-					printType(tokenPtr);	//TODO EXPRESSION
-					result=syntaxCheck( 7,f,tokenPtr);	//function Arguments
-					break;	
-				case token_assign:	
-					printType(tokenPtr);
-					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
-					result=syntaxCheck( 20,f,tokenPtr);	//to semicolon
-					break;		
-				default:			
-					fprintf(stderr, "19: invalid token, got %d, expected ; or ( or = \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;	
-			
-//*****************classSemicolon********************//
-		case 20:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_semicolon:	
-					printType(tokenPtr);
-					result=syntaxCheck( 3,f,tokenPtr);	//to classBody
-					break;		
-	
-				default:			
-					fprintf(stderr, "20: invalid token, got %d, expected ; \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;			
-		
-//**************functionBodyLeftBracketExpected*************//		
-		case 21:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketLeftCurly:	
-					printType(tokenPtr);
-					result=syntaxCheck( 11,f,tokenPtr);	//to functionBodyLeftBracket
-					break;		
-				default:			
-					fprintf(stderr, "21: invalid token, got %d, expected { \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;		
-
-//**********************while**********************//		
-		case 22:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketLeftRound:	
-					printType(tokenPtr);
-					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
-					result=syntaxCheck( 23,f,tokenPtr);	//to whileLeftBracket
-					break;		
-				default:			
-					fprintf(stderr, "22: invalid token, got %d, expected ( \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;		
-
-//**********************whileRightBracket**********************//		
-		case 23:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketRightRound:	
-					printType(tokenPtr);
-					result=syntaxCheck( 24,f,tokenPtr);	//to commandBlockBeginning
-					break;		
-				default:			
-					fprintf(stderr, "23: invalid token, got %d, expected ) \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;		
-	
-//**********************commandBlockBeginning**********************//		
-		case 24:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketLeftCurly:	
-					printType(tokenPtr);
-					result=syntaxCheck( 25,f,tokenPtr);	//to commandBlock
-					break;		
-				default:			
-					fprintf(stderr, "24: invalid token, got %d, expected { \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;		
-			
-//**********************commandBlock**********************//		
-		case 25:
-			tokenPtr = getToken(f);
-			switch (tokenPtr ->type){
-				case token_bracketRightCurly:	
-					printType(tokenPtr);
-					//result=syntaxCheck( ,f,tokenPtr);	//to
-					
-					break;		
-				default:			
-			fprintf(stderr, "25: invalid token, got %d, expected } \n",tokenPtr-> type);
-					break;
-			}
-			return result;
-			break;			
-					
-		
-		
-		
-		
-		
-		
-		
-		default:		
-			fprintf(stderr, "Syntax Error\n");
-			return -1;	
-	}
-}
-
 int runSyntaxAnalysis (FILE *f) {
 	
 
-	Token* tokenPtr = NULL;
-	int result = syntaxCheck(0,f,tokenPtr);
+	Token* tokenPtr = malloc(sizeof(Token));
+	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr);
 	result =result; //TODO delete me
-	
+	free(tokenPtr);
 	return result;
 }
 
+void getModifiedToken(FILE *f,Token* tokenPtr){
+	Token * tmpPtr= getToken(f);
+	memcpy(tokenPtr,tmpPtr,sizeof(Token));
+	
+}
+
+
+int syntaxCheck (int state, FILE *f,Token* tokenPtr){
+	int result=1;
+	switch (state){
+		
+//***************classBlock*******************//		
+		case CLASS_BLOCK:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if(tokenPtr->type != token_EOF){
+					if ((result=syntaxCheck( CLASS, f, tokenPtr))		!= 0) {goto EXIT;}
+					if ((result=syntaxCheck( CLASS_BLOCK, f, tokenPtr))		!= 0) {goto EXIT;}	
+			}else{
+				fprintf(stderr, "\nSyntax OK\n");
+			}
+			return 0;
+			break;
+			
+//******************class*******************//
+		case CLASS:		
+			if ((result=syntaxCheck( ID, f, tokenPtr))					!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 		
+			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr))	!= 0) {fprintf(stderr,"\n{\n");goto EXIT;}	
+			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr))			!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
+			if ((result=syntaxCheck( RIGHT_CURLY_BRACKET_CURRENT, f, tokenPtr))	!= 0) {fprintf(stderr,"\n}\n");goto EXIT;}
+
+			return 0;
+			break;
+			
+//******************ID*******************//			
+		case ID:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_identifier) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;
+			
+//******************ID_CURRENT*******************//			
+		case ID_CURRENT:
+			if (tokenPtr->type== token_identifier) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;			
+			
+//******************LEFT_CURLY_BRACKET*******************//			
+		case LEFT_CURLY_BRACKET:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_bracketLeftCurly) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;	
+			
+//******************Right_CURLY_BRACKET*******************//			
+		case RIGHT_CURLY_BRACKET:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_bracketRightCurly) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;	
+
+//******************RIGHT_CURLY_BRACKET_CURRENT*******************//			
+		case RIGHT_CURLY_BRACKET_CURRENT:
+			if (tokenPtr->type == token_bracketRightCurly) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;				
+			
+//******************CLASS_BODY*******************//			
+		case CLASS_BODY:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			switch (tokenPtr ->type){
+				case token_bracketRightCurly:
+					return 0;
+					break;	
+				case token_static:
+					if ((result=syntaxCheck( TYPE, f, tokenPtr))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;} 	
+					if ((result=syntaxCheck( ID, f, tokenPtr))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
+					getModifiedToken(f,tokenPtr);
+					printType(tokenPtr);
+					if (tokenPtr -> type == token_assign){
+						fprintf(stderr,"EXPRESSION HERE\n");
+						getModifiedToken(f,tokenPtr);
+						printType(tokenPtr);
+						break;
+					}else{
+						if (tokenPtr -> type == token_bracketLeftRound){
+							if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;} 	
+							break;
+						}
+					}
+					
+					if (tokenPtr -> type == token_semicolon){
+						break;
+					}
+					return result;
+					break;	
+				default:
+					return -1;	
+			}
+			
+			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr))			!= 0) {fprintf(stderr,"\nCBC\n");goto EXIT;} 
+			return result;			
+			break;	
+
+			
+			
+//******************FUNCTION_DECLARE*******************//			
+		case FUNCTION_DECLARE:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if(tokenPtr -> type == token_bracketRightRound){
+				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;} 
+			}else{
+				if ((result=syntaxCheck( TYPE_CURRENT, f, tokenPtr))	!= 0) {fprintf(stderr,"\nTYPE\n");goto EXIT;} 
+				if ((result=syntaxCheck( ID, f, tokenPtr))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 
+				getModifiedToken(f,tokenPtr);
+				printType(tokenPtr);
+				if(tokenPtr -> type == token_comma){
+					if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFD\n");goto EXIT;} 	
+				}else{
+					if(tokenPtr -> type == token_bracketRightRound){
+						if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
+					}
+				}
+			}
+			
+			return result;
+			break;		
+
+//******************TYPE*******************//			
+		case TYPE:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type == token_int) 	{return 0;}
+			if (tokenPtr->type == token_double) {return 0;}
+			if (tokenPtr->type == token_String) {return 0;}	
+			if (tokenPtr->type == token_void) 	{return 0;}
+		
+			
+			return -1;
+			break;	
+
+//******************TYPE_CURRENT*******************//			
+		case TYPE_CURRENT:
+			if (tokenPtr->type == token_int) 	{return 0;}
+			if (tokenPtr->type == token_double) {return 0;}
+			if (tokenPtr->type == token_String) {return 0;}	
+			if (tokenPtr->type == token_void) 	{return 0;}
+		
+			
+			return -1;
+			break;	
+
+//******************FN_BODY_BEGIN*******************//			
+		case FN_BODY_BEGIN:
+			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr))	!= 0) {fprintf(stderr,"\nLCB\n");goto EXIT;} 	
+			if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFB\n");goto EXIT;} 	
+		
+			return result;
+			break;	
+
+//******************FN_BODY*******************//			
+		case FN_BODY:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			switch(tokenPtr -> type){
+				case token_bracketRightCurly:
+					return 0;
+					break;
+				case token_identifier:
+					if ((result=syntaxCheck( ASSIGN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n=\n");goto EXIT;} 	
+					fprintf(stderr,"EXPRESSION HERE\n");
+					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;
+				case token_int:
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;
+				case token_while:
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+
+					return result;
+				default:
+					return -1;
+			}		
+			if ((result=syntaxCheck( FN_BODY_CURRENT, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFBC\n");goto EXIT;} 	
+		
+			return result;
+			break;	
+			
+//******************FN_BODY_CURRENT*******************//			
+		case FN_BODY_CURRENT:
+			switch(tokenPtr -> type){
+				case token_bracketRightCurly:
+					return 0;
+					break;
+				case token_identifier:
+					if ((result=syntaxCheck( ASSIGN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n=\n");goto EXIT;} 	
+					fprintf(stderr,"EXPRESSION HERE\n");
+					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;
+				case token_int:
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;
+				case token_while:
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+
+					return result;
+				default:
+					return -1;
+			}		
+			if ((result=syntaxCheck( FN_BODY_CURRENT, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFBC\n");goto EXIT;} 	
+		
+			return result;
+			break;				
+
+//******************ASSIGN*******************//			
+		case ASSIGN:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_assign) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;	
+
+//******************SEMICOLON*******************//			
+		case SEMICOLON:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_semicolon) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;	
+			
+//******************LEFT_ROUND*******************//			
+		case LEFT_ROUND:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_bracketLeftRound) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;	
+			
+//******************RIGHT_ROUND*******************//			
+		case RIGHT_ROUND:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_bracketRightRound) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;				
+
+//******************LOCAL_VAR_DEC*******************//			
+		case LOCAL_VAR_DEC:
+			if ((result=syntaxCheck( ID, f, tokenPtr))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 	
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			switch (tokenPtr -> type){
+				case token_semicolon:
+					return 0;
+				case token_assign:
+					if ((result=syntaxCheck( ID, f, tokenPtr))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 
+					getModifiedToken(f,tokenPtr);
+					printType(tokenPtr);
+					if(tokenPtr -> type == token_bracketLeftRound){
+						if ((result=syntaxCheck( FN_CALL, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 
+						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 
+						return result;
+					}
+				default:
+					return -1;
+			}
+
+			break;	
+
+//******************FN_CALL*******************//			
+		case FN_CALL:
+			if ((result=syntaxCheck( ID, f, tokenPtr))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if(tokenPtr -> type == token_comma){
+				if ((result=syntaxCheck( FN_CALL, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 
+				return result;
+			}else{
+				if(tokenPtr -> type == token_bracketLeftRound){
+					return 0;
+				}
+			}
+			break;		
+
+//******************COMMAND_BLOCK_BEGIN*******************//			
+		case COMMAND_BLOCK_BEGIN:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			switch (tokenPtr -> type){
+				case token_bracketLeftCurly:
+				if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;} 					
+					return result;
+					break;
+				default:
+					return -1;
+			}
+			break;
+//******************COMMAND_BLOCK*******************//			
+		case COMMAND_BLOCK:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			switch (tokenPtr -> type){
+				case token_bracketRightCurly:
+					return 0;
+					break;
+				default:
+					return -1;
+			}
+			break;
+			
 
 
 
@@ -564,6 +423,26 @@ int runSyntaxAnalysis (FILE *f) {
 
 
 
+
+
+			
+			
+			
+					
+		default:
+			fprintf(stderr,"Unexpected state\n");
+			return -1;
+			
+	EXIT:	
+		fprintf(stderr, "Syntax Error! Got: ");
+		printType(tokenPtr);
+		exit(2);
+		return result;
+		
+
+	}
+	return result;
+}
 
 
 
