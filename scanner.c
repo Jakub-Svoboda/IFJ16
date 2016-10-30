@@ -83,13 +83,13 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	int buffSize = BUFFER_SIZE;
 	char *buff = (char*) malloc(buffSize * sizeof(char));
 
-//	buffSize *= 2;
+//	buffSize += 2;
 //    buff = realloc(buff, buffSize);
 
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
 //	char buff[1024];
-    int c, position = 0, tempc, kwIndex, isDouble;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
+    int c, position = 0, tempc, kwIndex, isDouble, isComplex;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
 	State_type state = state_default;					//choose between states
 	//t = malloc(sizeof(Token));
 	//tokenInit(t);
@@ -105,11 +105,12 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 		//printf("%c,",c);
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
-				if(isalpha(c) || isdigit(c)){			//id's may contain numbers and characters
+				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex)){			//id's may contain numbers and characters or 1 dot
+					if(c == '.') isComplex = 0;
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize *= 2;
+						buffSize += 2;
 					    buff = realloc(buff, buffSize);
 					}
 				}else {									//end of allowed chars
@@ -125,6 +126,8 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						t->type = token_identifier;				//it's not keyword so return as id
 					}
 					position = 0;								//reset position of buffer
+					isComplex = 0;								//reset isComplex
+					//printf("%s  ",buff);
 					return t;
 				}
 				break;
@@ -132,7 +135,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				buff[position] = c;
 				position++;
 				if(position+2 == buffSize) {
-					buffSize *= 2;
+					buffSize += 2;
 					buff = realloc(buff, buffSize);
 				}
 				if(c == '\"' && buff[position-2] != '\\') {		//looking for " but only if previous char is not '\', so '\"' is not matching
@@ -156,14 +159,14 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize *= 2;
+						buffSize += 2;
 						buff = realloc(buff, buffSize);
 					}
 				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize *= 2;
+						buffSize += 2;
 						buff = realloc(buff, buffSize);
 					}
 				}else { //Osetrit double				//is this OK now?
