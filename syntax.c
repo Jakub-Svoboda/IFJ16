@@ -147,6 +147,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 			}else{
 				return -1;
 			} 
+			break;
+
+//******************ELSE*******************//			
+		case ELSE:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type == token_else) {
+				return 0;
+			}else{
+				return -1;
+			} 
 			break;				
 			
 //******************CLASS_BODY*******************//			
@@ -267,8 +278,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					fprintf(stderr,"EXPRESSION HERE\n");	
 					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
+				case token_if:
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( ELSE, f, tokenPtr))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;	
 				default:
 					return -1;
 			}		
@@ -298,15 +318,24 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					fprintf(stderr,"EXPRESSION HERE\n");	
 					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
+				case token_if:
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n)\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( ELSE, f, tokenPtr))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;	
 				default:
 					return -1;
 			}		
 			if ((result=syntaxCheck( FN_BODY_CURRENT, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFBC\n");goto EXIT;} 	
 		
 			return result;
-			break;				
+			break;			
 
 //******************ASSIGN*******************//			
 		case ASSIGN:
@@ -403,6 +432,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					return -1;
 			}
 			break;
+			
 //******************COMMAND_BLOCK*******************//			
 		case COMMAND_BLOCK:
 			getModifiedToken(f,tokenPtr);
