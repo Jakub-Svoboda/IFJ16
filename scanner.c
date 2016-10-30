@@ -105,7 +105,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 		//printf("%c,",c);
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
-				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex)){			//id's may contain numbers and characters or 1 dot
+				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0)){			//id's may contain numbers and characters or 1 dot
 					if(c == '.') isComplex = 0;
 					buff[position] = c;
 					position++;
