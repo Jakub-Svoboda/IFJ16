@@ -33,7 +33,7 @@ typedef enum state{
 	RIGHT_ROUND,
 	COMMAND_BLOCK_BEGIN,
 	COMMAND_BLOCK,
-	ELSE
-	
+	ELSE,
+	BREAK
 	
 }	State;
