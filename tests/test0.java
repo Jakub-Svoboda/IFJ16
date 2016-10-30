@@ -1,14 +1,13 @@
 class Main {
 	static int a;
-	static void run() {
+	static void run(int i, double d, String s) {
 		int a;
 		a = ;
 		double x = ;
 		String y = ;
-		x=;
-		y=;
-		
+		main.x=;
+		while(){
+			
+		}
 	}
-
-	static int a =;
 }

@@ -68,10 +68,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					break;
 				case token_EOF:	//TODO check for first token EOF
 					printType(tokenPtr);
-					fprintf(stderr,"Syntax OK\n");
+					fprintf(stderr,"\nSyntax OK!\n\n");
 					break;	
 				default:
-					fprintf(stderr, "invalid token, class expected, got %d \n",tokenPtr ->type);
+					fprintf(stderr, "0: invalid token, class expected, got %d \n",tokenPtr ->type);
 					break;
 			}		
 			return result;
@@ -84,7 +84,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 				printType(tokenPtr);
 				result=syntaxCheck(2,f,tokenPtr);	//to className
 			}else{ 
-				fprintf(stderr, "invalid token, identifier (of class) expected\n");
+				fprintf(stderr, "1: invalid token, identifier (of class) expected\n");
 			}
 			return result;
 			break;
@@ -96,7 +96,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 				printType(tokenPtr);
 				result=syntaxCheck(3,f,tokenPtr);	//to classBody
 			}else{
-				fprintf(stderr, "invalid token, { expected, got %d\n",tokenPtr-> type);
+				fprintf(stderr, "2: invalid token, { expected, got %d\n",tokenPtr-> type);
 			}
 			return result;
 			break;
@@ -115,7 +115,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					break;
 				
 				default:			
-					fprintf(stderr, "invalid token, got %d\n",tokenPtr-> type);
+					fprintf(stderr, "3: invalid token, got %d\n",tokenPtr-> type);
 					break;
 			}		
 			return result;
@@ -143,7 +143,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					break;
 				default:	
 					printType(tokenPtr);
-					fprintf(stderr, "invalid token, got %d, expected type\n",tokenPtr-> type);
+					fprintf(stderr, "4: invalid token, got %d, expected type\n",tokenPtr-> type);
 					break;
 			}		
 			return result;
@@ -159,7 +159,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					break;
 				
 				default:			
-					fprintf(stderr, "invalid token, got %d, expected id\n",tokenPtr-> type);
+					fprintf(stderr, "5: invalid token, got %d, expected id\n",tokenPtr-> type);
 					break;
 			}		
 			return result;
@@ -174,7 +174,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck(7,f,tokenPtr);	//to functionArguments
 					break;
 				default:			
-						fprintf(stderr, "invalid token, got %d, expected left round bracket\n",tokenPtr-> type);
+						fprintf(stderr, "6: invalid token, got %d, expected left round bracket\n",tokenPtr-> type);
 						break;
 			}
 			return result;
@@ -199,13 +199,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 				case token_String:
 					printType(tokenPtr);
 					result=syntaxCheck(8,f,tokenPtr);	//to functionArgumentsIdentifier
-					break;			
-				case token_void:
-					printType(tokenPtr);
-					result=syntaxCheck(8,f,tokenPtr);	//to functionArgumentsIdentifier
-					break;							
+					break;									
 				default:			
-						fprintf(stderr, "invalid token, got %d, expected type or ) \n",tokenPtr-> type);
+						fprintf(stderr, "7: invalid token, got %d, expected type or ) \n",tokenPtr-> type);
 						break;
 			}	
 			return result;
@@ -224,7 +220,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck(9,f,tokenPtr);	//to functionBody
 					break;	
 				default:
-					fprintf(stderr, "invalid token, got %d, expected identifier \n",tokenPtr-> type);
+					fprintf(stderr, "8: invalid token, got %d, expected identifier \n",tokenPtr-> type);
 					break;
 			}
 			return result;
@@ -240,10 +236,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					break;
 				case token_bracketRightRound:
 					printType(tokenPtr);
-					result=syntaxCheck(11,f,tokenPtr);	//to functionBodyLeftBracket
+					result=syntaxCheck(21,f,tokenPtr);	//to functionBodyLeftBracketExpected
 					break;	
 				default:
-					fprintf(stderr, "invalid token, got %d, expected identifier \n",tokenPtr-> type);
+					fprintf(stderr, "9: invalid token, got %d, expected identifier \n",tokenPtr-> type);
 					break;
 				
 			}
@@ -259,8 +255,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck(11,f,tokenPtr);	//to functionBody
 					break;
 				default:			
-						fprintf(stderr, "invalid token, got %d, expected left curly bracket\n",tokenPtr-> type);
-						break;
+					fprintf(stderr, "10: invalid token, got %d, expected left curly bracket\n",tokenPtr-> type);
+					break;
 			}
 			return result;
 			break;	
@@ -293,8 +289,12 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					printType(tokenPtr);
 					result=syntaxCheck(15,f,tokenPtr);	//to idInFunction
 					break;
+				case token_while:
+					printType(tokenPtr);
+					result=syntaxCheck(22,f,tokenPtr);	//to while
+					break;	
 				default:			
-					fprintf(stderr, "invalid token, got %d, expected }, type, id, function call\n",tokenPtr-> type);
+					fprintf(stderr, "11: invalid token, got %d, expected }, type, id, function call\n",tokenPtr-> type);
 					break;
 			}
 			return result;
@@ -309,7 +309,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck( 13,f,tokenPtr);	//to localVariableDecAssign
 					break;			
 				default:			
-					fprintf(stderr, "invalid token, got %d, expected ID\n",tokenPtr-> type);
+					fprintf(stderr, "12: invalid token, got %d, expected ID\n",tokenPtr-> type);
 					break;
 			}
 			return result;
@@ -329,7 +329,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck( 11,f,tokenPtr);	//to functionBody(leftBracket)
 					break;			
 				default:			
-					fprintf(stderr, "invalid token, got %d, expected = or ; \n",tokenPtr-> type);
+					fprintf(stderr, "13: invalid token, got %d, expected = or ; \n",tokenPtr-> type);
 					break;
 			}
 			return result;
@@ -344,7 +344,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck( 11,f,tokenPtr);	//to functionBody(leftBracket)
 					break;			
 				default:			
-					fprintf(stderr, "invalid token, got %d, expected ; \n",tokenPtr-> type);
+					fprintf(stderr, "14: invalid token, got %d, expected ; \n",tokenPtr-> type);
 					break;
 			}
 			return result;
@@ -364,7 +364,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					result=syntaxCheck( 14,f,tokenPtr);	//to semicolon
 					break;
 				default:			
-					fprintf(stderr, "invalid token, got %d, expected . or = \n",tokenPtr-> type);
+					fprintf(stderr, "15: invalid token, got %d, expected . or = \n",tokenPtr-> type);
 					break;
 			}
 			return result;
@@ -376,9 +376,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 			switch (tokenPtr ->type){
 				case token_identifier:
 					printType(tokenPtr);
-					result=syntaxCheck( 18,f,tokenPtr);	//to globalVarAssign
+					result=syntaxCheck( 18,f,tokenPtr);	//to fullIDVarAssign
 					break;		
-
 				default:			
 					fprintf(stderr, "16: invalid token, got %d, expected ID \n",tokenPtr-> type);
 					break;
@@ -401,12 +400,12 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 			return result;
 			break;			
 
-//******************globalVarAssign*******************//
+//******************fullIDVarAssign*******************//
 		case 18:
 			tokenPtr = getToken(f);
 			switch (tokenPtr ->type){
 				case token_assign:
-					printType(tokenPtr);		//TODO EXPRESSION
+					printType(tokenPtr);		//TODO EXPRESSION OR FUNC CALL
 					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
 					result=syntaxCheck( 14,f,tokenPtr);	//to semicolon
 					break;		
@@ -441,6 +440,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 			}
 			return result;
 			break;	
+			
 //*****************classSemicolon********************//
 		case 20:
 			tokenPtr = getToken(f);
@@ -457,6 +457,83 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 			return result;
 			break;			
 		
+//**************functionBodyLeftBracketExpected*************//		
+		case 21:
+			tokenPtr = getToken(f);
+			switch (tokenPtr ->type){
+				case token_bracketLeftCurly:	
+					printType(tokenPtr);
+					result=syntaxCheck( 11,f,tokenPtr);	//to functionBodyLeftBracket
+					break;		
+				default:			
+					fprintf(stderr, "21: invalid token, got %d, expected { \n",tokenPtr-> type);
+					break;
+			}
+			return result;
+			break;		
+
+//**********************while**********************//		
+		case 22:
+			tokenPtr = getToken(f);
+			switch (tokenPtr ->type){
+				case token_bracketLeftRound:	
+					printType(tokenPtr);
+					fprintf(stderr, "EXPRESSION HERE\n");	//TODO precedence analysis
+					result=syntaxCheck( 23,f,tokenPtr);	//to whileLeftBracket
+					break;		
+				default:			
+					fprintf(stderr, "22: invalid token, got %d, expected ( \n",tokenPtr-> type);
+					break;
+			}
+			return result;
+			break;		
+
+//**********************whileRightBracket**********************//		
+		case 23:
+			tokenPtr = getToken(f);
+			switch (tokenPtr ->type){
+				case token_bracketRightRound:	
+					printType(tokenPtr);
+					result=syntaxCheck( 24,f,tokenPtr);	//to commandBlockBeginning
+					break;		
+				default:			
+					fprintf(stderr, "23: invalid token, got %d, expected ) \n",tokenPtr-> type);
+					break;
+			}
+			return result;
+			break;		
+	
+//**********************commandBlockBeginning**********************//		
+		case 24:
+			tokenPtr = getToken(f);
+			switch (tokenPtr ->type){
+				case token_bracketLeftCurly:	
+					printType(tokenPtr);
+					result=syntaxCheck( 25,f,tokenPtr);	//to commandBlock
+					break;		
+				default:			
+					fprintf(stderr, "24: invalid token, got %d, expected { \n",tokenPtr-> type);
+					break;
+			}
+			return result;
+			break;		
+			
+//**********************commandBlock**********************//		
+		case 25:
+			tokenPtr = getToken(f);
+			switch (tokenPtr ->type){
+				case token_bracketRightCurly:	
+					printType(tokenPtr);
+					//result=syntaxCheck( ,f,tokenPtr);	//to
+					
+					break;		
+				default:			
+			fprintf(stderr, "25: invalid token, got %d, expected } \n",tokenPtr-> type);
+					break;
+			}
+			return result;
+			break;			
+					
 		
 		
 		
@@ -464,12 +541,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 		
 		
 		
-		
-		
-		
-		
-		
-		default:		fprintf(stderr, "Syntax Error\n");
+		default:		
+			fprintf(stderr, "Syntax Error\n");
 			return -1;	
 	}
 }
