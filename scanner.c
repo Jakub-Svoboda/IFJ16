@@ -125,7 +125,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					}else {
 						//TODO add buffered string to hashtable and link pointer
 						t->type = token_identifier;				//it's not keyword so return as id
-						printf("%s\n",buff);
+						//printf("%s\n",buff);
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
