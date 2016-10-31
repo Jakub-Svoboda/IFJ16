@@ -11,7 +11,7 @@ typedef struct{
 	int top;
 }tStack;
 
-void getModifiedTokenPrecedence(FILE *f,Token* tokenPtr);
+Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr);
 void stackPush(tStack *s,Token *Token);
 void stackPop(tStack* s);
 Token* stackTop(tStack *s);

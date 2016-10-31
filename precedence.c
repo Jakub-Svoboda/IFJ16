@@ -31,12 +31,11 @@ void printStack(tStack* s){
 		fprintf(stderr,"\n");
 	}
 
-void getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
+Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 	Token * tmpPtr= getToken(f);
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));
-	
+	return tmpPtr;
 }
-	
 	
 int whatRule(tStack* stack){
 	int rule;	
@@ -197,6 +196,7 @@ int whatRule(tStack* stack){
 						
 					default:
 						fprintf(stderr,"Unexpected token\n");
+						exit(2);//TODO improve?
 						break;
 						
 				}
@@ -227,7 +227,7 @@ int whatRule(tStack* stack){
 				break;
 			default:
 				fprintf(stderr,"Unexpected token\n");
-				
+				exit(2);//TODO improve?
 				break;
 			
 		}	
@@ -285,12 +285,15 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 				stackPush(stack, toBePushed);
 				stackPush(stack, tmpPtr);					//push E back from temporary ptr
 				stackPush(stack, tokenPtr);					//push input token
+				printStack(stack);
+
 			}else{
 				toBePushed -> type = token_leftHandle;		//IF E is not top token
 				stackPush(stack, toBePushed);				//push left handle and input TOken
 				stackPush(stack, tokenPtr);	
 			}
-			 printStack(stack);
+			printStack(stack);
+			
 			break;											//Break the cycle to get new token
 		}
 		if(whatToDo == '>'){				//IF precedence table returns >, we reduce	
@@ -325,7 +328,12 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			toBePushedE->type = token_expression;		// push E
 			stackPush(stack, toBePushedE);
 			break;		
-		}		
+		}
+		if(whatToDo == '0'){
+			fprintf(stderr,"Syntax Error\n");	//TODO improve?
+			exit(2);
+			
+		}	
 	}
 	
 
@@ -363,18 +371,20 @@ int stackEmpty (tStack* s){
 }
 
 int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){	
+	Token * tokenPtrTmp2 = malloc(sizeof(Token));
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
 	Token* tokenPtrTmp = tokenInit();			//init for the first $
 	tokenPtrTmp->type=token_dollar;
 	stackPush(stack,tokenPtrTmp);
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
-
+	int tokenCnt =0;
 	int depth=0;	//Defines how many brackets are yet to come to finish expression
 	while(1){
-		getModifiedTokenPrecedence(f,tokenPtr);
-		
+		tokenCnt++;
+		Token* precedencePtr = getModifiedTokenPrecedence(f,tokenPtr);
 		if (tokenPtr->type==token_semicolon){
+			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
 			stackTopPtr=stackTopTerminal(stack);
 			fprintf(stderr,"Stak top ptr is: %d\n",tokenPtr->type);
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
@@ -384,22 +394,21 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){
 		}
 		if (tokenPtr->type == token_bracketLeftRound){depth++;}	
 		if (tokenPtr->type == token_bracketRightRound){
+			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
 			depth--;
 			if (depth<0){
 				Token* tokenPtrTmp = tokenInit();			//init for the last $
 				tokenPtrTmp->type = token_dollar;
 				reduction(tokenPtrTmp,stackTopPtr,stack);
-				fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
+				//fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
 				return 0;
 			}
 		}
 		stackTopPtr = stackTopTerminal(stack);
-		
-		
-		reduction(tokenPtr, stackTopPtr, stack);	
+		reduction(precedencePtr, stackTopPtr, stack);	
 	
 	}
-
+	free(tokenPtrTmp2);
 	free(stack);	
 	return 0;
 }
