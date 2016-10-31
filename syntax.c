@@ -66,14 +66,12 @@ int runSyntaxAnalysis (FILE *f) {
 
 void getModifiedToken(FILE *f,Token* tokenPtr){
 	Token * tmpPtr= getToken(f);
-	memcpy(tokenPtr,tmpPtr,sizeof(Token));
-	
+	memcpy(tokenPtr,tmpPtr,sizeof(Token));	
 }
 
 void getModifiedLookAhead(FILE *f,Token* tokenPtr){
 	Token * tmpPtr= lookAhead(f,0);
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));
-	
 }
 
 int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){

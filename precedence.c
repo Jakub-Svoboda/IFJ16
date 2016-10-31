@@ -202,6 +202,9 @@ int whatRule(tStack* stack){
 				}
 				break;
 			case token_identifier:											//2nd token is i	
+				case token_intNumber:
+				case token_doubleNumber:
+				case token_string:
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
@@ -266,10 +269,22 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 	Token *toBePushed = malloc(sizeof(Token));	
-	while(1){	
-		//fprintf(stderr,"type in reduciton: %d\n",stackTopPtr->type);
+	while(1){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
-		char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];	//check precedence table 
+		char whatToDo;	//This deals with how to access the precedence table when number or string gets on input/ stack top
+		if ((tokenPtr -> type) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
+			if ((stackTopPtr-> type ) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
+				whatToDo = precedence_table[token_identifier][ token_identifier];
+			}else{
+				whatToDo = precedence_table[stackTopPtr -> type][ token_identifier];
+			}
+		}else{
+			if ((stackTopPtr-> type ) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
+				whatToDo = precedence_table[token_identifier][ tokenPtr->type];
+			}else{
+				whatToDo = precedence_table[stackTopPtr->type][ tokenPtr->type];
+			}
+		}
 		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
 		printf("stack top is %d\n", stackTopPtr->type);
 		printf("What to do is: %c\n\n",whatToDo);	

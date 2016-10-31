@@ -1,4 +1,7 @@
 class Main {
-	static int a = a;
-	
+	static int a (){
+		while("a"){}
+		
+		
+	}
 }
