@@ -320,7 +320,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 		}
 	}	//while 1 ends here
 }
-
+/*
   ///TESTING SECTION DON'T DELETE
 void identifyToken(Token *tempTok) {
 	if(tempTok->type == token_identifier) printf("id ");
