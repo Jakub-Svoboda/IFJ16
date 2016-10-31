@@ -36,6 +36,7 @@ typedef enum state{
 	COMMAND_BLOCK_BEGIN,
 	COMMAND_BLOCK,
 	ELSE,
-	BREAK
+	BREAK,
+	FN_CALL_COMMA
 	
 }	State;

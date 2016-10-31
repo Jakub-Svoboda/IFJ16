@@ -1,8 +1,4 @@
 class Main {
+	static int a = a;
 	
-	static void a (){
-		int a = a();
-
-	}
 }
-

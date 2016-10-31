@@ -40,7 +40,6 @@ void getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 	
 int whatRule(tStack* stack){
 	int rule;	
-	tStack* bufferStack = malloc(sizeof(tStack));				//temporar stack where we push the tokens to be reduced
 	Token* tokenPtr = malloc(sizeof(Token));
 	
 	tokenPtr = stackTop(stack);				//read top of the stack
@@ -242,7 +241,7 @@ int whatRule(tStack* stack){
 
 	//free(tokenPtr);
 	
-	free(bufferStack);
+	
 	return rule;
 }	
 
@@ -268,6 +267,7 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 	Token *toBePushed = malloc(sizeof(Token));	
 	while(1){	
+		//fprintf(stderr,"type in reduciton: %d\n",stackTopPtr->type);
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
 		char whatToDo = precedence_table[stackTopPtr -> type][ tokenPtr -> type];	//check precedence table 
 		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
@@ -373,7 +373,10 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){
 	int depth=0;	//Defines how many brackets are yet to come to finish expression
 	while(1){
 		getModifiedTokenPrecedence(f,tokenPtr);
+		
 		if (tokenPtr->type==token_semicolon){
+			stackTopPtr=stackTopTerminal(stack);
+			fprintf(stderr,"Stak top ptr is: %d\n",tokenPtr->type);
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
 			tokenPtrTmp->type = token_dollar;
 			reduction(tokenPtrTmp,stackTopPtr,stack);
@@ -390,10 +393,12 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){
 				return 0;
 			}
 		}
-		stackTopPtr = stackTop(stack);
-		if(tokenPtr -> type != token_semicolon)
+		stackTopPtr = stackTopTerminal(stack);
+		
+		
 		reduction(tokenPtr, stackTopPtr, stack);	
-	};
+	
+	}
 
 	free(stack);	
 	return 0;

@@ -163,7 +163,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 			}else{
 				return -1;
 			} 
-			break;				
+			break;	
+
+			
 			
 //******************CLASS_BODY*******************//			
 		case CLASS_BODY:
@@ -179,8 +181,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					getModifiedToken(f,tokenPtr);
 					printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
+						
 						fprintf(stderr,"EXPRESSION HERE\n");
-						getModifiedToken(f,tokenPtr);
+						runPrecedenceAnalysis(f,tokenPtr);
+						if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						printType(tokenPtr);
 						break;
 					}else{
@@ -269,8 +273,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					return 0;
 					break;
 				case token_identifier:
-					if ((result=syntaxCheck( ASSIGN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n=\n");goto EXIT;} 	
-					fprintf(stderr,"EXPRESSION HERE\n");
+					lookAheadPtr = lookAhead(f,1);
+					if(lookAheadPtr -> type == token_bracketLeftRound){
+						getModifiedLookAhead(f,tokenPtr);
+						printType(tokenPtr);
+						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 	
+					}else{
+						getModifiedLookAhead(f,tokenPtr);
+						printType(tokenPtr);
+						if ((result=syntaxCheck( ASSIGN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n=\n");goto EXIT;} 	
+						fprintf(stderr,"EXPRESSION HERE\n");
+					}
 					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 	
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
 					break;
@@ -278,6 +291,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
 					break;
+				case token_String:
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;	
+				case token_double:
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;		
 				case token_while:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					fprintf(stderr,"EXPRESSION HERE\n");	
@@ -314,8 +335,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					return 0;
 					break;
 				case token_identifier:
-					if ((result=syntaxCheck( ASSIGN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n=\n");goto EXIT;} 	
-					fprintf(stderr,"EXPRESSION HERE\n");
+					lookAheadPtr = lookAhead(f,1);
+					if(lookAheadPtr -> type == token_bracketLeftRound){
+						getModifiedLookAhead(f,tokenPtr);
+						printType(tokenPtr);
+						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 	
+					}else{
+						getModifiedLookAhead(f,tokenPtr);
+						printType(tokenPtr);
+						if ((result=syntaxCheck( ASSIGN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n=\n");goto EXIT;} 	
+						fprintf(stderr,"EXPRESSION HERE\n");
+					}
 					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 	
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
 					break;
@@ -323,6 +353,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
 					break;
+				case token_String:
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;	
+				case token_double:
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;} 	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;} 	
+					break;		
 				case token_while:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					fprintf(stderr,"EXPRESSION HERE\n");	
@@ -333,7 +371,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 				case token_if:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					fprintf(stderr,"EXPRESSION HERE\n");	
-					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n)\n");goto EXIT;}
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
 					if ((result=syntaxCheck( ELSE, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
@@ -343,7 +381,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					fprintf(stderr,"EXPRESSION HERE\n");	
 					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}					
-					return result;
+					return result;	
 				default:
 					return -1;
 			}		
@@ -432,18 +470,40 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 
 //******************FN_CALL*******************//			
 		case FN_CALL:
-			if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 
 			getModifiedToken(f,tokenPtr);
 			printType(tokenPtr);
-			if(tokenPtr -> type == token_comma){
-				if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 
-				return result;
-			}else{
-				if(tokenPtr -> type == token_bracketLeftRound){
+			switch (tokenPtr ->type){
+				case token_bracketRightRound:
 					return 0;
-				}
+					break;
+				case token_identifier:
+					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;} 
+					return result;
+					break;
+				default:
+					return -1;	
 			}
-			break;		
+			
+			break;	
+
+//******************FN_CALL_COMMA*******************//			
+		case FN_CALL_COMMA:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			switch (tokenPtr ->type){
+				case token_bracketRightRound:
+					return 0;
+					break;
+				case token_comma:
+					if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;} 
+					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;} 
+					return result;
+					break;
+				default:
+					return -1;		
+			}
+			
+			break;				
 
 //******************COMMAND_BLOCK_BEGIN*******************//			
 		case COMMAND_BLOCK_BEGIN:
