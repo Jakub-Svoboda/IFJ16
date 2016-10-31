@@ -289,6 +289,11 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;	
+				case token_break:
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}					
+					return result;	
 				default:
 					return -1;
 			}		
@@ -329,6 +334,11 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;	
+				case token_break:
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}					
+					return result;
 				default:
 					return -1;
 			}		
@@ -375,6 +385,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 			getModifiedToken(f,tokenPtr);
 			printType(tokenPtr);
 			if (tokenPtr->type== token_bracketRightRound) {
+				return 0;
+			}else{
+				return -1;
+			} 
+			break;	
+			
+//******************BREAK*******************//			
+		case BREAK:
+			getModifiedToken(f,tokenPtr);
+			printType(tokenPtr);
+			if (tokenPtr->type== token_break) {
 				return 0;
 			}else{
 				return -1;
@@ -441,6 +462,27 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr){
 				case token_bracketRightCurly:
 					return 0;
 					break;
+				case token_while:
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;
+				case token_if:
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( RIGHT_ROUND, f, tokenPtr))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( ELSE, f, tokenPtr))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;		
+				case token_break:
+					fprintf(stderr,"EXPRESSION HERE\n");	
+					if ((result=syntaxCheck( SEMICOLON, f, tokenPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}					
+					return result;
 				default:
 					return -1;
 			}
