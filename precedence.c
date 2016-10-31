@@ -273,13 +273,13 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
 		char whatToDo;	//This deals with how to access the precedence table when number or string gets on input/ stack top
 		if ((tokenPtr -> type) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
-			if ((stackTopPtr-> type ) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
+			if ((stackTopPtr-> type ) == token_intNumber || (stackTopPtr -> type) == token_doubleNumber || (stackTopPtr -> type) == token_string){
 				whatToDo = precedence_table[token_identifier][ token_identifier];
 			}else{
 				whatToDo = precedence_table[stackTopPtr -> type][ token_identifier];
 			}
 		}else{
-			if ((stackTopPtr-> type ) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
+			if ((stackTopPtr-> type ) == token_intNumber || (stackTopPtr -> type) == token_doubleNumber || (stackTopPtr -> type) == token_string){
 				whatToDo = precedence_table[token_identifier][ tokenPtr->type];
 			}else{
 				whatToDo = precedence_table[stackTopPtr->type][ tokenPtr->type];
