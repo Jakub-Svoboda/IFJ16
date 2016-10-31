@@ -1,5 +1,6 @@
 #include "precedence.h"
 
+
 char precedence_table[14][14]={					
 //input 	
 //+   -   *   /   <   >  <=  >=  ==  !=	  (	  )   i   $ 	  
@@ -30,6 +31,13 @@ void printStack(tStack* s){
 		fprintf(stderr,"\n");
 	}
 
+void getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
+	Token * tmpPtr= getToken(f);
+	memcpy(tokenPtr,tmpPtr,sizeof(Token));
+	
+}
+	
+	
 int whatRule(tStack* stack){
 	int rule;	
 	tStack* bufferStack = malloc(sizeof(tStack));				//temporar stack where we push the tokens to be reduced
@@ -354,19 +362,17 @@ int stackEmpty (tStack* s){
 	return(-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE* f){	
+int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){	
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
 	Token* tokenPtrTmp = tokenInit();			//init for the first $
 	tokenPtrTmp->type=token_dollar;
 	stackPush(stack,tokenPtrTmp);
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
-	Token* tokenPtr=NULL;
-	
 
 	int depth=0;	//Defines how many brackets are yet to come to finish expression
 	while(1){
-		tokenPtr= getToken(f);
+		getModifiedTokenPrecedence(f,tokenPtr);
 		if (tokenPtr->type==token_semicolon){
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
 			tokenPtrTmp->type = token_dollar;
