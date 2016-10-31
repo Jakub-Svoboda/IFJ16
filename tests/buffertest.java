@@ -1,2 +1,1 @@
-String string = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam ante. Integer in sapien. Pellentesque pretium lectus id turpis. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. Maecenas sollicitudin. Nullam justo enim, consectetuer nec, ullamcorper ac, vestibulum in, elit. Nullam dapibus fermentum ipsum. Donec ipsum massa, ullamcorper in, auctor et, scelerisque sed, est. Nullam dapibus fermentum ipsum. Vivamus luctus egestas leo. Praesent in mauris eu tortor porttitor accumsan. Donec vitae arcu."
-int noveAlokovanyNazevIntegeruKteryseFaktNevlezeDodefaultuAlsponDoufamAleCoUzVsakToUvidimAzTentoProgramSpustim = 0;
+keko.kek kekel.kek ke.kel keke.kekekl

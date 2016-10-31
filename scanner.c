@@ -80,6 +80,7 @@ Token *lookAhead(FILE *f, int steps) { //TODO : Is there better way of passing F
 }
 
 Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Call lookAhead instead of getToken();
+							// Lex errors: id. is not ok
 	int buffSize = BUFFER_SIZE;
 	char *buff = (char*) malloc(buffSize * sizeof(char));
 
@@ -89,7 +90,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
 //	char buff[1024];
-    int c, position = 0, tempc, kwIndex, isDouble, isComplex;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
+    int c, position = 0, tempc, kwIndex = 0, isDouble = 0, isComplex = 0;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
 	State_type state = state_default;					//choose between states
 	//t = malloc(sizeof(Token));
 	//tokenInit(t);
@@ -106,7 +107,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
 				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0)){			//id's may contain numbers and characters or 1 dot
-					if(c == '.') isComplex = 0;
+					if(c == '.') isComplex = 1;
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
@@ -124,6 +125,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					}else {
 						//TODO add buffered string to hashtable and link pointer
 						t->type = token_identifier;				//it's not keyword so return as id
+						printf("%s\n",buff);
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
@@ -319,7 +321,6 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	}	//while 1 ends here
 }
 
-/*
   ///TESTING SECTION DON'T DELETE
 void identifyToken(Token *tempTok) {
 	if(tempTok->type == token_identifier) printf("id ");
@@ -386,5 +387,3 @@ int main(int argc, char *argv[]) {
 	return 1;
 
 }
-
-*/
