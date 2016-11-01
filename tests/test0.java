@@ -1,8 +1,7 @@
 class Main {
-	static int x =;
-	static void a (){
-		while(){}
-
+	static int a (){
+		while("a"+0+"a"){}
+		
+		
 	}
 }
-

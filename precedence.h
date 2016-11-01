@@ -5,16 +5,18 @@
 #include <string.h>
 
 
+
 typedef struct{
 	Token *arr[MAX_STACK];		//1024 2 when indexed from 0
 	int top;
 }tStack;
 
+Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr);
 void stackPush(tStack *s,Token *Token);
 void stackPop(tStack* s);
 Token* stackTop(tStack *s);
 int stackEmpty(tStack* s);
-int runPrecedenceAnalysis(FILE* f);
+int runPrecedenceAnalysis(FILE* f,Token* tokenPtr);
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack);
 int whatRule(tStack* stack);
 void printStack(tStack* s);

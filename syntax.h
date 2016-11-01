@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "scanner.h"
+#include "precedence.h"
 #include <string.h>
 
-int runSyntaxAnalysis(FILE *f);
+
+void getModifiedToken(FILE *f,Token* tokenPtr);
 int runSyntaxAnalysis (FILE *f);
-int syntaxCheck (int state, FILE *f,Token* tokenPtr);
+int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr);
+void getModifiedLookAhead(FILE *f,Token* tokenPtr);
 
 typedef enum state{
 	CLASS_BLOCK,
@@ -34,6 +36,7 @@ typedef enum state{
 	COMMAND_BLOCK_BEGIN,
 	COMMAND_BLOCK,
 	ELSE,
-	BREAK
+	BREAK,
+	FN_CALL_COMMA
 	
 }	State;
