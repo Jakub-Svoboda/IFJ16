@@ -147,7 +147,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = '\0';
 					t->type = token_string;
 					//TODO add string into hashtable and link it to token
-					printf("'%s'",buff);				//remove when 100% working
+					//printf("'%s'",buff);				//remove when 100% working
 					position = 0;
 					return t;
 				}
@@ -180,11 +180,11 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					if(isDouble) {
 						t->type = token_doubleNumber;
 						//TODO hashtable insert
-						printf("DABL'%s'",buff);		//shout out its double
+						//printf("DABL'%s'",buff);		//shout out its double
 					}else {
 						t->type = token_intNumber;
 						//TODO hashtable insert
-						printf("INT'%s'",buff);			//its just number..
+						//printf("INT'%s'",buff);			//its just number..
 					}
 					position = 0;						//reset
 					isDouble = false;					//reset
