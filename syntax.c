@@ -64,6 +64,15 @@ int runSyntaxAnalysis (FILE *f) {
 	return result;
 }
 
+//returns 1 if token_identifier is ID of a function
+int isItFunction (Token* tokenPtr){
+	
+	//TODO check table of function
+	
+	return 1;
+	return 0;
+}
+
 void getModifiedToken(FILE *f,Token* tokenPtr){
 	Token * tmpPtr= getToken(f);
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));	
@@ -268,25 +277,31 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 				case token_bracketRightCurly:
 					return 0;
 					break;
-				case token_identifier:
+				case token_identifier:								//id
 					getModifiedToken(f,tokenPtr);
 					printType(tokenPtr);
-					if(tokenPtr -> type == token_bracketLeftRound){
+					if(tokenPtr -> type == token_bracketLeftRound){	// id(			
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 	
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 	
 
-					}else if (tokenPtr -> type == token_assign){
-						lookAheadPtr=lookAhead(f,1);		
-						if(tokenPtr->type == token_identifier){
-							getModifiedLookAhead(f,tokenPtr);
+					}else if (tokenPtr -> type == token_assign){	//id=
+						getModifiedToken(f,tokenPtr);
+						printType(tokenPtr);
+						if (isItFunction(tokenPtr) == 0){		//id=EXPRESSION;
+							
+						
+						
+						
+						
+						}else{									// id = functionid
+							getModifiedToken(f,tokenPtr);
 							printType(tokenPtr);
-							if(tokenPtr -> type == token_bracketLeftRound){
+							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
+							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 	
 								
-								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;} 	
-							}
-						}else{
-							runPrecedenceAnalysis(f,tokenPtr);
 						}
+						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;} 	
+
 					}else{
 						goto EXIT;
 					}
