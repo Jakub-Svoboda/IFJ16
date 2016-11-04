@@ -1,1 +1,1 @@
-keko.kek kekel.kek ke.kel keke.kekekl
+"a ekrek\" string hovnous = 334.3;

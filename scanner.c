@@ -89,6 +89,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
+							// add to garbage collector?
 //	char buff[1024];
     int c, position = 0, tempc, kwIndex = 0, isDouble = 0, isComplex = 0;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
 	State_type state = state_default;					//choose between states
@@ -134,14 +135,25 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				}
 				break;
 			case state_readingString:
-				buff[position] = c;
-				position++;
-				if(position+2 == buffSize) {
-					buffSize += 2;
-					buff = realloc(buff, buffSize);
-				}
-				if(c == '\"' && buff[position-2] != '\\') {		//looking for " but only if previous char is not '\', so '\"' is not matching
-					state = state_default;						//if found, end reading
+				if(c == EOF) {
+					//TODO: call lexical error!! read documentation and decide
+					state = state_default;
+					ungetc(c,f);
+					buff[position] = '\0';
+					t->type = token_invalid;
+					position = 0;
+					return t;
+					//printf("%s ",buff);
+				}else {
+					buff[position] = c;
+					position++;
+					if(position+2 == buffSize) {
+						buffSize += 2;
+						buff = realloc(buff, buffSize);
+					}
+					if((c == '\"' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
+						state = state_default;						//if found, end reading
+					}
 				}
 				if(state == state_default) {			//same as readingIdentifier
 					buff[position] = '\0';
