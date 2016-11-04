@@ -2,25 +2,25 @@
 
 
 
-void partition(char *A, int left, int right, int *i, int *j) {
-char PM;
-	char tmp;
+void partition(char *A, int left, int right, int *i, int *j) {			//Function divides array to two subarrays. Left subarray has smaller values than median, right has higher.
+	char PM;			//Declaration of pseudomedian.
+	char tmp;			//Temporary variable for swaping values.
 	
-	*i = left;
-	*j = right;
-	PM = *(A + ((*i + *j) / 2));
+	*i = left;			//Initialization of i.
+	*j = right;			//Initialization of j.
+	PM = *(A + ((*i + *j) / 2));			//Setting pseudomedian.
 
 	while(*i <= *j) {
 
-		while(*(A + *i) < PM) {
+		while(*(A + *i) < PM) {			//Increments index i while value on index i is smaller than pseudomedian.
 			*i = *i + 1;
 		}
 
-		while(*(A + *j) > PM) {
+		while(*(A + *j) > PM) {			//Increments index j while value on index j is bigger than pseudomedian.
 			*j = *j - 1;
 		}
 
-		if(*i <= *j) {
+		if(*i <= *j) {			//If i is lower than or equeal to j, swaps values on these indexes.
 			tmp = *(A + *i);
 			*(A + *i) = *(A + *j);
 			*(A + *j) = tmp;
@@ -30,18 +30,18 @@ char PM;
 	}
 }
 
-void quick_sort(char *A, int left, int right) {
-	int i = 0;
-	int j = 0;
+void quick_sort(char *A, int left, int right) {			//Function sorts array given.
+	int i = 0;			//Index
+	int j = 0;			//Index
 
-	partition(A, left, right, &i, &j);
+	partition(A, left, right, &i, &j);			//Partitioning array.
 
 	if(left < j) {
-		quick_sort(A, left, j);
+		quick_sort(A, left, j);			//Recursive call of function for left subarray.
 	}
 
 	if(i < right) {
-		quick_sort(A, i, right);
+		quick_sort(A, i, right);			//Recursive call of function for right subarray.
 	}
 }
 
