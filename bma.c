@@ -51,7 +51,7 @@ void compute_match_jump(char *P, int *MatchJump) {
 	while(k >= 0) {
 		Backup[k] = q;
 		
-		while((q < m) && (P[k] != P[q])) {
+		while((q < m) && (*(P + k) != *(P + q))) {
 			
 			MatchJump[q] = min(MatchJump[q], m - k);
 			q = Backup[q];
@@ -97,7 +97,6 @@ int bma(char *P, char *T, int *CharJump, int *MatchJump) {
 		else {
 			
 			j = j + max(CharJump[(unsigned char)*(T + j)], MatchJump[k]);
-//			j = j + MatchJump[k];
 			k = P_len - 1;
 		}	
 	}
