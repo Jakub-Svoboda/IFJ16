@@ -1,6 +1,7 @@
 class Main {
 	static int a (){
-		a=f(a);
-		
+		while(tvojemama == 42){
+			return a;
+		}
 	}
 }

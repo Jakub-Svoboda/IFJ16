@@ -26,18 +26,12 @@ void printStack(tStack* s){
 		{
 			fprintf(stderr,"%d ", s->arr[i]->type);
 			i++;
-			
 		}
 		fprintf(stderr,"\n");
 	}
 
 Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 	Token * tmpPtr= getToken(f);
-	if(tmpPtr->type>token_identifier && tmpPtr->type!=token_semicolon)
-	{
-		fprintf(stderr,"syntax error, unexpected token\n");	
-		exit(2);
-	}
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));
 	return tmpPtr;
 }
@@ -391,7 +385,7 @@ int stackEmpty (tStack* s){
 	return(-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){	
+int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){	
 	Token * tokenPtrTmp2 = malloc(sizeof(Token));
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
@@ -399,11 +393,24 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){
 	tokenPtrTmp->type=token_dollar;
 	stackPush(stack,tokenPtrTmp);
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
-	int tokenCnt =0;
+	int tokenCnt =0;			//if no expression is present, this causes error
 	int depth=0;	//Defines how many brackets are yet to come to finish expression
 	while(1){
 		tokenCnt++;
-		Token* precedencePtr = getModifiedTokenPrecedence(f,tokenPtr);
+		Token * precedencePtr;
+		if (readFirst == 0){
+			readFirst++;
+			precedencePtr = malloc(sizeof(Token));
+			memcpy(precedencePtr,tokenPtr,sizeof(Token));
+		}else{
+			precedencePtr = getModifiedTokenPrecedence(f,tokenPtr);
+		}
+		if(tokenPtr->type>token_identifier && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string)
+		{
+			fprintf(stderr,"syntax error, unexpected token\n");	
+			exit(2);	//TODO free all stuff
+		}
+		
 		if (tokenPtr->type==token_semicolon){
 			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
 			stackTopPtr=stackTopTerminal(stack);

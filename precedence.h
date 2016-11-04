@@ -16,7 +16,7 @@ void stackPush(tStack *s,Token *Token);
 void stackPop(tStack* s);
 Token* stackTop(tStack *s);
 int stackEmpty(tStack* s);
-int runPrecedenceAnalysis(FILE* f,Token* tokenPtr);
+int runPrecedenceAnalysis(FILE* f,Token* tokenPtr,int readFirst);
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack);
 int whatRule(tStack* stack);
 void printStack(tStack* s);
