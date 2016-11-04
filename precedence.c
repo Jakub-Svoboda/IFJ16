@@ -33,6 +33,11 @@ void printStack(tStack* s){
 
 Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 	Token * tmpPtr= getToken(f);
+	if(tmpPtr->type>token_identifier && tmpPtr->type!=token_semicolon)
+	{
+		fprintf(stderr,"syntax error, unexpected token\n");	
+		exit(2);
+	}
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));
 	return tmpPtr;
 }
@@ -272,6 +277,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 	while(1){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
 		char whatToDo;	//This deals with how to access the precedence table when number or string gets on input/ stack top
+	
 		if ((tokenPtr -> type) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
 			if ((stackTopPtr-> type ) == token_intNumber || (stackTopPtr -> type) == token_doubleNumber || (stackTopPtr -> type) == token_string){
 				whatToDo = precedence_table[token_identifier][ token_identifier];
@@ -282,7 +288,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			if ((stackTopPtr-> type ) == token_intNumber || (stackTopPtr -> type) == token_doubleNumber || (stackTopPtr -> type) == token_string){
 				whatToDo = precedence_table[token_identifier][ tokenPtr->type];
 			}else{
-				whatToDo = precedence_table[stackTopPtr->type][ tokenPtr->type];
+				whatToDo = precedence_table[stackTopPtr->type][tokenPtr->type];
 			}
 		}
 		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
@@ -427,7 +433,3 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr){
 	free(stack);	
 	return 0;
 }
-
-
-
-
