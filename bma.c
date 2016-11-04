@@ -45,13 +45,13 @@ void compute_match_jump(char *P, int *MatchJump) {
 		MatchJump[k] = 2 * m - k;
 	}
 
-	k = m;
-	q = m + 1;
+	k = m - 1;
+	q = m;
 
-	while(k > 0) {
+	while(k >= 0) {
 		Backup[k] = q;
 		
-		while((q <= m) && (P[k] != P[q])) {
+		while((q < m) && (P[k] != P[q])) {
 			
 			MatchJump[q] = min(MatchJump[q], m - k);
 			q = Backup[q];
@@ -82,13 +82,13 @@ int bma(char *P, char *T, int *CharJump, int *MatchJump) {
 	int P_len = strlen(P);
 	int T_len = strlen(T);
 
-	int j = P_len;
-	int k = P_len;
+	int j = P_len - 1;
+	int k = P_len - 1;
 
 	compute_jumps(P, CharJump);
 	compute_match_jump(P, MatchJump);
 
-	while(j <= T_len && k > 0) {
+	while(j < T_len && k >= 0) {
 
 		if(T[j] == P[k]) {
 			j--;
@@ -97,12 +97,13 @@ int bma(char *P, char *T, int *CharJump, int *MatchJump) {
 		else {
 			
 			j = j + max(CharJump[(unsigned char)*(T + j)], MatchJump[k]);
-			k = P_len;
+//			j = j + MatchJump[k];
+			k = P_len - 1;
 		}	
 	}
 
-	if(k == 0) {
-		return(j + 1);
+	if((k + 1) == 0) {
+		return(j + 2);
 	}
 	else {
 		return(T_len + 1);
@@ -110,7 +111,7 @@ int bma(char *P, char *T, int *CharJump, int *MatchJump) {
 }
 
 int main(int argc, char **argv) {
-	char *T = "abcahoj";
+	char *T = "qhojojahoj";
 	char *P = "ahoj";
 	int P_len = strlen(P);
 	int CharJump[256];
