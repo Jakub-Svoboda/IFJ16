@@ -2,50 +2,60 @@
 
 
 
-void quick_sort(char* str, int l, int r){
-	if(l < r) {					//Stops recursion
-		int left = l;					//Index of the first character
-		int right = r;					//Index of the last character
-		char pivot = *(str + left);				//Stores the value of the character to sort
-		while(left < right){					
-			while(left < right && pivot <= *(str+right)) {				
-				right--;
-			}
-			if(left < right) {
-				*(str+left) = *(str+right);
-				*(str+right) = pivot;
-			}
-			while(left < right && pivot >= *(str+left)) {
-				left++;
-			}
-			if(left < right) {
-				*(str+right) = *(str+left);
-				*(str+left) = pivot; 
-			}
+void partition(char *A, int left, int right, int *i, int *j) {
+char PM;
+	char tmp;
+	
+	*i = left;
+	*j = right;
+	PM = *(A + ((*i + *j) / 2));
+
+	while(*i <= *j) {
+
+		while(*(A + *i) < PM) {
+			*i = *i + 1;
 		}
-		quick_sort(str, l, left-1);			//Recursive call of function for the left substring
-		quick_sort(str, right+1, r);			//Recursive call of function for the right substring 
+
+		while(*(A + *j) > PM) {
+			*j = *j - 1;
+		}
+
+		if(*i <= *j) {
+			tmp = *(A + *i);
+			*(A + *i) = *(A + *j);
+			*(A + *j) = tmp;
+			*i = *i + 1;
+			*j = *j - 1;
+		}
+	}
+}
+
+void quick_sort(char *A, int left, int right) {
+	int i = 0;
+	int j = 0;
+
+	partition(A, left, right, &i, &j);
+
+	if(left < j) {
+		quick_sort(A, left, j);
 	}
 
-	return;
+	if(i < right) {
+		quick_sort(A, i, right);
+	}
 }
 
-void sort(char *s) {			//Wrapper
-	int l = 0;
-	int r = strlen(s) - 1;
-	quick_sort(s, l, r);
+int main(int argc, char **argv){                                //For testing
+        char* str = (char*)malloc(sizeof(char)*100);
+        printf("Input a string: ");
+        fgets(str, 99, stdin);
+        printf("String: %s\n", str);
+        int left = 0;
+	int right = strlen(str) - 1;
+	quick_sort(str, left, right);
+        printf("%s\n",str);
+        free(str);
 
-	return;
+        return 0;
 }
 
-int main(int argc, char **argv){				//For testing
-	char* str = (char*)malloc(sizeof(char)*100);
-	printf("Input a string: ");
-	fgets(str, 99, stdin);
-	printf("String: %s\n", str);
-	sort(str);
-	printf("%s\n",str);
-	free(str);
-
-	return 0;
-}
