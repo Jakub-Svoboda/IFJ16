@@ -11,7 +11,7 @@ void *memalloc(unsigned size) {			//Function allocates memory given and stores p
 	return(A.First->memptr);			//Return pointer to the newly allocated memory
 }
 
-void listdisp() {			//Dispose pointer list and free all memory
+void memfree() {			//Dispose pointer list and free all memory
 	tElemPtr hPtr;			//Help pointer
 
 	while (A.First != NULL) {			//While the list is not empty
@@ -21,18 +21,3 @@ void listdisp() {			//Dispose pointer list and free all memory
 		free(hPtr);			//Free help node memory
 	}
 }
-
-/*int main(int argc, char **argv) {
-	void *memptr = NULL;
-
-	memptr = memalloc(sizeof(int));
-	printf("%p\n", memptr);
-	memptr = memalloc(sizeof(int));
-	printf("%p\n", memptr);
-	memptr = memalloc(sizeof(int));
-	printf("%p\n", memptr);
-
-	listdisp();
-
-	return(0);
-}*/
