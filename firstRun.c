@@ -1,15 +1,15 @@
 #include "firstRun.h"
 
-void functionInsert(Token * tokenName, Token * tokenType, thTable * functionTable){
+void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass, thTable * functionTable){
 	htabInsert(functionTable, tokenName->name);
 	htabInsertReturnType(functionTable, tokenName->name,tokenType->type);
 }
 
 void globalVarInsert(Token * tokenName, Token * tokenType, thTable * globalVarTable){
 	htabInsert(globalVarTable, tokenName -> name);
-	printf("%s\n\n\n\n",tokenName->name);
+	//printf("%s\n\n\n\n",tokenName->name);
 	htabInsertVarType(globalVarTable, tokenName->name,tokenType->type);
-	printf("%s\n\n\n\n",tokenName->name);
+	//printf("%s\n\n\n\n",tokenName->name);
 }
 
 int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
@@ -17,12 +17,20 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 	Token * tokenPtr1 = NULL;
 	Token * tokenPtr2 = NULL;
 	Token * tokenPtr3 = NULL;
+	Token * classPtr = NULL;
+	
 	
 	while(1){
 		tokenPtr3=tokenPtr2;
 		tokenPtr2=tokenPtr1;
 		tokenPtr1=tokenPtr;
 		tokenPtr=getToken(f);
+		
+		if(tokenPtr1==token_class && tokenPtr==token_identifier)
+		{
+			classPtr=tokenPtr;
+		}
+		
 		if(tokenPtr ->type == token_EOF){
 			break;
 		}
@@ -30,8 +38,8 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 			if (tokenPtr1 -> type == token_identifier ){
 				if(tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String || tokenPtr2->type==token_void){
 					if(tokenPtr3->type == token_static){
-						printf("PISU FUNKCI YO\n\n\n\n\n");
-						functionInsert(tokenPtr1, tokenPtr2,functionTable);
+						//printf("PISU FUNKCI YO\n\n\n\n\n");
+						functionInsert(tokenPtr1, tokenPtr2, classPtr, functionTable);
 					}
 				}
 			}
@@ -41,7 +49,7 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 			if (tokenPtr1 -> type == token_identifier ){
 				if(tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String){
 					if(tokenPtr3->type == token_static){
-						printf("PISU STACICKOU PROMENNOU YO\n\n\n\n\n");
+						//printf("PISU STACICKOU PROMENNOU YO\n\n\n\n\n");
 						globalVarInsert(tokenPtr1, tokenPtr2, globalVarTable);
 					}
 				

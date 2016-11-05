@@ -28,7 +28,7 @@ thtabItem* htabSearch(thTable *htab, char* key) {
         thtabItem* tempItem = (*htab)[hashFun(key)];           //assign first item of hashtable row into tempItem
         //    printf("foo\n");
         while(tempItem != NULL) {                           //cycle through row
-            if(tempItem->key == key) return tempItem;       //return item that we were looking for
+            if(strcmp(tempItem->key,key)==0) return tempItem;       //return item that we were looking for
             tempItem = tempItem->next;
         }
         //    printf("foo2\n");
@@ -76,7 +76,7 @@ void htabInsert(thTable *htab, char* key) {
 
         //printf("ss\n");
     }else {
-
+		printf("%s\n\n",key);
         thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
         if (tempItem == NULL) {                             //item is not yet in hashtable
             if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet

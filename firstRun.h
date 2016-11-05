@@ -4,5 +4,5 @@
 #include "htab.h"
 
 int firstRun(thTable * functionTable, thTable * globalVarTable, FILE * f);
-void functionInsert(Token * tokenName, Token * tokenType, thTable * functionTable);
+void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass, thTable * functionTable);
 void globalVarInsert(Token * tokenName, Token * tokenType, thTable * functionTable);
