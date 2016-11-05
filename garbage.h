@@ -13,4 +13,5 @@ typedef struct { 			//List
 extern tList A;			//Global variable which stores the pointers to the allocated memory
 
 void *memalloc(unsigned);			//Allocates memory and stores the pointer to that memory
-void memfree();			//Dispose list and free memory
+void memfreeall();
+void memfree(void *);		
