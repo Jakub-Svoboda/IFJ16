@@ -136,7 +136,8 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				break;
 			case state_readingString:
 				if(c == EOF) {
-					//TODO: call lexical error!! read documentation and decide
+					exit(1);
+					//TODO: remove
 					state = state_default;
 					ungetc(c,f);
 					buff[position] = '\0';

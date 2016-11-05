@@ -105,7 +105,7 @@ void printHtab(thTable htab) {
     }
 }
 
-/* for testing purposes
+/* //for testing purposes
 int main() {
     thTable htab;
     htabInit(htab);
