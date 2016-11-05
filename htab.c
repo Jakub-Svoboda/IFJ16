@@ -10,7 +10,7 @@ int hashFun(char* key) {                                    //Drugs are fun
 }
 
 void htabInit(thTable *htab) {
-    printf("ss\n");
+    //printf("ss\n");
     //*htab = malloc(sizeof(struct thtabItem)*HTAB_SIZE);
     for (int i = 0; i < HTAB_SIZE; i++) {
         (*htab)[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
@@ -39,10 +39,10 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 }
 
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
-    printf("sdsfs\n");
+    printf("v htabSearchClass\n");
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
-        if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
+        if ((*htab)[hashFun(key)] == NULL) printf("kekoefel\n");
         return NULL;
     }else {
         //printf("kekel\n");
@@ -62,31 +62,35 @@ thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
 }
 
 void htabInsertReturnType(thTable *htab, char* key, char* classKey, Token_type ret) {
+    printf("v htabInsertReturnType\n");
     if (*htab == NULL) {
 
-        //printf("ss\n");
     }else {
-        printf("ssdfsdfsdfs\n");
+        printf("dvakrat v htabInsertReturnType\n");
         thtabItem* tempItem = htabSearchClass(htab, key, classKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
+        printf("trikrat v htabInsertReturnType\n");
         if (tempItem == NULL) {
+
             if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet
+                printf("novy v htabInsertReturnType\n");
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
                 insertItem->next = NULL;
                 insertItem->classKey = classKey;
-                tempItem->returnType = ret;
+                insertItem->returnType = ret;
                 //insertItem->returnType = token;
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }else {                                         //hashtable has already created row
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
                 insertItem->classKey = classKey;
-                tempItem->returnType = ret;
+                insertItem->returnType = ret;
                 //insertItem->returnType = token_invalid;
                 insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }
         }else {
+            printf("edit v htabInsertReturnType\n");
              //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
             tempItem->returnType = ret;
             //tempItem->classKey = classKey;
