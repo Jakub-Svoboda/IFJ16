@@ -8,6 +8,7 @@
 
 typedef struct thtabItem{
 	char* key;
+	char* name;
 	char* classKey;
 	Token_type returnType;
 	Token_type varType;
@@ -26,6 +27,6 @@ void htabInsert(thTable *htab, char* key);
 //const char* htabRead(thtabItem* htab[], char* key);
 void htabDelete(thTable *htab, char* key);
 void htabDispose(thTable *htab);
-void htabInsertReturnType(thTable *htab, char* key, char* classKey, Token_type ret);
-void htabInsertVarType(thTable *htab, char* key, Token_type var);
-void printHtab(thTable *htab);
+void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_type ret);
+void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type var);
+void printHtab(thTable *htab, int var);

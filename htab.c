@@ -1,5 +1,19 @@
 #include "htab.h"
 
+char* concat(char* str1, char* str2) {
+
+
+    int str1len = strlen(str1);
+    int str2len = strlen(str2);
+    char *buff = (char*) malloc((str1len+str2len+2) * sizeof(char));
+    strcpy(buff,str2);
+    strcat(buff,".");
+    strcat(buff,str1);
+
+    //printf("@@@@@%s",buff);
+    return buff;
+}
+
 int hashFun(char* key) {                                    //Drugs are fun
     int hash = 0;
     int length = strlen(key);
@@ -21,7 +35,7 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
-        if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
+        //if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
         return NULL;
     }else {
         //printf("kekel\n");
@@ -39,10 +53,10 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 }
 
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
-    printf("v htabSearchClass\n");
+    //printf("v htabSearchClass\n");
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
-        if ((*htab)[hashFun(key)] == NULL) printf("kekoefel\n");
+        //if ((*htab)[hashFun(key)] == NULL) printf("kekoefel\n");
         return NULL;
     }else {
         //printf("kekel\n");
@@ -61,58 +75,91 @@ thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
 
 }
 
-void htabInsertReturnType(thTable *htab, char* key, char* classKey, Token_type ret) {
-    printf("v htabInsertReturnType\n");
+void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_type ret) {
+    //printf("v htabInsertReturnType\n");
     if (*htab == NULL) {
 
     }else {
-        printf("dvakrat v htabInsertReturnType\n");
-        thtabItem* tempItem = htabSearchClass(htab, key, classKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
-        printf("trikrat v htabInsertReturnType\n");
+        char *conKey = concat(funcName, classKey);
+        //printf("dvakrat v htabInsertReturnType\n");
+        thtabItem* tempItem = htabSearch(htab, conKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
+        //printf("trikrat v htabInsertReturnType\n");
         if (tempItem == NULL) {
 
-            if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet
-                printf("novy v htabInsertReturnType\n");
+            if ((*htab)[hashFun(conKey)] == NULL) {               //hashtable row is not created yet
+                //printf("novy v htabInsertReturnType\n");
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
-                insertItem->key = key;
+
+                insertItem->key = conKey;
+                insertItem->name = funcName;
                 insertItem->next = NULL;
                 insertItem->classKey = classKey;
                 insertItem->returnType = ret;
                 //insertItem->returnType = token;
-                (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
-            }else {                                         //hashtable has already created row
+                (*htab)[hashFun(conKey)] = insertItem;            //insert created item on the first position in hashtable row
+            }else {
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
-                insertItem->key = key;
+
+                insertItem->key = conKey;
+                insertItem->name = funcName;
+                insertItem->next = (*htab)[hashFun(conKey)];
                 insertItem->classKey = classKey;
                 insertItem->returnType = ret;
-                //insertItem->returnType = token_invalid;
-                insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row
-                (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
+                //insertItem->returnType = token;
+                (*htab)[hashFun(conKey)] = insertItem;                             //hashtable has already created row
             }
         }else {
-            printf("edit v htabInsertReturnType\n");
+            fprintf(stderr, "Error function redeclaration.\n");
+            exit(3);
+            //printf("edit v htabInsertReturnType\n");
              //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
-            tempItem->returnType = ret;
+            //tempItem->returnType = ret;
             //tempItem->classKey = classKey;
         }
-
     }
 }
 
-void htabInsertVarType(thTable *htab, char* key, Token_type var) {
+void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type var) {
+    //printf("v htabInsertReturnType\n");
     if (*htab == NULL) {
 
-        //printf("ss\n");
     }else {
-        thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
+        char *conKey = concat(varName, classKey);
+        //printf("dvakrat v htabInsertReturnType\n");
+        thtabItem* tempItem = htabSearch(htab, conKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
+        //printf("trikrat v htabInsertReturnType\n");
         if (tempItem == NULL) {
-            ;                            //item is not yet in hashtable
-            printf("mofo error\n");
-        }else {
-             //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
-            tempItem->varType = var;
-        }
 
+            if ((*htab)[hashFun(conKey)] == NULL) {               //hashtable row is not created yet
+                //printf("novy v htabInsertReturnType\n");
+                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+
+                insertItem->key = conKey;
+                insertItem->name = varName;
+                insertItem->next = NULL;
+                insertItem->classKey = classKey;
+                insertItem->varType = var;
+                //insertItem->returnType = token;
+                (*htab)[hashFun(conKey)] = insertItem;            //insert created item on the first position in hashtable row
+            }else {
+                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+
+                insertItem->key = conKey;
+                insertItem->name = varName;
+                insertItem->next = (*htab)[hashFun(conKey)];
+                insertItem->classKey = classKey;
+                insertItem->varType = var;
+                //insertItem->returnType = token;
+                (*htab)[hashFun(conKey)] = insertItem;                             //hashtable has already created row
+            }
+        }else {
+            fprintf(stderr, "Error variable redeclaration.\n");
+            exit(3);
+            //printf("edit v htabInsertReturnType\n");
+             //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
+            //tempItem->returnType = ret;
+            //tempItem->classKey = classKey;
+        }
     }
 }
 
@@ -130,7 +177,8 @@ void htabInsert(thTable *htab, char* key) {
                 insertItem->next = NULL;
                 //insertItem->returnType = token;
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
-            }else {                                         //hashtable has already created row
+            }else {
+                                                        //hashtable has already created row
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
                 //insertItem->returnType = token_invalid;
@@ -184,13 +232,14 @@ void htabDispose(thTable *htab) {
     }
 }
 
-void printHtab(thTable *htab) {
+void printHtab(thTable *htab, int var) {
     //printf("aa\n");
     for (int i = 0; i< HTAB_SIZE; i++) {
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
         while(temp != NULL) {
-            printf("->[%s %d %s ]",temp->key,temp -> varType, temp -> classKey);
+            if (var) printf("->[%s %d %s ]",temp->key,temp -> varType, temp -> classKey);
+            if (!var) printf("->[%s %d %s %s]",temp->key,temp -> returnType, temp -> classKey, temp->name);
             temp = temp->next;
         }
         printf("\n");

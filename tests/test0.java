@@ -1,28 +1,35 @@
 
 class Main{
-	static int x;
-	static double xsssqa;
-	static String xgsfg;
-	static int sdgsfg;
-	static void run()
+	static int ahej;
+	static double nazdar;
+	static String cus;
+	static void runa()
 	{
-		
+
+	}
+	static int play(String str)
+	{
+
+		return;
 	}
 	// end of static void run()
 } // end of class Main
 
 class Game
 {
+
+	static String cus;
+	static int cus;
 	static void run()
 	{
-		
+
 	}
-	static double axsssqa;
-	static String axgsfg;
-	static int asdgsfg;
-	static void play(String str)
+
+	static void pla(String sr)
 	{
-		
+
 		return;
-	} 
+	}
+
+
 }//yuyuyuy
