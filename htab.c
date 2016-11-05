@@ -190,7 +190,7 @@ void printHtab(thTable *htab) {
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
         while(temp != NULL) {
-            printf("->[%s %d]",temp->key,temp -> returnType);
+            printf("->[%s %d %s ]",temp->key,temp -> varType, temp -> classKey);
             temp = temp->next;
         }
         printf("\n");

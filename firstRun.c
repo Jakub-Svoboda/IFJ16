@@ -63,6 +63,6 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 		
 
 	}
-	printHtab(globalVarTable);
+	printHtab(functionTable);
 	return 0;
 }
