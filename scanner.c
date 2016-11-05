@@ -28,6 +28,7 @@ Token *tokenInit() {									//allocate space
 		printf("tokenInit malloc error\n");				//propably BS
 		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type
 	}
+	t->name = NULL;
 	return t;
 }
 
@@ -125,8 +126,8 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					if((kwIndex = isKeyword(buff)) != -1) {		//if buffered word is in keyword array return kw token
 						t->type = kwIndex + KEYWORD_OFFSET;		//value calculated by returned kwIndex and KEYWORD_OFFSET set in scanner.h
 					}else {
-						//TODO add buffered string to hashtable and link pointer
 						t->type = token_identifier;				//it's not keyword so return as id
+						t->name = buff;
 						//printf("%s\n",buff);
 					}
 					position = 0;								//reset position of buffer
@@ -160,7 +161,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				if(state == state_default) {			//same as readingIdentifier
 					buff[position] = '\0';
 					t->type = token_string;
-					//TODO add string into hashtable and link it to token
+					t->name = buff;
 					//printf("'%s'",buff);				//remove when 100% working
 					position = 0;
 					return t;
@@ -193,10 +194,12 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = '\0';
 					if(isDouble) {
 						t->type = token_doubleNumber;
+						t->name = buff;
 						//TODO hashtable insert
 						//printf("DABL'%s'",buff);		//shout out its double
 					}else {
 						t->type = token_intNumber;
+						t->name = buff;
 						//TODO hashtable insert
 						//printf("INT'%s'",buff);			//its just number..
 					}
@@ -227,14 +230,13 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					case '/':
 						c = fgetc(f);
 						if(c == '/') {							//line-comment found
-							while((c=fgetc(f)) != '\n'){		//just skip it!
-								if(c == EOF) {
-									t->type = token_EOF;
-									return t;
-								}
-								//printf("%c ",c);
+							while((c=fgetc(f)) != '\n' || c != EOF){		//just skip it!
+								;
 							}
-							
+							if(c == EOF) {
+								t->type = token_EOF;
+								return t;
+							}
 							break;
 						}else if(c == '*') {					//block-comment found
 							//printf("K");
