@@ -8,6 +8,7 @@
 
 typedef struct thtabItem{
 	char* key;
+	char* classKey;
 	Token_type returnType;
 	Token_type varType;
 //	int length;  needed?
@@ -20,10 +21,11 @@ typedef thtabItem* thTable[HTAB_SIZE];
 int hashFun(char* key);
 void htabInit(thTable *htab);
 thtabItem* htabSearch(thTable *htab, char* key);
+thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey);
 void htabInsert(thTable *htab, char* key);
 //const char* htabRead(thtabItem* htab[], char* key);
 void htabDelete(thTable *htab, char* key);
 void htabDispose(thTable *htab);
-void htabInsertReturnType(thTable *htab, char* key, Token_type ret);
+void htabInsertReturnType(thTable *htab, char* key, char* classKey, Token_type ret);
 void htabInsertVarType(thTable *htab, char* key, Token_type var);
 void printHtab(thTable *htab);
