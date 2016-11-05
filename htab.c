@@ -54,6 +54,23 @@ void htabInsertReturnType(thTable *htab, char* key, Token_type ret) {
     }
 }
 
+void htabInsertVarType(thTable *htab, char* key, Token_type var) {
+    if (*htab == NULL) {
+
+        //printf("ss\n");
+    }else {
+        thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
+        if (tempItem == NULL) {
+            ;                            //item is not yet in hashtable
+            printf("mofo error\n");
+        }else {
+             //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
+            tempItem->varType = ret;
+        }
+
+    }
+}
+
 void htabInsert(thTable *htab, char* key) {
     if (*htab == NULL) {
 
