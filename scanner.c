@@ -28,6 +28,7 @@ Token *tokenInit() {									//allocate space
 		printf("tokenInit malloc error\n");				//propably BS
 		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type
 	}
+	t->name = NULL;
 	return t;
 }
 
@@ -126,6 +127,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						t->type = kwIndex + KEYWORD_OFFSET;		//value calculated by returned kwIndex and KEYWORD_OFFSET set in scanner.h
 					}else {
 						//TODO add buffered string to hashtable and link pointer
+						t->name = buff;
 						t->type = token_identifier;				//it's not keyword so return as id
 						//printf("%s\n",buff);
 					}
@@ -160,6 +162,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				if(state == state_default) {			//same as readingIdentifier
 					buff[position] = '\0';
 					t->type = token_string;
+					t->name = buff;
 					//TODO add string into hashtable and link it to token
 					//printf("'%s'",buff);				//remove when 100% working
 					position = 0;
@@ -193,10 +196,12 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = '\0';
 					if(isDouble) {
 						t->type = token_doubleNumber;
+						t->name = buff;
 						//TODO hashtable insert
 						//printf("DABL'%s'",buff);		//shout out its double
 					}else {
 						t->type = token_intNumber;
+						t->name = buff;
 						//TODO hashtable insert
 						//printf("INT'%s'",buff);			//its just number..
 					}
@@ -234,7 +239,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 								}
 								//printf("%c ",c);
 							}
-							
+
 							break;
 						}else if(c == '*') {					//block-comment found
 							//printf("K");
@@ -392,12 +397,13 @@ void identifyToken(Token *tempTok) {
 int main(int argc, char *argv[]) {
 
 	FILE *f;
-	f = fopen("tests/buffertest.java", "r");
+	f = fopen("tests/test0.java", "r");
 	Token *tempTok = lookAhead(f, 0);
 
 
 	while(tempTok->type != token_EOF) {
 		printf("%d",tempTok->type);
+		//if (tempTok->name != NULL) printf("@@@%s@@@",tempTok->name);
 		identifyToken(tempTok);
 		tempTok = lookAhead(f, 0);
 	}
