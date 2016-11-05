@@ -96,7 +96,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //***************classBlock*******************//
 		case CLASS_BLOCK:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if(tokenPtr->type != token_EOF){
 					if ((result=syntaxCheck( CLASS, f, tokenPtr, lookAheadPtr))		!= 0) {goto EXIT;}
 					if ((result=syntaxCheck( CLASS_BLOCK, f, tokenPtr, lookAheadPtr))		!= 0) {goto EXIT;}
@@ -119,7 +119,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************ID*******************//
 		case ID:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_identifier) {
 				return 0;
 			}else{
@@ -139,7 +139,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************LEFT_CURLY_BRACKET*******************//
 		case LEFT_CURLY_BRACKET:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_bracketLeftCurly) {
 				return 0;
 			}else{
@@ -150,7 +150,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************Right_CURLY_BRACKET*******************//
 		case RIGHT_CURLY_BRACKET:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_bracketRightCurly) {
 				return 0;
 			}else{
@@ -170,7 +170,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************ELSE*******************//
 		case ELSE:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type == token_else) {
 				return 0;
 			}else{
@@ -183,7 +183,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************CLASS_BODY*******************//
 		case CLASS_BODY:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			switch (tokenPtr ->type){
 				case token_bracketRightCurly:
 					return 0;
@@ -192,11 +192,11 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					if ((result=syntaxCheck( TYPE, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
 					if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
 						runPrecedenceAnalysis(f,tokenPtr,1);
 						if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
-						printType(tokenPtr);
+						//printType(tokenPtr);
 						break;
 					}else{
 						if (tokenPtr -> type == token_bracketLeftRound){
@@ -223,14 +223,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************FUNCTION_DECLARE*******************//
 		case FUNCTION_DECLARE:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if(tokenPtr -> type == token_bracketRightRound){
 				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
 			}else{
 				if ((result=syntaxCheck( TYPE_CURRENT, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nTYPE\n");goto EXIT;}
 				if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 				getModifiedToken(f,tokenPtr);
-				printType(tokenPtr);
+				//printType(tokenPtr);
 				if(tokenPtr -> type == token_comma){
 					if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFD\n");goto EXIT;}
 				}else{
@@ -245,7 +245,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************TYPE*******************//
 		case TYPE:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type == token_int) 	{return 0;}
 			if (tokenPtr->type == token_double) {return 0;}
 			if (tokenPtr->type == token_String) {return 0;}
@@ -277,27 +277,27 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************FN_BODY*******************//
 		case FN_BODY:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			switch(tokenPtr -> type){
 				case token_bracketRightCurly:
 					return 0;
 					break;
 				case token_identifier:								//id
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
-						printType(tokenPtr);
+						//printType(tokenPtr);
 						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
 							runPrecedenceAnalysis(f,tokenPtr,0);
 							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						}else{									// id = functionid
 							getModifiedToken(f,tokenPtr);
-							printType(tokenPtr);
+							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
 							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
@@ -337,7 +337,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					return result;
 				case token_return:
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if(tokenPtr-> type == token_semicolon){
 					}else{
 						runPrecedenceAnalysis(f,tokenPtr,0);
@@ -361,20 +361,20 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					break;
 				case token_identifier:								//id
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
-						printType(tokenPtr);
+						//printType(tokenPtr);
 						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
 							runPrecedenceAnalysis(f,tokenPtr,0);
 							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						}else{									// id = functionid
 							getModifiedToken(f,tokenPtr);
-							printType(tokenPtr);
+							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
 							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
@@ -414,7 +414,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					return result;
 				case token_return:
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if(tokenPtr-> type == token_semicolon){
 					}else{
 						runPrecedenceAnalysis(f,tokenPtr,0);
@@ -433,7 +433,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************ASSIGN*******************//
 		case ASSIGN:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_assign) {
 				return 0;
 			}else{
@@ -444,7 +444,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************SEMICOLON*******************//
 		case SEMICOLON:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_semicolon) {
 				return 0;
 			}else{
@@ -455,7 +455,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************LEFT_ROUND*******************//
 		case LEFT_ROUND:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_bracketLeftRound) {
 				return 0;
 			}else{
@@ -466,7 +466,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************RIGHT_ROUND*******************//
 		case RIGHT_ROUND:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_bracketRightRound) {
 				return 0;
 			}else{
@@ -477,7 +477,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************BREAK*******************//
 		case BREAK:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			if (tokenPtr->type== token_break) {
 				return 0;
 			}else{
@@ -489,17 +489,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 		case LOCAL_VAR_DEC:
 			if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			switch (tokenPtr -> type){
 				case token_semicolon:
 					return 0;
 				case token_assign:
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 						if(tokenPtr-> type == token_identifier){
 							if(isItFunction(f,tokenPtr) == 1){
 								getModifiedToken(f,tokenPtr);
-								printType(tokenPtr);
+								//printType(tokenPtr);
 								if (tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n(\n");goto EXIT;}
 								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 								if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
@@ -521,7 +521,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************FN_CALL*******************//
 		case FN_CALL:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			switch (tokenPtr ->type){
 				case token_bracketRightRound:
 					return 0;
@@ -560,7 +560,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************COMMAND_BLOCK_BEGIN*******************//
 		case COMMAND_BLOCK_BEGIN:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			switch (tokenPtr -> type){
 				case token_bracketLeftCurly:
 				if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
@@ -574,27 +574,27 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 //******************COMMAND_BLOCK*******************//
 		case COMMAND_BLOCK:
 			getModifiedToken(f,tokenPtr);
-			printType(tokenPtr);
+			//printType(tokenPtr);
 			switch (tokenPtr -> type){
 				case token_bracketRightCurly:
 					return 0;
 					break;
 				case token_identifier:								//id
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
-						printType(tokenPtr);
+						//printType(tokenPtr);
 						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
 							runPrecedenceAnalysis(f,tokenPtr,0);
 							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						}else{									// id = functionid
 							getModifiedToken(f,tokenPtr);
-							printType(tokenPtr);
+							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
 							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
@@ -622,7 +622,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 					return result;
 				case token_return:
 					getModifiedToken(f,tokenPtr);
-					printType(tokenPtr);
+					//printType(tokenPtr);
 					if(tokenPtr-> type == token_semicolon){
 					}else{
 						runPrecedenceAnalysis(f,tokenPtr,0);
@@ -646,7 +646,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr){
 
 	EXIT:
 		fprintf(stderr, "Syntax Error! Got: ");
-		printType(tokenPtr);
+		//printType(tokenPtr);
 		exit(2);
 		return result;
 

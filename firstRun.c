@@ -7,7 +7,9 @@ void functionInsert(Token * tokenName, Token * tokenType, thTable * functionTabl
 
 void globalVarInsert(Token * tokenName, Token * tokenType, thTable * globalVarTable){
 	htabInsert(globalVarTable, tokenName -> name);
+	printf("%s\n\n\n\n",tokenName->name);
 	htabInsertVarType(globalVarTable, tokenName->name,tokenType->type);
+	printf("%s\n\n\n\n",tokenName->name);
 }
 
 int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
