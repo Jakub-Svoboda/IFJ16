@@ -24,6 +24,6 @@ typedef enum {
 	err_command_line_parameters
 } error_type;
 
-unsigned long line_number(FILE *f);
+unsigned long line_number(FILE *);
 void error(error_type type);
 
