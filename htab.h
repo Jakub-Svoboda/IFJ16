@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "scanner.h"
 
 #define HTAB_SIZE 5
 //#define thTable thtabItem*
 
 typedef struct thtabItem{
 	const char* key;
+	Token_type returnType;
 //	int length;  needed?
 	struct thtabItem* next;
 } thtabItem;

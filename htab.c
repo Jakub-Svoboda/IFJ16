@@ -35,6 +35,32 @@ thtabItem* htabSearch(thTable *htab, const char* key) {
 
 }
 
+void htabInsertReturnType(thTable *htab, const char* key, Token_type returnType) {
+    if (*htab == NULL) {
+
+        //printf("ss\n");
+    }else {
+        thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
+        if (tempItem == NULL) {                             //item is not yet in hashtable
+            if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet
+                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                insertItem->key = key;
+                insertItem->next = NULL;
+                (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
+            }else {                                         //hashtable has already created row
+                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                insertItem->key = key;
+                insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row
+                (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
+            }
+        }else {
+            ; //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
+            tempItem->returnType = returnType;
+        }
+
+    }
+}
+
 void htabInsert(thTable *htab, const char* key) {
     if (*htab == NULL) {
 
