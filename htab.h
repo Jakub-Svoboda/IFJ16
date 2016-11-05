@@ -26,3 +26,4 @@ void htabDelete(thTable *htab, char* key);
 void htabDispose(thTable *htab);
 void htabInsertReturnType(thTable *htab, char* key, Token_type ret);
 void htabInsertVarType(thTable *htab, char* key, Token_type var);
+void printHtab(thTable *htab);

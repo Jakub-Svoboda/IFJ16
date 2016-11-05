@@ -5,4 +5,4 @@
 
 int firstRun(thTable * functionTable, thTable * globalVarTable, FILE * f);
 void functionInsert(Token * tokenName, Token * tokenType, thTable * functionTable);
-void globalVarInsert(Token * tokenPtr, thTable * globalVarTable);
+void globalVarInsert(Token * tokenName, Token * tokenType, thTable * functionTable);

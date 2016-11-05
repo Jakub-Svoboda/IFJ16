@@ -65,7 +65,7 @@ void htabInsertVarType(thTable *htab, char* key, Token_type var) {
             printf("mofo error\n");
         }else {
              //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
-            tempItem->varType = ret;
+            tempItem->varType = var;
         }
 
     }
@@ -143,7 +143,7 @@ void printHtab(thTable *htab) {
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
         while(temp != NULL) {
-            printf("->[%s %d]",temp->key,temp -> returnType);
+            printf("->[%s %d]",temp->key,temp -> varType);
             temp = temp->next;
         }
         printf("\n");
