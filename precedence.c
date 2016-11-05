@@ -1,20 +1,20 @@
 #include "precedence.h"
 
 
-char precedence_table[14][14]={					
-//input 	
-//+   -   *   /   <   >  <=  >=  ==  !=	  (	  )   i   $ 	  
-{'>','>','<','<','>','>','>','>','>','>','<','>','<','>'},	// +	
+char precedence_table[14][14]={
+//input
+//+   -   *   /   <   >  <=  >=  ==  !=	  (	  )   i   $
+{'>','>','<','<','>','>','>','>','>','>','<','>','<','>'},	// +
 {'>','>','<','<','>','>','>','>','>','>','<','>','<','>'},	// -
 {'>','>','>','>','>','>','>','>','>','>','<','>','<','>'},	// *
 {'>','>','>','>','>','>','>','>','>','>','<','>','<','>'},	// /
 {'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//<
 {'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//>
-{'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//<= 
+{'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//<=
 {'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//>=
 {'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//==
 {'<','<','<','<','>','>','>','>','>','>','<','>','<','>'},	//!=
-{'<','<','<','<','<','<','<','<','<','<','<','=','<','0'},	//(			
+{'<','<','<','<','<','<','<','<','<','<','<','=','<','0'},	//(
 {'>','>','>','>','>','>','>','>','>','>','0','>','0','>'},	//)
 {'>','>','>','>','>','>','>','>','>','>','0','>','0','>'},	//i
 {'<','<','<','<','<','<','<','<','<','<','<','0','<','$'},	//$       	stack
@@ -31,18 +31,19 @@ void printStack(tStack* s){
 	}
 
 Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
-	Token * tmpPtr= getToken(f);
+	//Token * tmpPtr= getToken(f);
+	Token * tmpPtr= lookAhead(f,0);
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));
 	return tmpPtr;
 }
-	
+
 int whatRule(tStack* stack){
-	int rule;	
+	int rule;
 	Token* tokenPtr = malloc(sizeof(Token));
-	
+
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
-	
+
 	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
@@ -50,14 +51,14 @@ int whatRule(tStack* stack){
 			case token_expression:											//2nd token is E
 				tokenPtr = stackTop(stack);					//read top of the stack
 				stackPop(stack);											//pop the token we dont need
-				
+
 				switch (tokenPtr -> type){									// E>
-				
+
 					case token_add:											// +E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E+E>
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 1;									//rule 1 <E+E>
@@ -66,12 +67,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-					
+
 					case token_subtract:										// -E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E-E>
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 2;									//rule 2 <E-E>
@@ -80,12 +81,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-					
+
 					case token_multiply:										// *E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E*E>
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 3;									//rule 3 <E*E>
@@ -94,12 +95,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-					
+
 					case token_divide:										// /E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E/E>
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 4;									//rule 4 <E/E>
@@ -108,12 +109,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-				
+
 					case token_less:										// <E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E<E>
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 5;									//rule 5 <E<E>
@@ -122,12 +123,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-					
+
 					case token_greater:										// >E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){				// E>E>
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 6;									//rule 6 <E>E>
@@ -136,12 +137,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-									
+
 					case token_lessEqual:										// ==E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 7;									//rule 7 <E<=E>
@@ -150,12 +151,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-								
+
 					case token_greaterEqual:										// >=E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 8;									//rule 8 <E>=E>
@@ -164,12 +165,12 @@ int whatRule(tStack* stack){
 							}
 						}
 						break;
-										
+
 					case token_equal:										// ==E>
-						tokenPtr = stackTop(stack);			
+						tokenPtr = stackTop(stack);
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
-							tokenPtr = stackTop(stack);		
+							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								rule = 9;									//rule 9 <E!=E>
@@ -177,9 +178,9 @@ int whatRule(tStack* stack){
 								fprintf(stderr,"Error: Someting E!=E>\n");
 							}
 						}
-						break;	
-								
-					case token_notEqual:	
+						break;
+
+					case token_notEqual:
 						tokenPtr = stackTop(stack);			//read top of the stack
 						stackPop(stack);
 						if(tokenPtr -> type  == token_expression){
@@ -191,16 +192,16 @@ int whatRule(tStack* stack){
 								fprintf(stderr,"Error: Someting E!=E>\n");
 							}
 						}
-						break;	
-						
+						break;
+
 					default:
 						fprintf(stderr,"Unexpected token\n");
 						exit(2);//TODO improve?
 						break;
-						
+
 				}
 				break;
-			case token_identifier:											//2nd token is i	
+			case token_identifier:											//2nd token is i
 				case token_intNumber:
 				case token_doubleNumber:
 				case token_string:
@@ -213,7 +214,7 @@ int whatRule(tStack* stack){
 					//printStack(stack);
 				}
 				break;
-			case token_bracketRightRound:	
+			case token_bracketRightRound:
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if( tokenPtr -> type  == token_expression){
@@ -231,21 +232,21 @@ int whatRule(tStack* stack){
 				fprintf(stderr,"Unexpected token\n");
 				exit(2);//TODO improve?
 				break;
-			
-		}	
+
+		}
 	}else{
 		fprintf(stderr,"First token to be reduced is not right handle\n");
-		
-		
-	}		
-	
+
+
+	}
+
 	fprintf(stderr,"rule is: %d\n\n",rule);
 
 	//free(tokenPtr);
-	
-	
+
+
 	return rule;
-}	
+}
 
 Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 	Token* stackTopPtr=NULL;
@@ -254,24 +255,24 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 	if(stackEmpty(s)){													//check for empty stack
 		fprintf(stderr,"StackTop requested but stack is empty.\n");
 	}else{
-		while(stackTopPtr -> type == token_leftHandle || stackTopPtr -> type == token_expression){		
+		while(stackTopPtr -> type == token_leftHandle || stackTopPtr -> type == token_expression){
 			stackTopPtr = s->arr[i];
 			i--;
 			if(i<0){
 				break;
 			}
 		}
-	}	
+	}
 
 	return stackTopPtr;
 }
 
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
-	Token *toBePushed = malloc(sizeof(Token));	
+	Token *toBePushed = malloc(sizeof(Token));
 	while(1){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
 		char whatToDo;	//This deals with how to access the precedence table when number or string gets on input/ stack top
-	
+
 		if ((tokenPtr -> type) == token_intNumber || (tokenPtr -> type) == token_doubleNumber || (tokenPtr -> type) == token_string){
 			if ((stackTopPtr-> type ) == token_intNumber || (stackTopPtr -> type) == token_doubleNumber || (stackTopPtr -> type) == token_string){
 				whatToDo = precedence_table[token_identifier][ token_identifier];
@@ -287,10 +288,10 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 		}
 		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
 		printf("stack top is %d\n", stackTopPtr->type);
-		printf("What to do is: %c\n\n",whatToDo);	
+		printf("What to do is: %c\n\n",whatToDo);
 		if(whatToDo == '$'){
 			return;
-		}	
+		}
 		if(whatToDo == '<'){				//When table returns <
 			stackTopPtr=stackTop(stack);	//check what is the very top of stack
 			if (stackTopPtr->type == token_expression){		//if E is on top
@@ -305,18 +306,18 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			}else{
 				toBePushed -> type = token_leftHandle;		//IF E is not top token
 				stackPush(stack, toBePushed);				//push left handle and input TOken
-				stackPush(stack, tokenPtr);	
+				stackPush(stack, tokenPtr);
 			}
 			printStack(stack);
-			
+
 			break;											//Break the cycle to get new token
 		}
-		if(whatToDo == '>'){				//IF precedence table returns >, we reduce	
+		if(whatToDo == '>'){				//IF precedence table returns >, we reduce
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
 			printStack(stack);	//TODO delete
 			whatRule(stack);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
-			if (tokenPtr->type != token_semicolon){	//NOT Semicolon 
+			if (tokenPtr->type != token_semicolon){	//NOT Semicolon
 				Token * toBePushedE = malloc(sizeof(Token));
 				toBePushedE->type = token_expression;		//if not ; push E
 				stackPush(stack, toBePushedE);
@@ -327,10 +328,10 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 					printStack(stack);
 					break;
 				}else{
-					fprintf(stderr,"Semicolon on input but stack not empty! \n"); 
-				}	
-			
-			}	
+					fprintf(stderr,"Semicolon on input but stack not empty! \n");
+				}
+
+			}
 		}
 		if(whatToDo == '='){
 			stackPush(stack,tokenPtr);
@@ -342,22 +343,22 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			Token * toBePushedE = malloc(sizeof(Token));
 			toBePushedE->type = token_expression;		// push E
 			stackPush(stack, toBePushedE);
-			break;		
+			break;
 		}
 		if(whatToDo == '0'){
 			fprintf(stderr,"Syntax Error\n");	//TODO improve?
 			exit(2);
-			
-		}	
+
+		}
 	}
-	
+
 
 	//free(toBePushed);
 }
 
 void stackPush(tStack* s,Token* Token){
 	s->top=s->top+1;
-	s->arr[s->top]=Token;	
+	s->arr[s->top]=Token;
 //	Token* stackTop= stackTop(s);
 //	fprintf(stderr,"A token has been pushed: %d, s Top is: %d\n",Token ->type,s->top);		//TODO test-output,delete later
 }
@@ -368,7 +369,7 @@ void stackPop(tStack* s){
 	}else{
 		s->arr[s->top] = NULL ;
 		(s->top)--;
-	}	
+	}
 }
 
 Token* stackTop(tStack* s){
@@ -377,7 +378,7 @@ Token* stackTop(tStack* s){
 		fprintf(stderr,"StackTop requested but stack is empty.\n");
 	}else{
 		stackTopPtr = s->arr[s->top];
-	}	
+	}
 	return stackTopPtr;
 }
 
@@ -385,14 +386,14 @@ int stackEmpty (tStack* s){
 	return(-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){	
+int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 	Token * tokenPtrTmp2 = malloc(sizeof(Token));
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
 	Token* tokenPtrTmp = tokenInit();			//init for the first $
 	tokenPtrTmp->type=token_dollar;
 	stackPush(stack,tokenPtrTmp);
-	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer	
+	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer
 	int tokenCnt =0;			//if no expression is present, this causes error
 	int depth=0;	//Defines how many brackets are yet to come to finish expression
 	while(1){
@@ -407,10 +408,10 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 		}
 		if(tokenPtr->type>token_identifier && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string)
 		{
-			fprintf(stderr,"syntax error, unexpected token\n");	
+			fprintf(stderr,"syntax error, unexpected token\n");
 			exit(2);	//TODO free all stuff
 		}
-		
+
 		if (tokenPtr->type==token_semicolon){
 			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
 			stackTopPtr=stackTopTerminal(stack);
@@ -420,7 +421,7 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 			reduction(tokenPtrTmp,stackTopPtr,stack);
 			break;
 		}
-		if (tokenPtr->type == token_bracketLeftRound){depth++;}	
+		if (tokenPtr->type == token_bracketLeftRound){depth++;}
 		if (tokenPtr->type == token_bracketRightRound){
 			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
 			depth--;
@@ -433,10 +434,10 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 			}
 		}
 		stackTopPtr = stackTopTerminal(stack);
-		reduction(precedencePtr, stackTopPtr, stack);	
-	
+		reduction(precedencePtr, stackTopPtr, stack);
+
 	}
 	free(tokenPtrTmp2);
-	free(stack);	
+	free(stack);
 	return 0;
 }
