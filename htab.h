@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define HTAB_SIZE 5
+//#define thTable thtabItem*
 
 typedef struct thtabItem{
 	const char* key;
@@ -14,9 +15,9 @@ typedef struct thtabItem{
 typedef thtabItem* thTable[HTAB_SIZE];
 
 int hashFun(const char* key);
-void htabInit(thtabItem* htab[]);
-thtabItem* htabSearch(thtabItem* htab[], const char* key);
-void htabInsert(thtabItem* htab[], const char* key);
+void htabInit(thTable *htab);
+thtabItem* htabSearch(thTable *htab, const char* key);
+void htabInsert(thTable *htab, const char* key);
 //const char* htabRead(thtabItem* htab[], const char* key);
-void htabDelete(thtabItem* htab[], const char* key);
-void htabDispose(thtabItem* htab[]);
+void htabDelete(thTable *htab, const char* key);
+void htabDispose(thTable *htab);
