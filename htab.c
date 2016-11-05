@@ -12,7 +12,7 @@ int hashFun(char* key) {                                    //Drugs are fun
 void htabInit(thTable *htab) {
     //*htab = malloc(sizeof(struct thtabItem)*HTAB_SIZE);
     for (int i = 0; i < HTAB_SIZE; i++) {
-        *htab[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
+        (*htab)[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
     }
 }
 
@@ -20,8 +20,10 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
+        //if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
         return NULL;
     }else {
+        //printf("kekel\n");
         //printf("searching\n");                              //simple debug...
         thtabItem* tempItem = (*htab)[hashFun(key)];           //assign first item of hashtable row into tempItem
         //    printf("foo\n");
@@ -35,27 +37,18 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 
 }
 
-void htabInsertReturnType(thTable *htab, char* key, Token_type returnType) {
+void htabInsertReturnType(thTable *htab, char* key, Token_type ret) {
     if (*htab == NULL) {
 
         //printf("ss\n");
     }else {
         thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
-        if (tempItem == NULL) {                             //item is not yet in hashtable
-            if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
-                insertItem->key = key;
-                insertItem->next = NULL;
-                (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
-            }else {                                         //hashtable has already created row
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
-                insertItem->key = key;
-                insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row
-                (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
-            }
+        if (tempItem == NULL) {
+            ;                            //item is not yet in hashtable
+            printf("mofo error\n");
         }else {
-            ; //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
-//            tempItem->returnType = returnType;
+             //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
+            tempItem->returnType = ret;
         }
 
     }
@@ -66,16 +59,19 @@ void htabInsert(thTable *htab, char* key) {
 
         //printf("ss\n");
     }else {
+
         thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
         if (tempItem == NULL) {                             //item is not yet in hashtable
             if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
                 insertItem->next = NULL;
+                //insertItem->returnType = token;
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }else {                                         //hashtable has already created row
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
+                //insertItem->returnType = token_invalid;
                 insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }
@@ -136,6 +132,7 @@ void printHtab(thTable *htab) {
         printf("\n");
     }
 }
+
 /*
  //for testing purposes
 int main() {
