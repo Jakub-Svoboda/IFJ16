@@ -20,7 +20,7 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
-        //if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
+        if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
         return NULL;
     }else {
         //printf("kekel\n");
@@ -94,6 +94,8 @@ void htabInsert(thTable *htab, char* key) {
             }
         }else {
             ; //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
+            fprintf(stderr, "Semanticky error htab\n");
+            exit(3);
         }
 
     }
@@ -143,7 +145,7 @@ void printHtab(thTable *htab) {
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
         while(temp != NULL) {
-            printf("->[%s %d]",temp->key,temp -> varType);
+            printf("->[%s %d]",temp->key,temp -> returnType);
             temp = temp->next;
         }
         printf("\n");
@@ -164,8 +166,10 @@ int main() {
 
     htabInsert(htab, "kaock");                                          //few tests of insert
     htabInsert(htab, "cakko");
+        htabInsert(htab, "sysel");
     htabInsert(htab, "kacko");
     htabInsert(htab, "sysel");
+
     htabInsert(htab, "televiza");
     htabInsert(htab, "balon");
     htabInsert(htab, kocka);
