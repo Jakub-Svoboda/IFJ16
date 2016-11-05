@@ -1,6 +1,6 @@
 #include "htab.h"
 
-int hashFun(const char* key) {                                    //Drugs are fun
+int hashFun(char* key) {                                    //Drugs are fun
     int hash = 0;
     int length = strlen(key);
     for(int i = 0; i < length; i++) {
@@ -16,7 +16,7 @@ void htabInit(thTable *htab) {
     }
 }
 
-thtabItem* htabSearch(thTable *htab, const char* key) {
+thtabItem* htabSearch(thTable *htab, char* key) {
 
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
@@ -35,7 +35,7 @@ thtabItem* htabSearch(thTable *htab, const char* key) {
 
 }
 
-void htabInsertReturnType(thTable *htab, const char* key, Token_type returnType) {
+void htabInsertReturnType(thTable *htab, char* key, Token_type returnType) {
     if (*htab == NULL) {
 
         //printf("ss\n");
@@ -55,13 +55,13 @@ void htabInsertReturnType(thTable *htab, const char* key, Token_type returnType)
             }
         }else {
             ; //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
-            tempItem->returnType = returnType;
+//            tempItem->returnType = returnType;
         }
 
     }
 }
 
-void htabInsert(thTable *htab, const char* key) {
+void htabInsert(thTable *htab, char* key) {
     if (*htab == NULL) {
 
         //printf("ss\n");
@@ -87,11 +87,11 @@ void htabInsert(thTable *htab, const char* key) {
 }
 
 //commented because of warnings
-//const char* htabRead (thTable *htab, const char* key) {
+//const char* htabRead (thTable *htab, char* key) {
 //    ; //used to read length of string etc if needed,
 //}
 
-void htabDelete (thTable *htab, const char* key) {
+void htabDelete (thTable *htab, char* key) {
     thtabItem* prevItem = (*htab)[hashFun(key)];
     if (*htab == NULL || prevItem == NULL) {
         ;
@@ -145,7 +145,7 @@ int main() {
     if(*htab == NULL) printf("null\n");
     htabInit(htab);
 
-    const char* kocka = "kocka";
+    char* kocka = "kocka";
     printf("HASH KOCKA %d\n", hashFun(kocka));                          //test hashFun
 
     htabInsert(htab, "kaock");                                          //few tests of insert

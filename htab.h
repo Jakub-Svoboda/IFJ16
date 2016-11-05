@@ -7,8 +7,8 @@
 //#define thTable thtabItem*
 
 typedef struct thtabItem{
-	const char* key;
-	Token_type returnType;
+	char* key;
+	//Token_type returnType;
 //	int length;  needed?
 	struct thtabItem* next;
 } thtabItem;
@@ -16,10 +16,11 @@ typedef struct thtabItem{
 
 typedef thtabItem* thTable[HTAB_SIZE];
 
-int hashFun(const char* key);
+int hashFun(char* key);
 void htabInit(thTable *htab);
-thtabItem* htabSearch(thTable *htab, const char* key);
-void htabInsert(thTable *htab, const char* key);
-//const char* htabRead(thtabItem* htab[], const char* key);
-void htabDelete(thTable *htab, const char* key);
+thtabItem* htabSearch(thTable *htab, char* key);
+void htabInsert(thTable *htab, char* key);
+//const char* htabRead(thtabItem* htab[], char* key);
+void htabDelete(thTable *htab, char* key);
 void htabDispose(thTable *htab);
+void htabInsertReturnType(thTable *htab, char* key, Token_type returnType);
