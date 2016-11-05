@@ -1,3 +1,4 @@
+/* Program 3: Prace s retezci a vestavenymi funkcemi */
 class Main{
 	static int x;
 	static void run()
@@ -6,14 +7,14 @@ class Main{
 		str1 = "Toto je nejaky text";
 		String str2;
 		str2 = str1 + ", ktery jeste trochu obohatime";
-		Main.x = ifj16.find(str2, "text");
+		Main. x = ifj16.find(str2, "text");						//HERE
 		ifj16.print("Pozice retezce \"text\" v retezci str2: " + x + "\n");
 		Game.play(str1);
 	} // end of static void run()
 } // end of class Main
 
 class Game
-{
+	{
 	static void play(String str)
 	{
 		ifj16.print("Zadejte nejakou posloupnost vsech malych pismen a-h, ");
@@ -28,8 +29,8 @@ class Game
 				str = ifj16.sort(str);
 				cmp = ifj16.compare(str, "abcdefgh");
 			}
-		}else {
-		}
-		return;
-	} 
-}//yuyuyuy
+		}else{
+	}
+	return;
+	} // end of static v
+}

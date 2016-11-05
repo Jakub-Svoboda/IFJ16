@@ -3,7 +3,7 @@ class Main{
 	static void run()
 	{
 		String str1;
-		str1 = "Toto je nejaky text";
+		str1 = "Toto je nejaky text;
 		String str2;
 		str2 = str1 + ", ktery jeste trochu obohatime";
 		Main.x = ifj16.find(str2, "text");
@@ -13,7 +13,7 @@ class Main{
 } // end of class Main
 
 class Game
-{
+	{
 	static void play(String str)
 	{
 		ifj16.print("Zadejte nejakou posloupnost vsech malych pismen a-h, ");
@@ -28,8 +28,8 @@ class Game
 				str = ifj16.sort(str);
 				cmp = ifj16.compare(str, "abcdefgh");
 			}
-		}else {
-		}
-		return;
-	} 
-}//yuyuyuy
+		}else{
+	}
+	return;
+	} // end of static v
+}
