@@ -80,4 +80,4 @@ typedef enum {
 Token *getToken(FILE *f);
 Token *tokenInit();
 Token *lookAhead(FILE *f, int steps);  // Choose 0/1 steps ahead , check usage
-0
+

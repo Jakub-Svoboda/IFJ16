@@ -1,7 +1,7 @@
 #define MAX_STACK 1023
 #include <stdio.h>
 #include <stdlib.h>
-#include "scanner.h"
+#include "firstRun.h"
 #include <string.h>
 
 
