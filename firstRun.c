@@ -26,41 +26,41 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 		tokenPtr2=tokenPtr1;
 		tokenPtr1=tokenPtr;
 		tokenPtr=getToken(f);
-		if(tokenPtr3!=NULL ){
-			if(tokenPtr1->type==token_class && tokenPtr->type==token_identifier){
-				classPtr=tokenPtr;
-			}
-			if(tokenPtr ->type == token_EOF){
-				break;
-			}
-			if(tokenPtr -> type == token_bracketLeftRound ){
-				if (tokenPtr1 -> type == token_identifier ){
-					if(tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String || tokenPtr2->type==token_void){
-						if(tokenPtr3->type == token_static){
-							//printf("PISU FUNKCI YO\n\n\n\n\n");
-							functionInsert(tokenPtr1, tokenPtr2, classPtr, functionTable);
-						}
-					}
-				}
-			}
-
-			if(tokenPtr -> type == token_assign || tokenPtr -> type == token_semicolon ){
-				if (tokenPtr1 -> type == token_identifier ){
-					if(tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String){
-						if(tokenPtr3->type == token_static){
-							//printf("PISU STACICKOU PROMENNOU YO\n\n\n\n\n");
-							globalVarInsert(tokenPtr1, tokenPtr2, globalVarTable);
-						}
-
-					}
-					if(tokenPtr2->type==token_void && tokenPtr3->type==token_static)
-					{
-						fprintf(stderr, "Syntax error, variable type void\n");
-						exit(2);
+		if(tokenPtr1!=NULL && tokenPtr1->type==token_class && tokenPtr->type==token_identifier){
+			classPtr=tokenPtr;
+		}
+		if(tokenPtr ->type == token_EOF){
+			break;
+		}
+		if(tokenPtr -> type == token_bracketLeftRound ){
+			if (tokenPtr1 -> type == token_identifier ){
+				if(tokenPtr2!=NULL && tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String || tokenPtr2->type==token_void){
+					if(tokenPtr3!=NULL && tokenPtr3->type == token_static){
+						//printf("PISU FUNKCI YO\n\n\n\n\n");
+					
+						functionInsert(tokenPtr1, tokenPtr2, classPtr, functionTable);
 					}
 				}
 			}
 		}
+
+		if(tokenPtr -> type == token_assign || tokenPtr -> type == token_semicolon ){
+			if (tokenPtr1!=NULL && tokenPtr1 -> type == token_identifier ){
+				if(tokenPtr2!= NULL && tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String){
+					if(tokenPtr3!=NULL && tokenPtr3->type == token_static){
+						//printf("PISU STACICKOU PROMENNOU YO\n\n\n\n\n");
+						globalVarInsert(tokenPtr1, tokenPtr2, globalVarTable);
+					}
+					
+				}
+				if(tokenPtr2!=NULL && tokenPtr3!=NULL && tokenPtr2->type==token_void && tokenPtr3->type==token_static)
+				{
+					fprintf(stderr, "Syntax error, variable type void\n");
+					exit(2);
+				}
+			}
+		}
+		
 
 	}
 	printHtab(globalVarTable);
