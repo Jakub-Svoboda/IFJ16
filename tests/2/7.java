@@ -1,3 +1,4 @@
+/* Program 3: Prace s retezci a vestavenymi funkcemi */
 class Main{
 	static int x;
 	static void run()
@@ -13,7 +14,7 @@ class Main{
 } // end of class Main
 
 class Game
-{
+	{
 	static void play(String str)
 	{
 		ifj16.print("Zadejte nejakou posloupnost vsech malych pismen a-h, ");
@@ -24,12 +25,12 @@ class Game
 		if (cmp != 0) {
 			while (cmp != 0) {
 				ifj16.print("Spatne zadana posloupnost, zkuste znovu:");
-				str = ifj16.readString();
+				int	str = ifj16.readString();		//here
 				str = ifj16.sort(str);
 				cmp = ifj16.compare(str, "abcdefgh");
 			}
-		}else {
-		}
-		return;
-	} 
-}//yuyuyuy
+		}else{
+	}
+	return;
+	} // end of static v
+}

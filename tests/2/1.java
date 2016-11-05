@@ -1,5 +1,6 @@
+
 class Main{
-	static int x;
+	static int x
 	static void run()
 	{
 		String str1;
@@ -13,7 +14,7 @@ class Main{
 } // end of class Main
 
 class Game
-{
+	{
 	static void play(String str)
 	{
 		ifj16.print("Zadejte nejakou posloupnost vsech malych pismen a-h, ");
@@ -28,8 +29,8 @@ class Game
 				str = ifj16.sort(str);
 				cmp = ifj16.compare(str, "abcdefgh");
 			}
-		}else {
-		}
-		return;
-	} 
-}//yuyuyuy
+		}else{
+	}
+	return;
+	} // end of static v
+}

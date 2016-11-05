@@ -227,13 +227,14 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					case '/':
 						c = fgetc(f);
 						if(c == '/') {							//line-comment found
-							while((c=fgetc(f)) != '\n' || c != EOF){		//just skip it!
-								;
+							while((c=fgetc(f)) != '\n'){		//just skip it!
+								if(c == EOF) {
+									t->type = token_EOF;
+									return t;
+								}
+								//printf("%c ",c);
 							}
-							if(c == EOF) {
-								t->type = token_EOF;
-								return t;
-							}
+							
 							break;
 						}else if(c == '*') {					//block-comment found
 							//printf("K");

@@ -24,7 +24,7 @@ class Main
             return 1;
         }
         else {
-            11temp_result = factorial(decremented_n);
+            temp_result = factorial(decremented_n);
             temp_result = n * temp_result;
             return temp_result;
         }
