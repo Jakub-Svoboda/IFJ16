@@ -1,5 +1,5 @@
 class Main {
-	static int a.a(){
+	static int 1a.a(){
 		
 	}
 }

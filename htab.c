@@ -110,7 +110,7 @@ void printHtab(thTable *htab) {
         printf("\n");
     }
 }
-
+/*
  //for testing purposes
 int main() {
     thTable *htab = NULL;
@@ -150,3 +150,4 @@ int main() {
     printHtab(htab);
     return 0;
 }
+*/
