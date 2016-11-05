@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "scanner.h"
+//#include "htab.c"
 
 #define true 1
 #define false 0
@@ -107,7 +108,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 		//printf("%c,",c);
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
-				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0)){			//id's may contain numbers and characters or 1 dot
+				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_'){			//id's may contain numbers and characters or 1 dot
 					if(c == '.') isComplex = 1;
 					buff[position] = c;
 					position++;
