@@ -1,7 +1,8 @@
 #include "firstRun.h"
 
-void functionInsert(Token * tokenPtr, thTable * functionTable){
-	htabInsert(functionTable, tokenPtr->name);
+void functionInsert(Token * tokenName, Token * tokenType, thTable * functionTable){
+	htabInsert(functionTable, tokenName->name);
+	htabInsertReturnType(functionTable, tokenName->name,tokenType->type);
 }
 
 void globalVarInsert(Token * tokenPtr, thTable * globalVarTable){
@@ -27,7 +28,7 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 				if(tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String || tokenPtr2->type==token_void){
 					if(tokenPtr3->type == token_static){
 						printf("PISU FUNKCI YO\n\n\n\n\n");
-						functionInsert(tokenPtr1,functionTable);
+						functionInsert(tokenPtr1, tokenPtr2,functionTable);
 					}
 				}
 			}
@@ -46,6 +47,7 @@ int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
 		}
 		
 	}
+	printHtab(functionTable);
 	return 0;
 }
 
