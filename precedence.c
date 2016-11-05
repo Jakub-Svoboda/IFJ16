@@ -406,13 +406,13 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 		}else{
 			precedencePtr = getModifiedTokenPrecedence(f,tokenPtr);
 		}
-		if(tokenPtr->type>token_identifier && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string)
+		if(tokenPtr->type>token_identifier && tokenPtr->type != token_comma && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string)
 		{
 			fprintf(stderr,"syntax error, unexpected token\n");
 			exit(2);	//TODO free all stuff
 		}
 
-		if (tokenPtr->type==token_semicolon){
+		if (tokenPtr->type==token_semicolon || tokenPtr->type == token_comma){
 			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
 			stackTopPtr=stackTopTerminal(stack);
 			fprintf(stderr,"Stak top ptr is: %d\n",tokenPtr->type);
