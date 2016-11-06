@@ -207,7 +207,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						t->type = token_intNumber;
 						t->name = buff;
 						//TODO hashtable insert
-						printf("INT'%s'",buff);			//its just number..
+						//printf("INT'%s'",buff);			//its just number..
 					}
 					position = 0;						//reset
 					isDouble = false;					//reset

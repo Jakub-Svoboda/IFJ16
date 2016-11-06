@@ -210,7 +210,7 @@ int whatRule(tStack* stack){
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
 					rule= 12;												// rule 12 <i>
-					fprintf(stderr,"tmp%d, =, %d, \n",tmpCounter,tokenPtr->name);
+					fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
 					tmpCounter++;
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
