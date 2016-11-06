@@ -14,7 +14,7 @@ char* concat(char* str1, char* str2) {
     return buff;
 }
 
-int hashFun(char* key) {                                    //Drugs are fun
+int hashFun(char* key) {                                    
     int hash = 0;
     int length = strlen(key);
     for(int i = 0; i < length; i++) {
@@ -246,6 +246,18 @@ void printHtab(thTable *htab, int var) {
     }
 }
 
+
+void printHtabLocal(thTable *htab){
+    for (int i = 0; i< HTAB_SIZE; i++) {
+        printf("|ROW %d|",i);
+        thtabItem* temp = (*htab)[i];
+        while(temp != NULL) {
+            printf("->[%s ]",temp->key);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+}
 /*
  //for testing purposes
 int main() {
