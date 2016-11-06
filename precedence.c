@@ -206,12 +206,13 @@ int whatRule(tStack* stack){
 				case token_intNumber:
 				case token_doubleNumber:
 				case token_string:
+				fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
+					tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
 					rule= 12;												// rule 12 <i>
-					fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
-					tmpCounter++;
+					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
 					////printStack(stack);
