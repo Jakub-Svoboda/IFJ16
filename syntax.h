@@ -13,12 +13,14 @@
 #include <stdlib.h>
 #include "precedence.h"
 #include <string.h>
+#include "iList.h"
 
 
 void getModifiedToken(FILE *f,Token* tokenPtr);
-int runSyntaxAnalysis (FILE *f);
+int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
 int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr);
 void getModifiedLookAhead(FILE *f,Token* tokenPtr);
+void generateInstruction(tInstr I, int instType, void *addr1, void *addr2, void *addr3,tListOfInstr* list);
 
 typedef enum state{
 	CLASS_BLOCK,

@@ -19,7 +19,7 @@ class Game
 {
 
 	static String cus;
-	static int cus;
+	//static int cus;
 	static void run()
 	{
 

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//types of instructions
+#define I_STOP    0		//end of program
+
 typedef struct		//List of instructions
 {
   struct listItem *first;  // pointer to first element
@@ -24,3 +27,4 @@ void listInit(tListOfInstr *L);
 void listInsertLast(tListOfInstr *L, tInstr I);
 void listFirst(tListOfInstr *L);
 void listNext(tListOfInstr *L);
+tInstr *listGetData(tListOfInstr *L);

@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include "syntax.h"
 
+
 int main(int argc, char *argv[]){
 	if(argc==2)
-	{
+	{	
+		tListOfInstr list;
+		listInit(&list);	//pointer to the list of instructions
+		
 		thTable * functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(functionTable);
 		thTable * globalVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
@@ -20,7 +24,7 @@ int main(int argc, char *argv[]){
 		
 		FILE *f;
 		if ((f = fopen(argv[1], "r"))!= NULL){		//Checks for nonexistant file 
-			int result = runSyntaxAnalysis(f);
+			int result = runSyntaxAnalysis(f,&list);
 			result = result; 	//TODO delete me
 			fclose(f);	
 		}else{

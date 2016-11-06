@@ -1,5 +1,6 @@
 #include "syntax.h"
 
+
 void printType(Token* tokenPtr){
 	switch (tokenPtr -> type){
 		case		token_add: 				fprintf(stderr,"+ \n");		break;
@@ -55,13 +56,26 @@ void printType(Token* tokenPtr){
 	}
 }
 
-int runSyntaxAnalysis (FILE *f) {
+int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	Token* lookAheadPtr = malloc(sizeof(Token));
 	Token* tokenPtr = malloc(sizeof(Token));
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lookAheadPtr);
 	result =result; //TODO delete me
+	
+	tInstr I;			//create instruction of end and place it to the end of the instruction list
+	generateInstruction(I,I_STOP, NULL, NULL, NULL,list);
+	listInsertLast(list,I);
 	free(tokenPtr);
 	return result;
+	
+}
+
+void generateInstruction(tInstr I, int instType, void *addr1, void *addr2, void *addr3,tListOfInstr* list){	//Adds new instruction to list of instructions
+	I.instType = instType;
+	I.addr1 = addr1;
+	I.addr2 = addr2;
+	I.addr3 = addr3;
+	listInsertLast(list, I);
 }
 
 //returns 1 if token_identifier is ID of a function
