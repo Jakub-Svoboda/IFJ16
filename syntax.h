@@ -13,12 +13,15 @@
 #include <stdlib.h>
 #include "precedence.h"
 #include <string.h>
+#include "iList.h"
 
 
 void getModifiedToken(FILE *f,Token* tokenPtr);
-int runSyntaxAnalysis (FILE *f);
-int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr);
+int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
+int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOfInstr * list,thTable* localVarTable);
 void getModifiedLookAhead(FILE *f,Token* tokenPtr);
+void generateInstruction(tInstr I, int instType, void *addr1, void *addr2, void *addr3,tListOfInstr* list);
+thTable* enterScope();
 
 typedef enum state{
 	CLASS_BLOCK,
