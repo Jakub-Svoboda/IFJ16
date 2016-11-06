@@ -68,13 +68,8 @@ int runSyntaxAnalysis (FILE *f) {
 int isItFunction (FILE *f, Token* tokenPtr){
 	Token * tmpPtr= lookAhead(f,1);
 	if(tokenPtr->type == 12 && tmpPtr->type == 10){ //10 = bracketLeftRound, 12 = identifier
-		//printf("------------------------------------je to funkce! \n");
 		return 1;
 	}
-
-	//TODO check table of function
-
-	//return 1;
 	return 0;
 }
 

@@ -11,15 +11,21 @@ int main(int argc, char *argv[]){
 		htabInit(globalVarTable);
 		
 		FILE *file;
-		file = fopen(argv[1], "r");	
-		firstRun(functionTable,globalVarTable,file);
-		fclose(file);			
+		if ((file = fopen(argv[1], "r")) != NULL){	//Checks for nonexistant file 
+			firstRun(functionTable,globalVarTable,file);
+			fclose(file);			
+		}else{
+			exit(99);								//exits if file does not exist
+		}
 		
 		FILE *f;
-		f = fopen(argv[1], "r");
-		int result = runSyntaxAnalysis(f);
-		result = result; 	//TODO delete me
-		fclose(f);
+		if ((f = fopen(argv[1], "r"))!= NULL){		//Checks for nonexistant file 
+			int result = runSyntaxAnalysis(f);
+			result = result; 	//TODO delete me
+			fclose(f);	
+		}else{
+			exit(99);								//exits if file does not exist
+		}
 	}
 	return 0;
 }

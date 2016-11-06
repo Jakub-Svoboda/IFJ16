@@ -173,7 +173,7 @@ int whatRule(tStack* stack){
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
-								rule = 9;									//rule 9 <E!=E>
+								rule = 9;									//rule 9 <E==E>
 							}else{
 								fprintf(stderr,"Error: Someting E!=E>\n");
 							}
