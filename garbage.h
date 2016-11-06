@@ -10,8 +10,6 @@ typedef struct { 			//List
     tElemPtr First;			//Pointer to the first node
 } tList;
 
-extern tList A;			//Global variable which stores the pointers to the allocated memory
-
-void *memalloc(unsigned);			//Allocates memory and stores the pointer to that memory
-void memfreeall();
-void memfree(void *);		
+void *memalloc(unsigned, tList *);			//Allocates memory and stores the pointer to that memory
+void memfreeall(tList *);			//Frees all allocated memory
+void memfree(void *, tList *);			//Frees memory on pointer specified
