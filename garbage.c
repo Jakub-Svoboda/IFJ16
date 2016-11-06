@@ -22,36 +22,36 @@ void memfreeall() {			//Dispose pointer list and free all memory
 	}
 }
 
-void memfree(void *ptr) {
-	tElemPtr hPtr;
-	tElemPtr ttPtr = A.First;
-	tElemPtr tPtr = A.First;
+void memfree(void *ptr) {			//Function frees memory on specified pointer (must be allocated using memalloc, NOT malloc)
+	tElemPtr hPtr;			//Help pointer
+	tElemPtr ttPtr = A.First;			//Pointer to previous node
+	tElemPtr tPtr = A.First;			//Pointer to current node
 
-	if(tPtr->memptr == ptr) {
-		hPtr = tPtr;
-		tPtr = tPtr->next;
-		free(hPtr->memptr);
-		free(hPtr);
+	if(tPtr->memptr == ptr) {		//If the pointer given as argument equeals memptr pointer in the current (First in this case) node 
+		hPtr = tPtr;			//Backup current node
+		tPtr = tPtr->next;			//Current node moves to the next node
+		free(hPtr->memptr);			//Frees memory allocated on the pointer given as argument
+		free(hPtr);			//Frees the node in which the pointer given as argument was
 		hPtr = NULL;
-		A.First = tPtr;
+		A.First = tPtr;			//First node is now the next node
 		ttPtr = NULL;
 		tPtr = NULL;
 		return;
 	}
-	tPtr = tPtr->next;
+	tPtr = tPtr->next;			//Current node moves to the next node
 
-	while(tPtr != NULL) {
+	while(tPtr != NULL) {			//While not the end of list
 		
-		if(tPtr->memptr != ptr) {
-			tPtr = tPtr->next;
-			ttPtr = ttPtr->next;
+		if(tPtr->memptr != ptr) {			//If the pointer given as argument does not equeal memptr pointer in the current node
+			tPtr = tPtr->next;			//Current node moves to the next node
+			ttPtr = ttPtr->next;			//Previous node moves to the next node
 		}
 		else {
-			hPtr = tPtr;
-			tPtr = tPtr->next;
-			ttPtr->next = tPtr;
-			free(hPtr->memptr);
-			free(hPtr);
+			hPtr = tPtr;			//Backup current node
+			tPtr = tPtr->next;			//Current node moves to the next node
+			ttPtr->next = tPtr;			//Set pointer next of previous node to the current node
+			free(hPtr->memptr);			//Frees memory allocated on the pointer given as argument
+			free(hPtr);			//Frees the node in which the pointer given as argument was
 			hPtr = NULL;
 			ttPtr = NULL;
 			tPtr = NULL;
