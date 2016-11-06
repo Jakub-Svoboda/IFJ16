@@ -168,7 +168,7 @@ void htabInsert(thTable *htab, char* key) {
 
         //printf("ss\n");
     }else {
-		printf("%s\n\n",key);
+		//printf("%s\n\n",key);
         thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
         if (tempItem == NULL) {                             //item is not yet in hashtable
             if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet

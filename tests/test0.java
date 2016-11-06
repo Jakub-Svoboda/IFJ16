@@ -1,6 +1,8 @@
 
 class Main{
 	static void func(int a){
-		x= a + 5 ;
+		func(0+0);
+		int x =0;
+		String a=x;
+		double d;
 	}
-}

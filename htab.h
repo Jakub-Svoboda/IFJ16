@@ -30,3 +30,4 @@ void htabDispose(thTable *htab);
 void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_type ret);
 void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type var);
 void printHtab(thTable *htab, int var);
+void printHtabLocal(thTable *htab);

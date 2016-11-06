@@ -1,6 +1,5 @@
 #include "syntax.h"
 
-
 void printType(Token* tokenPtr){
 	switch (tokenPtr -> type){
 		case		token_add: 				fprintf(stderr,"+ \n");		break;
@@ -59,9 +58,11 @@ void printType(Token* tokenPtr){
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	Token* lookAheadPtr = malloc(sizeof(Token));
 	Token* tokenPtr = malloc(sizeof(Token));
-	thTable* localVarTable=NULL;
+	thTable * localVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+	htabInit(localVarTable);
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lookAheadPtr,list,localVarTable);
 	result =result; //TODO delete me
+	printHtabLocal(localVarTable);
 	
 	tInstr I;			//create instruction of end and place it to the end of the instruction list
 	generateInstruction(I,I_STOP, NULL, NULL, NULL,list);
@@ -318,7 +319,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 							getModifiedToken(f,tokenPtr);
 							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
-							localVarTable = enterScope();
 							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 						}
