@@ -189,6 +189,10 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						buff = realloc(buff, buffSize);
 					}
 				}else { //Osetrit double				//is this OK now?
+					if(isalpha(c)) {
+						fprintf(stderr, "Lexical error, invalid number\n");
+						exit(1);
+					}
 					ungetc(c,f);
 					state = state_default;				//end reading state
 				}
@@ -203,7 +207,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						t->type = token_intNumber;
 						t->name = buff;
 						//TODO hashtable insert
-						//printf("INT'%s'",buff);			//its just number..
+						printf("INT'%s'",buff);			//its just number..
 					}
 					position = 0;						//reset
 					isDouble = false;					//reset
@@ -397,7 +401,7 @@ void identifyToken(Token *tempTok) {
 int main(int argc, char *argv[]) {
 
 	FILE *f;
-	f = fopen("tests/test0.java", "r");
+	f = fopen("tests/double.java", "r");
 	Token *tempTok = lookAhead(f, 0);
 
 
