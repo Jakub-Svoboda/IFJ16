@@ -38,3 +38,19 @@ tInstr *listGetData(tListOfInstr *L){	//Returns the active instruction
 		return &(L->active->Instruction);
 	}
 }
+void *listGetPointerLast(tListOfInstr *L){
+  return (void*) L->last;
+}
+
+void listPrint(tListOfInstr *L){
+	listFirst(L);
+	while(1){
+		if(L->last != L-> active){
+			fprintf(stderr,"instruction: %d\n",L->active->Instruction.instType);
+			listNext(L);
+		}else{
+			fprintf(stderr,"instruction: %d\n",L->active->Instruction.instType);
+			break;
+		}			
+	}	
+}

@@ -18,7 +18,7 @@
 
 void getModifiedToken(FILE *f,Token* tokenPtr);
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
-int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr);
+int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOfInstr * list);
 void getModifiedLookAhead(FILE *f,Token* tokenPtr);
 void generateInstruction(tInstr I, int instType, void *addr1, void *addr2, void *addr3,tListOfInstr* list);
 

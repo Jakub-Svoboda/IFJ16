@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 //types of instructions
-#define I_STOP    0		//end of program
+#define I_STOP    	0		//end of program
+#define I_LABEL		1		//jump label
 
 typedef struct		//List of instructions
 {
@@ -28,3 +29,5 @@ void listInsertLast(tListOfInstr *L, tInstr I);
 void listFirst(tListOfInstr *L);
 void listNext(tListOfInstr *L);
 tInstr *listGetData(tListOfInstr *L);
+void listPrint(tListOfInstr *L);
+void *listGetPointerLast(tListOfInstr *L);
