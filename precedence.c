@@ -1,4 +1,4 @@
-#include "precedence.h"
+#include "syntax.h"
 
 
 char precedence_table[14][14]={
@@ -37,11 +37,11 @@ Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 	return tmpPtr;
 }
 
-int whatRule(tStack* stack){
+int whatRule(tStack* stack, tListOfInstr * list){
 	static int tmpCounter = 0;
 	int rule;
 	Token* tokenPtr = malloc(sizeof(Token));
-
+	tInstr I;
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 
@@ -268,11 +268,10 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 			}
 		}
 	}
-
 	return stackTopPtr;
 }
 
-void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
+void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr * list){
 	Token *toBePushed = malloc(sizeof(Token));
 	while(1){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
@@ -321,7 +320,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
 			//printStack(stack);	//TODO delete
-			whatRule(stack);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
+			whatRule(stack, list);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
 			if (tokenPtr->type != token_semicolon){	//NOT Semicolon
 				Token * toBePushedE = malloc(sizeof(Token));
 				toBePushedE->type = token_expression;		//if not ; push E
@@ -335,7 +334,6 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 				}else{
 					fprintf(stderr,"Semicolon on input but stack not empty! \n");
 				}
-
 			}
 		}
 		if(whatToDo == '='){
@@ -343,7 +341,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
 			//printStack(stack);
-			whatRule(stack);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
+			whatRule(stack,list);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
 			//printStack(stack);
 			Token * toBePushedE = malloc(sizeof(Token));
 			toBePushedE->type = token_expression;		// push E
@@ -356,8 +354,6 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack){
 
 		}
 	}
-
-
 	//free(toBePushed);
 }
 
@@ -391,7 +387,7 @@ int stackEmpty (tStack* s){
 	return(-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
+int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * list){
 	Token * tokenPtrTmp2 = malloc(sizeof(Token));
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
@@ -423,7 +419,7 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 			//fprintf(stderr,"Stak top ptr is: %d\n",tokenPtr->type);
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
 			tokenPtrTmp->type = token_dollar;
-			reduction(tokenPtrTmp,stackTopPtr,stack);
+			reduction(tokenPtrTmp,stackTopPtr,stack,list);
 			break;
 		}
 		if (tokenPtr->type == token_bracketLeftRound){depth++;}
@@ -433,13 +429,13 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst){
 			if (depth<0){
 				Token* tokenPtrTmp = tokenInit();			//init for the last $
 				tokenPtrTmp->type = token_dollar;
-				reduction(tokenPtrTmp,stackTopPtr,stack);
+				reduction(tokenPtrTmp,stackTopPtr,stack,list);
 				//fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
 				return 0;
 			}
 		}
 		stackTopPtr = stackTopTerminal(stack);
-		reduction(precedencePtr, stackTopPtr, stack);
+		reduction(precedencePtr, stackTopPtr, stack,list);
 
 	}
 	free(tokenPtrTmp2);

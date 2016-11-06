@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "syntax.h"
 
-
 int main(int argc, char *argv[]){
 	if(argc==2)
 	{	

@@ -6,3 +6,4 @@ class Main{
 		String a=x;
 		double d;
 	}
+}

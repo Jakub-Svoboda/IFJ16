@@ -11,10 +11,8 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
-#include "precedence.h"
 #include <string.h>
-#include "iList.h"
-
+#include "precedence.h"
 
 void getModifiedToken(FILE *f,Token* tokenPtr);
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
