@@ -1,31 +1,31 @@
 #include "garbage.h"
 
-tList A;			//Global variable for storing pointers to memory
-
-void *memalloc(unsigned size) {			//Function allocates memory given and stores poiter to that memory
+void *memalloc(unsigned size, tList *A) {			//Function allocates memory given and stores poiter to that memory
 	tElemPtr hPtr = malloc(sizeof(struct tElem));			//Allocating memory for new list node
-	hPtr->memptr = malloc(size);			//Allocating memory given
-	hPtr->next = A.First;			//Set new node next pointer to the first node
-	A.First = hPtr;			//First is now new node
+	hPtr->memptr = malloc(size);
+	printf("%p\n", hPtr->memptr);			//Allocating memory given
+	hPtr->next = A->First;
+	printf("%p\n", hPtr->memptr);			//Set new node next pointer to the first node
+	A->First = hPtr;			//First is now new node
 
-	return(A.First->memptr);			//Return pointer to the newly allocated memory
+	return(A->First->memptr);			//Return pointer to the newly allocated memory
 }
 
-void memfreeall() {			//Dispose pointer list and free all memory
+void memfreeall(tList *A) {			//Dispose pointer list and free all memory
 	tElemPtr hPtr;			//Help pointer
 
-	while (A.First != NULL) {			//While the list is not empty
-		hPtr = A.First;			//Help points to the first node
-		A.First = A.First->next;			//First now points to the next node
+	while (A->First != NULL) {			//While the list is not empty
+		hPtr = A->First;			//Help points to the first node
+		A->First = A->First->next;			//First now points to the next node
 		free(hPtr->memptr);			//Free help memptr memory
-		free(hPtr);			//Free help node memory
+		free(hPtr);			//Free help node memory	
 	}
 }
 
-void memfree(void *ptr) {			//Function frees memory on specified pointer (must be allocated using memalloc, NOT malloc)
+void memfree(void *ptr, tList *A) {			//Function frees memory on specified pointer (must be allocated using memalloc, NOT malloc)
 	tElemPtr hPtr;			//Help pointer
-	tElemPtr ttPtr = A.First;			//Pointer to previous node
-	tElemPtr tPtr = A.First;			//Pointer to current node
+	tElemPtr ttPtr = A->First;			//Pointer to previous node
+	tElemPtr tPtr = A->First;			//Pointer to current node
 
 	if(tPtr->memptr == ptr) {		//If the pointer given as argument equeals memptr pointer in the current (First in this case) node 
 		hPtr = tPtr;			//Backup current node
@@ -33,7 +33,7 @@ void memfree(void *ptr) {			//Function frees memory on specified pointer (must b
 		free(hPtr->memptr);			//Frees memory allocated on the pointer given as argument
 		free(hPtr);			//Frees the node in which the pointer given as argument was
 		hPtr = NULL;
-		A.First = tPtr;			//First node is now the next node
+		A->First = tPtr;			//First node is now the next node
 		ttPtr = NULL;
 		tPtr = NULL;
 		return;
