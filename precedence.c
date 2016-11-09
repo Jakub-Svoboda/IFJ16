@@ -38,10 +38,10 @@ Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 }
 
 int whatRule(tStack* stack, tListOfInstr * list){
-	static int tmpCounter = 0;
+	//static int tmpCounter = 0;
 	int rule;
 	Token* tokenPtr = malloc(sizeof(Token));
-	tInstr I;
+	//tInstr I;
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 
@@ -206,9 +206,9 @@ int whatRule(tStack* stack, tListOfInstr * list){
 				case token_intNumber:
 				case token_doubleNumber:
 				case token_string:
-				fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
-				generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
-				tmpCounter++;
+				//fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
+				//generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
+				//tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
