@@ -56,11 +56,11 @@ void printType(Token* tokenPtr){
 }
 
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
-	Token* lookAheadPtr = malloc(sizeof(Token));
+	Token* lastToken = malloc(sizeof(Token));
 	Token* tokenPtr = malloc(sizeof(Token));
 	thTable * localVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 	htabInit(localVarTable);
-	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lookAheadPtr,list,localVarTable);
+	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list,localVarTable);
 	result =result; //TODO delete me
 	//printHtabLocal(localVarTable);
 	
@@ -107,7 +107,7 @@ void getModifiedLookAhead(FILE *f,Token* tokenPtr){
 	memcpy(tokenPtr,tmpPtr,sizeof(Token));
 }
 
-int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOfInstr * list,thTable* localVarTable){
+int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfInstr * list,thTable* localVarTable){
 	tInstr I;
 	int result=1;	
 	static int counter=0; //TODO check if used	// coutner for loop labels
@@ -119,8 +119,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			if(tokenPtr->type != token_EOF){
-					if ((result=syntaxCheck( CLASS, f, tokenPtr, lookAheadPtr, list,localVarTable))		!= 0) {goto EXIT;}
-					if ((result=syntaxCheck( CLASS_BLOCK, f, tokenPtr, lookAheadPtr, list,localVarTable))		!= 0) {goto EXIT;}
+					if ((result=syntaxCheck( CLASS, f, tokenPtr, lastToken, list,localVarTable))		!= 0) {goto EXIT;}
+					if ((result=syntaxCheck( CLASS_BLOCK, f, tokenPtr, lastToken, list,localVarTable))		!= 0) {goto EXIT;}
 			}else{
 				fprintf(stderr, "\nSyntax OK\n");
 			}
@@ -129,10 +129,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 
 //******************class*******************//
 		case CLASS:
-			if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr, list,localVarTable))					!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
-			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n{\n");goto EXIT;}
-			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))			!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
-			if ((result=syntaxCheck( RIGHT_CURLY_BRACKET_CURRENT, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n}\n");goto EXIT;}
+			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list,localVarTable))					!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
+			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n{\n");goto EXIT;}
+			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lastToken, list,localVarTable))			!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
+			if ((result=syntaxCheck( RIGHT_CURLY_BRACKET_CURRENT, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n}\n");goto EXIT;}
 
 			return 0;
 			break;
@@ -210,8 +210,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 					return 0;
 					break;
 				case token_static:
-					if ((result=syntaxCheck( TYPE, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
-					if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
+					if ((result=syntaxCheck( TYPE, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
+					if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
@@ -221,7 +221,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 						break;
 					}else{
 						if (tokenPtr -> type == token_bracketLeftRound){
-							if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+							if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 							break;
 						}
 					}
@@ -235,7 +235,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 					return -1;
 			}
 
-			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))			!= 0) {fprintf(stderr,"\nCBC\n");goto EXIT;}
+			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lastToken, list,localVarTable))			!= 0) {fprintf(stderr,"\nCBC\n");goto EXIT;}
 			return result;
 			break;
 
@@ -246,17 +246,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			if(tokenPtr -> type == token_bracketRightRound){
-				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
+				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
 			}else{
-				if ((result=syntaxCheck( TYPE_CURRENT, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nTYPE\n");goto EXIT;}
-				if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr, list,localVarTable))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
+				if ((result=syntaxCheck( TYPE_CURRENT, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nTYPE\n");goto EXIT;}
+				if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list,localVarTable))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 				getModifiedToken(f,tokenPtr);
 				//printType(tokenPtr);
 				if(tokenPtr -> type == token_comma){
-					if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFD\n");goto EXIT;}
+					if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFD\n");goto EXIT;}
 				}else{
 					if(tokenPtr -> type == token_bracketRightRound){
-						if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
+						if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
 					}
 				}
 			}
@@ -289,8 +289,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 
 //******************FN_BODY_BEGIN*******************//
 		case FN_BODY_BEGIN:
-			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLCB\n");goto EXIT;}
-			if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFB\n");goto EXIT;}
+			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nLCB\n");goto EXIT;}
+			if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFB\n");goto EXIT;}
 
 			return result;
 			break;
@@ -307,8 +307,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
-						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
@@ -320,46 +320,47 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 							getModifiedToken(f,tokenPtr);
 							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
-							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 						}
 					}else{
 						goto EXIT;
 					}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					break;
 				case token_int:
-					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					break;
 				case token_String:
-					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					break;
 				case token_double:
-					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					break;
 				case token_while:
 					generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
 					fprintf(stderr,"I_LABEL: while%d\n",counter);
 					int gotoLabel = counter;
-					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
-					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					counter++;
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					runPrecedenceAnalysis(f,tokenPtr,1,list);
+					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					fprintf(stderr,"I_GOTO: while%d\n",gotoLabel);
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					generateInstruction(I,I_GOTO, NULL, NULL, NULL,list);
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_if:
-					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
-					if ((result=syntaxCheck( ELSE, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( ELSE, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_return:
 					getModifiedToken(f,tokenPtr);
@@ -369,93 +370,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 						runPrecedenceAnalysis(f,tokenPtr,0,list);
 						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}
 						}
-					if ((result=syntaxCheck(FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck(FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				default:
 					return -1;
 			}
-			//if ((result=syntaxCheck( FN_BODY_CURRENT, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBC\n");goto EXIT;}
+			//if ((result=syntaxCheck( FN_BODY_CURRENT, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBC\n");goto EXIT;}
 
 			return result;
 			break;
 
-//******************FN_BODY_CURRENT*******************//
-/*		case FN_BODY_CURRENT:
-			switch(tokenPtr -> type){
-				case token_bracketRightCurly:
-					return 0;
-					break;
-				case token_identifier:								//id
-					getModifiedToken(f,tokenPtr);
-					//printType(tokenPtr);
-					if(tokenPtr -> type == token_bracketLeftRound){	// id(
-						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 
-					}else if (tokenPtr -> type == token_assign){	//id=
-						getModifiedToken(f,tokenPtr);
-						//printType(tokenPtr);
-						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
-							runPrecedenceAnalysis(f,tokenPtr,0, list);
-							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
-						}else{									// id = functionid
-							getModifiedToken(f,tokenPtr);
-							//printType(tokenPtr);
-							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
-							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
-						}
-					}else{
-						goto EXIT;
-					}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					break;
-				case token_int:
-					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					break;
-				case token_String:
-					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					break;
-				case token_double:
-					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					break;
-				case token_while:
-					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
-					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					return result;
-				case token_if:
-					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
-					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
-					if ((result=syntaxCheck( ELSE, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					return result;
-				case token_return:
-					getModifiedToken(f,tokenPtr);
-					//printType(tokenPtr);
-					if(tokenPtr-> type == token_semicolon){
-					}else{
-						runPrecedenceAnalysis(f,tokenPtr,0,list);
-						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}
-					}
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
-					return result;
-				default:
-					return -1;
-			}
-			if ((result=syntaxCheck( FN_BODY_CURRENT, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFBC\n");goto EXIT;}
-
-			return result;
-			break;
-			*/
 
 //******************ASSIGN*******************//
 		case ASSIGN:
@@ -514,8 +439,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 
 //******************LOCAL_VAR_DEC*******************//
 		case LOCAL_VAR_DEC:
-			if ((result=syntaxCheck( ID, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
-			htabInsert(localVarTable,tokenPtr -> name);
+			lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));		
+			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
+			generateInstruction(I,I_NEW_VAR, tokenPtr, lastToken, NULL,list);				//TODO check if not redeclaration
+			fprintf(stderr,"I_NEW_VAR: %s, %d\n",tokenPtr->name, lastToken->type);
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			switch (tokenPtr -> type){
@@ -529,8 +456,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 								getModifiedToken(f,tokenPtr);
 								//printType(tokenPtr);
 								if (tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n(\n");goto EXIT;}
-								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-								if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+								if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 							}else{
 								runPrecedenceAnalysis(f,tokenPtr,0,list);
 								if (tokenPtr->type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
@@ -552,6 +479,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 			//printType(tokenPtr);
 			switch (tokenPtr ->type){
 				case token_bracketRightRound:
+					fprintf(stderr,"I_FN_CALL\n");
+					//generateInstruction(I,I_GOTO, NULL, NULL, NULL,list);
 					return 0;
 					break;
 				case token_identifier:
@@ -559,7 +488,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 				case token_intNumber:
 				case token_doubleNumber:
 					runPrecedenceAnalysis(f,tokenPtr,0,list);
-					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
+					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
 					return result;
 					break;
 				default:
@@ -572,11 +501,12 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 		case FN_CALL_COMMA:				
 			switch (tokenPtr ->type){
 				case token_bracketRightRound:
+					fprintf(stderr,"I_FN_CALL\n");
 					return 0;
 					break;
 				case token_comma:
 					runPrecedenceAnalysis(f,tokenPtr,1,list);
-					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
+					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
 					return result;
 					break;
 				default:
@@ -591,7 +521,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 			//printType(tokenPtr);
 			switch (tokenPtr -> type){
 				case token_bracketLeftCurly:
-				if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
+				if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
 					return result;
 					break;
 				default:
@@ -611,8 +541,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
-						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
@@ -624,34 +554,35 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 							getModifiedToken(f,tokenPtr);
 							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
-							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
-							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
+							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+							if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 						}
 					}else{
 						goto EXIT;
 					}
-					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCMB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCMB\n");goto EXIT;}
 					break;
 				case token_while:
 					generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
 					fprintf(stderr,"I_LABEL: while%d\n",counter);
 					int gotoLabel = counter;
-					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					counter++;
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					fprintf(stderr,"I_GOTO: while%d\n",gotoLabel);
-					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					generateInstruction(I,I_GOTO, NULL, NULL, NULL,list);
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_if:
-					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr->type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
-					if ((result=syntaxCheck( ELSE, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
-					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( ELSE, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nELSE\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_return:
 					getModifiedToken(f,tokenPtr);
@@ -661,7 +592,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 						runPrecedenceAnalysis(f,tokenPtr,0,list);
 						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}
 					}
-					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lookAheadPtr, list,localVarTable))	!= 0) {fprintf(stderr,"\nCMB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nCMB\n");goto EXIT;}
 					return result;
 				default:
 					return -1;
@@ -674,7 +605,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lookAheadPtr, tListOf
 			return -1;
 
 	EXIT:
-		fprintf(stderr, "Syntax Error! Got: ");
+		fprintf(stderr, "Syntax Error! \n");
 		//printType(tokenPtr);
 		exit(2);
 		return result;

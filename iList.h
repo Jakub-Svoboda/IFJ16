@@ -5,6 +5,7 @@
 #define I_STOP    	0		//end of program
 #define I_LABEL		1		//jump label
 #define I_GOTO		2		//goto a label
+#define I_NEW_VAR	3
 
 typedef struct		//List of instructions
 {
