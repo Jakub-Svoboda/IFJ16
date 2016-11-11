@@ -64,12 +64,12 @@ int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	result =result; //TODO delete me
 	//printHtabLocal(localVarTable);
 	
-
 	tInstr I;			//create instruction of end and place it to the end of the instruction list
 	generateInstruction(I,I_STOP, NULL, NULL, NULL,list);
-
 	listPrint(list);	
-	free(tokenPtr);
+	result =runInterpret(list);
+	
+	//free(tokenPtr);
 	return result;
 }
 
@@ -227,7 +227,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 							break;
 						}
 					}
-
 					if (tokenPtr -> type == token_semicolon){
 						break;
 					}
@@ -313,7 +312,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
-
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
 						//printType(tokenPtr);
@@ -346,15 +344,19 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					break;
 				case token_while:
 					generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
-					fprintf(stderr,"I_LABEL: while%d\n",counter);
 					int gotoLabel = counter;
+					fprintf(stderr,"I_LABEL: while%d\n",counter);
 					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
+					fprintf(stderr," I_IF_GOTO: if 0 goto while_end%d\n",gotoLabel);
+					generateInstruction(I,I_IF_GOTO, NULL, NULL, NULL,list);
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					fprintf(stderr," I_GOTO: while%d\n",gotoLabel);
+					fprintf(stderr," I_GOTO: goto while%d\n",gotoLabel);
 					generateInstruction(I,I_GOTO, NULL, NULL, NULL,list);
+					fprintf(stderr,"I_LABEL: while_end%d\n",gotoLabel);
+					generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_if:
@@ -571,15 +573,19 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					break;
 				case token_while:
 					generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
-					fprintf(stderr,"I_LABEL: while%d\n",counter);
+					fprintf(stderr,"I_LABEL:while%d\n",counter);
 					int gotoLabel = counter;
+					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
-					counter++;
+					fprintf(stderr," I_IF_GOTO: if 0 goto while_end%d\n",gotoLabel);
+					generateInstruction(I,I_IF_GOTO, NULL, NULL, NULL,list);
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					fprintf(stderr," I_GOTO: while%d\n",gotoLabel);
+					fprintf(stderr," I_GOTO: goto while%d\n",gotoLabel);
 					generateInstruction(I,I_GOTO, NULL, NULL, NULL,list);
+					fprintf(stderr," I_LABEL:while_end%d\n",gotoLabel);
+					generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
 					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_if:

@@ -7,21 +7,11 @@ class Main{
 	//	while (a){
 			
 	//	}
-		if(a){
-			while(a){while(a){while(a){}while(a){}}}
-		}else{
-			while(a){}
-			
-		}
-	}
-	static void tvojemama(int a){
 
-		if(a){
-			while(a){while(a){while(a){}while(a){}}}
-		}else{
-			while(a){}
+			while(a){
+				if(a){}else{}
+			}
 			
-		}
+		return 0;
 	}
-	
 }

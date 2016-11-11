@@ -10,8 +10,8 @@ class Main{
 		Main. x = ifj16.find(str2, "text");						//HERE
 		ifj16.print("Pozice retezce \"text\" v retezci str2: " + x + "\n");
 		Game.play(str1);
-	} // end of static void run()
-} // end of class Main
+	} 
+} 
 
 class Game
 	{
