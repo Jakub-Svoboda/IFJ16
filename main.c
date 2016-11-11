@@ -37,6 +37,9 @@ int main(int argc, char *argv[]){
 		}else{
 			exit(99);								//exits if file does not exist
 		}
+		
+		result =runInterpret(list,globalVarTable,functionTable);
+		
 	}
 	return 0;
 }

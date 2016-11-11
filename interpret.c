@@ -10,7 +10,14 @@ int runInterpret(tListOfInstr *list){
 		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
 		listNext(list);
 	}
+	printInstType(list->active->Instruction.instType);	//print the very last instr
+	fprintf(stderr,"\n");
 	
+	listFirst(list);
+	interpretEval(list);
+	
+	thTable * functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+	htabInit(localVarTable);
 	
 return 0;	
 }
@@ -67,12 +74,12 @@ void interpretEval(tListOfInstr *list)
 
 void printInstType(int instructionType){
 	switch (instructionType){
-		case I_STOP:		fprintf(stderr,"I_STOP:\t"); 		break;
+		case I_STOP:		fprintf(stderr,"  I_STOP:\t\n"); 	break;
 		case I_LABEL:		fprintf(stderr,"I_LABEL:\t"); 		break;
-		case I_GOTO:		fprintf(stderr,"I_GOTO:\t\t"); 		break;
-		case I_NEW_VAR:		fprintf(stderr,"I_NEW_VAR:\t"); 	break;
-		case I_FN_END:		fprintf(stderr,"I_FN_END:\t"); 		break;
-		case I_RETURN:		fprintf(stderr,"I_RETURN:\t"); 		break;
-		case I_IF_GOTO:		fprintf(stderr,"I_IF_GOTO:\t"); 	break;
+		case I_GOTO:		fprintf(stderr,"  I_GOTO:\t"); 		break;
+		case I_NEW_VAR:		fprintf(stderr,"  I_NEW_VAR:\t"); 	break;
+		case I_FN_END:		fprintf(stderr,"  I_FN_END:\t"); 	break;
+		case I_RETURN:		fprintf(stderr,"  I_RETURN:\t"); 	break;
+		case I_IF_GOTO:		fprintf(stderr,"  I_IF_GOTO:\t"); 	break;
 	}
 }
