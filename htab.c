@@ -163,7 +163,7 @@ void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type 
     }
 }
 
-void htabInsert(thTable *htab, char* key) {
+void htabInsert(thTable *htab, char* key, int localVarType) {
     if (*htab == NULL) {
 
         //printf("ss\n");
@@ -175,6 +175,7 @@ void htabInsert(thTable *htab, char* key) {
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
                 insertItem->next = NULL;
+                insertItem->varType=localVarType;
                 //insertItem->returnType = token;
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }else {
@@ -183,6 +184,7 @@ void htabInsert(thTable *htab, char* key) {
                 insertItem->key = key;
                 //insertItem->returnType = token_invalid;
                 insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row
+                insertItem->varType=localVarType;
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }
         }else {

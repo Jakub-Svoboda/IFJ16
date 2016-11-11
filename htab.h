@@ -23,7 +23,7 @@ int hashFun(char* key);
 void htabInit(thTable *htab);
 thtabItem* htabSearch(thTable *htab, char* key);
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey);
-void htabInsert(thTable *htab, char* key);
+void htabInsert(thTable *htab, char* key, int localVarType);
 //const char* htabRead(thtabItem* htab[], char* key);
 void htabDelete(thTable *htab, char* key);
 void htabDispose(thTable *htab);
