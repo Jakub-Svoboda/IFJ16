@@ -1,7 +1,5 @@
 #include "interpret.h"
-#include "scanner.h"
-
-int runInterpret(tListOfInstr *list){
+int runInterpret(tListOfInstr *list,thTable * globalVarTable,thTable * functionTable){
 	fprintf(stderr,"\n");
 	listFirst(list);
 	

@@ -27,18 +27,18 @@ int main(int argc, char *argv[]){
 			exit(99);								//exits if file does not exist
 		}
 
-
+		int result;
 		
 		FILE *f;
 		if ((f = fopen(argv[1], "r"))!= NULL){		//Checks for nonexistant file 
-			int result = runSyntaxAnalysis(f,&list);
+			result = runSyntaxAnalysis(f,&list);
 			result = result; 	//TODO delete me
 			fclose(f);	
 		}else{
 			exit(99);								//exits if file does not exist
 		}
 		
-		result =runInterpret(list,globalVarTable,functionTable);
+		result =runInterpret(&list,globalVarTable,functionTable);
 		
 	}
 	return 0;

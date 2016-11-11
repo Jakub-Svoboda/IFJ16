@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "iList.h"
+#include "htab.h"
 
 int runInterpret(tListOfInstr *list, thTable * globalVarTable,thTable * functionTable );
 void interpretEval(tListOfInstr *list);

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "scanner.h"
-#include "interpret.h"
 
 #define HTAB_SIZE 5
 //#define thTable thtabItem*

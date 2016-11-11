@@ -14,6 +14,7 @@
 #include <string.h>
 #include "precedence.h"
 
+
 void getModifiedToken(FILE *f,Token* tokenPtr);
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
 int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfInstr * list);
