@@ -254,7 +254,7 @@ void printHtabLocal(thTable *htab){
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
         while(temp != NULL) {
-            printf("->[%s ]",temp->key);
+            printf("->[%s %d]",temp->key,temp->varType);
             temp = temp->next;
         }
         printf("\n");

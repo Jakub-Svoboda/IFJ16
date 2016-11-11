@@ -1,4 +1,5 @@
 #include "firstRun.h"
+extern thTable * functionTable;
 
 void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass, thTable * functionTable){
 	htabInsertReturnType(functionTable, tokenName->name, tokenClass->name, tokenType->type);
@@ -9,7 +10,7 @@ void globalVarInsert(Token * tokenName, Token * tokenType,Token * tokenClass, th
 	htabInsertVarType(globalVarTable, tokenName->name, tokenClass->name, tokenType->type);
 }
 
-int firstRun(thTable * functionTable, thTable * globalVarTable,FILE * f){
+int firstRun(thTable * globalVarTable,FILE * f){
 	Token * tokenPtr = NULL;
 	Token * tokenPtr1 = NULL;
 	Token * tokenPtr2 = NULL;

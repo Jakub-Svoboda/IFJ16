@@ -2,20 +2,22 @@
 #include <stdlib.h>
 #include "syntax.h"
 
+thTable * functionTable;
+
 int main(int argc, char *argv[]){
 	if(argc==2)
 	{	
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
 		
-		thTable * functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+		functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(functionTable);
 		thTable * globalVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(globalVarTable);
 		
 		FILE *file;
 		if ((file = fopen(argv[1], "r")) != NULL){	//Checks for nonexistant file 
-			firstRun(functionTable,globalVarTable,file);
+			firstRun(globalVarTable,file);
 			fclose(file);
 		char *key="Main.run";						//initialize variable for Main.run existence check
 		if(htabSearch(functionTable, key)==NULL){	//if function run in class Main does not exist
@@ -38,7 +40,7 @@ int main(int argc, char *argv[]){
 			exit(99);								//exits if file does not exist
 		}
 		
-		result =runInterpret(&list,globalVarTable,functionTable);
+		result =runInterpret(&list,globalVarTable);
 		
 	}
 	return 0;

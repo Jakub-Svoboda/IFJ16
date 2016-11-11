@@ -1,5 +1,8 @@
 #include "syntax.h"
 
+	Token * classPtr=NULL;	//Pointer to active (last) class	//TODO merge into structure!!!!!
+	Token * funcPtr=NULL;	//Pointer to active (last) function	
+
 void printType(Token* tokenPtr){
 	switch (tokenPtr -> type){
 		case		token_add: 				fprintf(stderr,"+ \n");		break;
@@ -58,12 +61,13 @@ void printType(Token* tokenPtr){
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	Token* lastToken = malloc(sizeof(Token));
 	Token* tokenPtr = malloc(sizeof(Token));
+	classPtr= malloc(sizeof(Token));
+	funcPtr= malloc(sizeof(Token));
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list);
 	result =result; //TODO delete me
 	tInstr I;			//create instruction of end and place it to the end of the instruction list
-	generateInstruction(I,I_STOP, "", "", "",list);
+	generateInstruction(I,I_EOF, "", "", "",list);
 
-	
 	//free(tokenPtr);
 	return result;
 }
@@ -109,6 +113,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	char buf[1023];
 	char buf2[1023];
 	char buf3[1023];
+
+
 	switch (state){
 
 //***************classBlock*******************//
@@ -127,6 +133,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 //******************class*******************//
 		case CLASS:
 			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))					!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
+			memcpy(classPtr,tokenPtr,sizeof(Token));	
 			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n{\n");goto EXIT;}
 			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lastToken, list))			!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
 			if ((result=syntaxCheck( RIGHT_CURLY_BRACKET_CURRENT, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n}\n");goto EXIT;}
@@ -210,6 +217,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if ((result=syntaxCheck( TYPE, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
 					if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
 					generateInstruction(I,I_LABEL, tokenPtr->name, "", "",list);
+					memcpy(funcPtr,tokenPtr,sizeof(Token));		
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
@@ -268,8 +276,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			if (tokenPtr->type == token_double) {return 0;}
 			if (tokenPtr->type == token_String) {return 0;}
 			if (tokenPtr->type == token_void) 	{return 0;}
-
-
 			return -1;
 			break;
 
@@ -299,12 +305,19 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			switch(tokenPtr -> type){
 				case token_bracketRightCurly:
 					generateInstruction(I,I_FN_END, "", "", "",list);
+					if(strcmp(classPtr->name,"Main")==0 && strcmp(funcPtr->name,"run")==0 ){
+						generateInstruction(I,I_STOP, "", "", "",list);
+					}
+					
 					return 0;
 					break;
 				case token_identifier:								//id
+					lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));	
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
+						sprintf(buf, "%s",lastToken->name);
+						generateInstruction(I,I_FN_CALL, buf,"","", list);
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 					}else if (tokenPtr -> type == token_assign){	//id=
@@ -482,7 +495,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			//printType(tokenPtr);
 			switch (tokenPtr ->type){
 				case token_bracketRightRound:
-					//generateInstruction(I,I_GOTO, NULL, NULL, NULL,list);
 					return 0;
 					break;
 				case token_identifier:
@@ -539,12 +551,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return 0;
 					break;
 				case token_identifier:								//id
+					lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
+						sprintf(buf, "%s",lastToken->name);
+						generateInstruction(I,I_FN_CALL, buf,"","", list);
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
-
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
 						//printType(tokenPtr);

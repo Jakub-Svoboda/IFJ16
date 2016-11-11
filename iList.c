@@ -26,7 +26,7 @@ void listFirst(tListOfInstr *L){ //First instruction becomes active
 }
 
 void listNext(tListOfInstr *L){	//Moves the activity to next element
-	if (L->active != NULL)
+	if (L->active != NULL &&  L->active->nextItem !=NULL)
 	L->active = L->active->nextItem;
 }
 
