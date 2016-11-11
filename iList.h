@@ -19,9 +19,9 @@ typedef struct		//List of instructions
 
 typedef struct{	//tInstr contains type of instruction and three adresses for TAC
   int instType;  
-  void *addr1; 
-  void *addr2; 
-  void *addr3; 
+  char addr1[2047]; 
+  char addr2[2047]; 
+  char addr3[2047]; 
 } tInstr;
 
 typedef struct listItem{		//List item contains an instruction and a pointer to the next item
