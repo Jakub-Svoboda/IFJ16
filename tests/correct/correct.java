@@ -1,5 +1,5 @@
 class Main {
-	static int a(){
+	static void run(){
 		while(a-a+4 < 0){
 			a=a+b;
 			a = lel;	

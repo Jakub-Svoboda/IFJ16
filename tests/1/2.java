@@ -1,5 +1,6 @@
 class Main {
-	static int a.a.a(){
+	static void run(int a){}
+	static int 0alala(){
 		
 	}
 }
