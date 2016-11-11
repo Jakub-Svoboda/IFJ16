@@ -341,8 +341,11 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if ((result=syntaxCheck( LOCAL_VAR_DEC, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nLVD\n");goto EXIT;}
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list,localVarTable))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					break;
-				case token_while:
-					generateInstruction(I,I_LABEL, "_while"+counter, "", "",list);
+				case token_while: ;
+					
+					char buf[12];
+					sprintf(buf, "_while%d",counter);
+					generateInstruction(I,I_LABEL, buf, "", "",list);
 					int gotoLabel = counter;
 					fprintf(stderr,"I_LABEL: while%d\n",counter);
 					counter++;
