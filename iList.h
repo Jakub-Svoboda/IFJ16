@@ -10,7 +10,7 @@
 #define I_RETURN	5		//If first arg is NULL, no expr was returned -> return;
 #define I_IF_GOTO	6		//conditional jump
 #define I_FN_CALL	7		//goto a function label
-#define I_EOF		8		
+#define I_PROGRAM	8		//first instr		
 
 typedef struct		//List of instructions
 {

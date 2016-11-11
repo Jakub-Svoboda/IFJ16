@@ -59,14 +59,15 @@ void printType(Token* tokenPtr){
 }
 
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
+	tInstr I;		
 	Token* lastToken = malloc(sizeof(Token));
 	Token* tokenPtr = malloc(sizeof(Token));
 	classPtr= malloc(sizeof(Token));
 	funcPtr= malloc(sizeof(Token));
+	generateInstruction(I,I_PROGRAM, "", "", "",list);
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list);
 	result =result; //TODO delete me
-	tInstr I;			//create instruction of end and place it to the end of the instruction list
-	generateInstruction(I,I_EOF, "", "", "",list);
+
 
 	//free(tokenPtr);
 	return result;
