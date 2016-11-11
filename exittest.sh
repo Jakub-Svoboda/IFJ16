@@ -1,33 +1,28 @@
 #!/bin/bash
 make
-
-var=0
-i=1
 for i in `ls tests/1/`; do
-echo "tests/1" $i
 ./project tests/1/$i 2> /dev/null
-if [ "$?" -eq "1" ]
+if [ "$?" -ne "1" ]
 then 
-echo Correct
+echo "tests/1" $i
+echo Neco je spatne
 fi
 done
 
-i=1
 for i in `ls tests/2/`; do
-echo "tests/2" $i
 ./project tests/2/$i 2> /dev/null
-if [ "$?" -eq "2" ]
+if [ "$?" -ne "2" ]
 then 
-echo Correct
+echo "tests/2" $i
+echo Neco je spatne
 fi
 done
 
-i=1
 for i in `ls tests/3/`; do
-echo "tests/2" $i
 ./project tests/3/$i 2> /dev/null
-if [ "$?" -eq "3" ]
+if [ "$?" -ne "3" ]
 then 
-echo Correct
+echo "tests/3" $i
+echo Neco je spatne
 fi
 done
