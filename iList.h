@@ -6,6 +6,9 @@
 #define I_LABEL		1		//jump label
 #define I_GOTO		2		//goto a label
 #define I_NEW_VAR	3
+#define I_FN_END	4		//end of a function body. If there was no return, this will be executed.
+#define I_RETURN	5		//If first arg is NULL, no expr was returned -> return;
+#define I_IF_GOTO	6		//conditional jump
 
 typedef struct		//List of instructions
 {
