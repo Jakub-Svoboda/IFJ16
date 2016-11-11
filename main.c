@@ -17,9 +17,16 @@ int main(int argc, char *argv[]){
 		if ((file = fopen(argv[1], "r")) != NULL){	//Checks for nonexistant file 
 			firstRun(functionTable,globalVarTable,file);
 			fclose(file);			
-		}else{
+		}
+		else{
 			exit(99);								//exits if file does not exist
 		}
+		char *key="Main.run";						//initialize variable for Main.run existence check
+		if(htabSearch(functionTable, key)==NULL){	//if function run in class Main does not exist
+				fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
+				exit(3);					//TODO call garbage collector
+		}
+
 		
 		FILE *f;
 		if ((f = fopen(argv[1], "r"))!= NULL){		//Checks for nonexistant file 
