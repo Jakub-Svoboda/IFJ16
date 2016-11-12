@@ -193,12 +193,12 @@ void printInstType(int instructionType){
 		case I_SUB:		fprintf(stderr,"  I_SUB:\t"); 	break;
 		case I_MUL:		fprintf(stderr,"  I_MUL:\t"); 	break;
 		case I_DIV:		fprintf(stderr,"  I_DIV:\t"); 	break;
-		case I_LT:		fprintf(stderr,"  I_:LT\t"); 	break;
-		case I_GT:		fprintf(stderr,"  I_:GT\t"); 	break;
-		case I_LE:		fprintf(stderr,"  I_:LE\t"); 	break;
-		case I_GE:		fprintf(stderr,"  I_:GE\t"); 	break;
-		case I_EQ:		fprintf(stderr,"  I_:EQ\t"); 	break;
-		case I_NE:		fprintf(stderr,"  I_NE:\t"); 	break;
+		case I_LT:		fprintf(stderr,"  I_LT:\t\t"); 	break;
+		case I_GT:		fprintf(stderr,"  I_GT:\t\t"); 	break;
+		case I_LE:		fprintf(stderr,"  I_LE:\t\t"); 	break;
+		case I_GE:		fprintf(stderr,"  I_GE:\t\t"); 	break;
+		case I_EQ:		fprintf(stderr,"  I_EQ:\t\t"); 	break;
+		case I_NE:		fprintf(stderr,"  I_NE:\t\t"); 	break;
 		
 	
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;

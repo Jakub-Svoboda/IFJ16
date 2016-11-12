@@ -72,6 +72,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
 								generateInstruction(I,I_ADD, buf, lastToken->name, lastToken2->name, list);
 								rule = 1;									//rule 1 <E+E>
 							}else{
@@ -83,10 +84,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_subtract:										// -E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){				// E-E>
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_SUB, buf, lastToken->name, lastToken2->name, list);
 								rule = 2;									//rule 2 <E-E>
 							}else{
 								fprintf(stderr,"Error: Someting E-E>\n");
@@ -97,10 +103,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_multiply:										// *E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){				// E*E>
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_MUL, buf, lastToken->name, lastToken2->name, list);
 								rule = 3;									//rule 3 <E*E>
 							}else{
 								fprintf(stderr,"Error: Someting E*E>\n");
@@ -111,10 +122,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_divide:										// /E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){				// E/E>
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_DIV, buf, lastToken->name, lastToken2->name, list);
 								rule = 4;									//rule 4 <E/E>
 							}else{
 								fprintf(stderr,"Error: Someting E/E>\n");
@@ -125,10 +141,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_less:										// <E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){				// E<E>
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_LT, buf, lastToken->name, lastToken2->name, list);
 								rule = 5;									//rule 5 <E<E>
 							}else{
 								fprintf(stderr,"Error: Someting E<E>\n");
@@ -139,10 +160,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_greater:										// >E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){				// E>E>
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_GT, buf, lastToken->name, lastToken2->name, list);
 								rule = 6;									//rule 6 <E>E>
 							}else{
 								fprintf(stderr,"Error: Someting E>E>\n");
@@ -153,10 +179,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_lessEqual:										// ==E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_LE, buf, lastToken->name, lastToken2->name, list);
 								rule = 7;									//rule 7 <E<=E>
 							}else{
 								fprintf(stderr,"Error: Someting E<=E>\n");
@@ -167,10 +198,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_greaterEqual:										// >=E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_GE, buf, lastToken->name, lastToken2->name, list);
 								rule = 8;									//rule 8 <E>=E>
 							}else{
 								fprintf(stderr,"Error: Someting E>=E>\n");
@@ -181,10 +217,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_equal:										// ==E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_EQ, buf, lastToken->name, lastToken2->name, list);
 								rule = 9;									//rule 9 <E==E>
 							}else{
 								fprintf(stderr,"Error: Someting E!=E>\n");
@@ -195,10 +236,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					case token_notEqual:
 						tokenPtr = stackTop(stack);			//read top of the stack
 						stackPop(stack);
+						lastToken=tokenPtr;
 						if(tokenPtr -> type  == token_expression){
 							tokenPtr = stackTop(stack);		//read top of the stack
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								tmpCounter++;
+								generateInstruction(I,I_NE, buf, lastToken->name, lastToken2->name, list);
 								rule = 10;									// rule 10 <E!=E>
 							}else{
 								fprintf(stderr,"Error: Someting E!=E>\n");
