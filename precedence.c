@@ -47,27 +47,32 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 	Token * lastToken;
-	//Token * last2Token;
+	Token * last2Token;
 	Token * toBePushedE = malloc(sizeof(Token));		//TODO sort of a memory waste
 
 	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
-		Token * lastToken = tokenPtr;
+		Token * lastToken2 = tokenPtr;
+		
 		switch (tokenPtr -> type){
 			case token_expression:											//2nd token is E
 				tokenPtr = stackTop(stack);					//read top of the stack
 				stackPop(stack);											//pop the token we dont need
-
 				switch (tokenPtr -> type){									// E>
-
 					case token_add:											// +E>
 						tokenPtr = stackTop(stack);
 						stackPop(stack);
+						lastToken=tokenPtr;
+						//fprintf(stderr,"1st op is: %s\n",lastToken->name);
+						//fprintf(stderr,"2nd op is: %s\n",lastToken2->name);
 						if(tokenPtr -> type  == token_expression){				// E+E>
 							tokenPtr = stackTop(stack);
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
+								sprintf(buf, "#var%d",tmpCounter);
+								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
+								generateInstruction(I,I_ADD, buf, lastToken->name, lastToken2->name, list);
 								rule = 1;									//rule 1 <E+E>
 							}else{
 								fprintf(stderr,"Error: Someting E+E>\n");
@@ -213,11 +218,12 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				//sprintf(buf2, "%d",lastToken->type);
 				//generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
 				//tmpCounter++;
+				lastToken=tokenPtr;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){				
 					rule= 12;												// rule 12 <i>
-					toBePushedE->name = tokenPtr->name;
+					toBePushedE->name = lastToken->name;
 					toBePushedE->type = token_expression;
 					
 				}else{
@@ -293,7 +299,6 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 						tokenPtr = stackTop(stack);				//read top of the stack
 						stackPop(stack);									//pop the token we dont need
 						if(tokenPtr -> type  == token_leftHandle)
-							//fprintf(stderr,"the name is %s\n",lastToken->name);
 							toBePushedE->name = lastToken->name;
 							toBePushedE->type = token_expression;	
 							rule= 11;										//rule 11 <(E)>

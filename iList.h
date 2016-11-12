@@ -14,6 +14,16 @@
 #define I_MOV_INT	9		//move int CONSTANT number to adr1
 #define I_MOV_DOUBLE	10
 #define I_MOV_STRING	11
+#define	I_ADD			12
+#define	I_SUB			13
+#define	I_MUL			14
+#define	I_DIV			15
+#define	I_LT			16
+#define	I_GT			17
+#define	I_LE			18
+#define	I_GE			19
+#define	I_EQ			20
+#define	I_NE			21
 
 typedef struct		//List of instructions
 {

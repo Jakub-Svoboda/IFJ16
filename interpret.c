@@ -113,7 +113,58 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_MOV_STRING******************************//
 			case I_MOV_STRING:
 
+			break;	
+
+	//************************I_ADD******************************//
+			case I_ADD:
+
+			break;
+	
+	//************************I_SUB******************************//
+			case I_SUB:
+
+			break;	
+			
+	//************************I_MUL******************************//
+			case I_MUL:
+
+			break;	
+			
+	//************************I_DIV******************************//
+			case I_DIV:
+
+			break;	
+			
+	//************************I_LT******************************//
+			case I_LT:
+
 			break;				
+
+	//************************I_GT******************************//
+			case I_GT:
+
+			break;		
+			
+	//************************I_LE******************************//
+			case I_LE:
+
+			break;	
+
+	//************************I_GE******************************//
+			case I_GE:
+
+			break;				
+
+	//************************I_EQ******************************//
+			case I_EQ:
+
+			break;	
+
+	//************************I_NE******************************//
+			case I_NE:
+
+			break;				
+			
 			
 			default:
 				fprintf(stderr,"Interpreting an unknown instruction %d\n",list->active->Instruction.instType);
@@ -138,6 +189,18 @@ void printInstType(int instructionType){
 		case I_MOV_INT:		fprintf(stderr,"  I_MOV_INT:\t"); 	break;
 		case I_MOV_DOUBLE:	fprintf(stderr,"  I_MOV_DOUBLE:\t"); 	break;
 		case I_MOV_STRING:	fprintf(stderr,"  I_MOV_STRING:\t"); 	break;
+		case I_ADD:		fprintf(stderr,"  I_ADD:\t"); 	break;
+		case I_SUB:		fprintf(stderr,"  I_SUB:\t"); 	break;
+		case I_MUL:		fprintf(stderr,"  I_MUL:\t"); 	break;
+		case I_DIV:		fprintf(stderr,"  I_DIV:\t"); 	break;
+		case I_LT:		fprintf(stderr,"  I_:LT\t"); 	break;
+		case I_GT:		fprintf(stderr,"  I_:GT\t"); 	break;
+		case I_LE:		fprintf(stderr,"  I_:LE\t"); 	break;
+		case I_GE:		fprintf(stderr,"  I_:GE\t"); 	break;
+		case I_EQ:		fprintf(stderr,"  I_:EQ\t"); 	break;
+		case I_NE:		fprintf(stderr,"  I_NE:\t"); 	break;
+		
+	
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }
