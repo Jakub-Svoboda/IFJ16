@@ -27,9 +27,11 @@ return 0;
 
 void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVarTable){
 	struct listItem *lastActive;
+	thTable * nextCallTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
+	htabInit(nextCallTable);
 	
 	while(1){
-		fprintf(stderr,"interpreting instr: %d\n",list->active->Instruction.instType);
+		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
 		switch (list->active->Instruction.instType){
 
 
@@ -77,7 +79,6 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_FN_CALL******************************//
 			case I_FN_CALL:
 				lastActive=list->active;	//save pointer to active instr
-		fprintf(stderr,"foo\n");
 				listFirst(list);			//reset active to first for label search
 				while(1){
 					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr1)==0){
@@ -87,9 +88,10 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 					listNext(list);
 				}
 				
-				interpretEval(list,localVarTable,globalVarTable);
+				interpretEval(list,nextCallTable,globalVarTable);
+				htabDispose(nextCallTable);
+				htabInit(nextCallTable);
 				list->active=lastActive;	//restore active position before fn call
-		fprintf(stderr,"bar\n");
 			break;		
 	
 	//************************I_PROGRAM******************************//

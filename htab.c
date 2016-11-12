@@ -9,8 +9,6 @@ char* concat(char* str1, char* str2) {
     strcpy(buff,str2);
     strcat(buff,".");
     strcat(buff,str1);
-
-    //printf("@@@@@%s",buff);
     return buff;
 }
 
@@ -24,8 +22,6 @@ int hashFun(char* key) {
 }
 
 void htabInit(thTable *htab) {
-    //printf("ss\n");
-    //*htab = malloc(sizeof(struct thtabItem)*HTAB_SIZE);
     for (int i = 0; i < HTAB_SIZE; i++) {
         (*htab)[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
     }
@@ -37,11 +33,8 @@ thtabItem* htabSearch(thTable *htab, char* key) {
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
         //if ((*htab)[hashFun(key)] == NULL) printf("kekfel\n");
         return NULL;
-    }else {
-        //printf("kekel\n");
-        //printf("searching\n");                              //simple debug...
+    }else {                          //simple debug...
         thtabItem* tempItem = (*htab)[hashFun(key)];           //assign first item of hashtable row into tempItem
-        //    printf("foo\n");
         while(tempItem != NULL) {                           //cycle through row
             if(strcmp(tempItem->key,key)==0) return tempItem;       //return item that we were looking for
             tempItem = tempItem->next;
@@ -53,23 +46,18 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 }
 
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
-    //printf("v htabSearchClass\n");
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
         //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
         //if ((*htab)[hashFun(key)] == NULL) printf("kekoefel\n");
         return NULL;
-    }else {
-        //printf("kekel\n");
-        //printf("searching\n");                              //simple debug...
+    }else {                            //simple debug...
         thtabItem* tempItem = (*htab)[hashFun(key)];           //assign first item of hashtable row into tempItem
-        //    printf("foo\n");
         while(tempItem != NULL) {                           //cycle through row
             if(strcmp(tempItem->key,key)==0) {
                 if(strcmp(tempItem->classKey,classKey)==0)return tempItem;
             }       //return item that we were looking for
             tempItem = tempItem->next;
         }
-        //    printf("foo2\n");
         return tempItem;                                        //or NULL
     }
 
@@ -81,13 +69,10 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
 
     }else {
         char *conKey = concat(funcName, classKey);
-        //printf("dvakrat v htabInsertReturnType\n");
         thtabItem* tempItem = htabSearch(htab, conKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
-        //printf("trikrat v htabInsertReturnType\n");
         if (tempItem == NULL) {
 
             if ((*htab)[hashFun(conKey)] == NULL) {               //hashtable row is not created yet
-                //printf("novy v htabInsertReturnType\n");
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
 
                 insertItem->key = conKey;
@@ -111,7 +96,6 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
         }else {
             fprintf(stderr, "Error function redeclaration.\n");
             exit(3);
-            //printf("edit v htabInsertReturnType\n");
              //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
             //tempItem->returnType = ret;
             //tempItem->classKey = classKey;
@@ -120,14 +104,11 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
 }
 
 void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type var) {
-    //printf("v htabInsertReturnType\n");
     if (*htab == NULL) {
 
     }else {
         char *conKey = concat(varName, classKey);
-        //printf("dvakrat v htabInsertReturnType\n");
         thtabItem* tempItem = htabSearch(htab, conKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
-        //printf("trikrat v htabInsertReturnType\n");
         if (tempItem == NULL) {
 
             if ((*htab)[hashFun(conKey)] == NULL) {               //hashtable row is not created yet
