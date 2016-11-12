@@ -11,6 +11,9 @@
 #define I_IF_GOTO	6		//conditional jump
 #define I_FN_CALL	7		//goto a function label
 #define I_PROGRAM	8		//first instr		
+#define I_MOV_INT	9		//move int CONSTANT number to adr1
+#define I_MOV_DOUBLE	10
+#define I_MOV_STRING	11
 
 typedef struct		//List of instructions
 {

@@ -36,6 +36,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 
 	//************************I_STOP******************************//
 			case I_STOP:
+				
 				exit(0);
 
 			break;
@@ -98,8 +99,23 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 				listNext(list);
 			break;
 			
+	//************************I_MOV_INT******************************//
+			case I_MOV_INT:
+
+			break;		
+			
+	//************************I_MOV_DOUBLE******************************//
+			case I_MOV_DOUBLE:
+
+			break;	
+			
+	//************************I_MOV_STRING******************************//
+			case I_MOV_STRING:
+
+			break;				
 			
 			default:
+				fprintf(stderr,"Interpreting an unknown instruction %d\n",list->active->Instruction.instType);
 			return;
 		}
 		listNext(list);
@@ -118,6 +134,9 @@ void printInstType(int instructionType){
 		case I_IF_GOTO:		fprintf(stderr,"  I_IF_GOTO:\t"); 	break;
 		case I_FN_CALL:		fprintf(stderr,"  I_FN_CALL:\t"); 	break;
 		case I_PROGRAM:		fprintf(stderr,"  I_PROGRAM:\t"); 	break;
+		case I_MOV_INT:		fprintf(stderr,"  I_MOV_INT:\t"); 	break;
+		case I_MOV_DOUBLE:	fprintf(stderr,"  I_MOV_DOUBLE:\t"); 	break;
+		case I_MOV_STRING:	fprintf(stderr,"  I_MOV_STRING:\t"); 	break;
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }
