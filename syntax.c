@@ -251,7 +251,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 		case FUNCTION_DECLARE:
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
-			fprintf(stderr,"%s\n\n",concat(resources->funcPtr->name,resources->classPtr->name));					//TODO delete
+		//	fprintf(stderr,"%s\n\n",concat(resources->funcPtr->name,resources->classPtr->name));					//TODO delete
 			thtabItem *Item=htabSearch(resources->functionTable, concat(resources->funcPtr->name,resources->classPtr->name));				//find function in function table
 			if(tokenPtr -> type == token_bracketRightRound){
 				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
@@ -261,8 +261,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					Item->arguments[argCount]->argumentType=tokenPtr->type;																	//store type of current argument
 				if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 					Item->arguments[argCount]->argumentName=tokenPtr->name;																	//store name of current argument
-					fprintf(stderr,"type: %d\n\n",Item->arguments[argCount]->argumentType);			//TODO delete
-					fprintf(stderr,"name: %s\n\n",Item->arguments[argCount]->argumentName);			//TODO delete
+		//			fprintf(stderr,"type: %d\n\n",Item->arguments[argCount]->argumentType);			//TODO delete
+		//			fprintf(stderr,"name: %s\n\n",Item->arguments[argCount]->argumentName);			//TODO delete
 					argCount++;																												//increment position in array
 				getModifiedToken(f,tokenPtr);
 				//printType(tokenPtr);

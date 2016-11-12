@@ -249,7 +249,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				sprintf(buf2, "%d",23);
 				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
 				sprintf(buf2, "%s",tokenPtr->name);
-				generateInstruction(I,I_MOV_INT,buf,buf2,"",list);
+				generateInstruction(I,I_MOV_DOUBLE,buf,buf2,"",list);
 				tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
