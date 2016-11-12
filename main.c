@@ -2,20 +2,20 @@
 #include <stdlib.h>
 #include "syntax.h"
 
-resourceStruct * resources;
-
+resourceStruct* resources;
 
 int main(int argc, char *argv[]){
 	if(argc==2)
 	{	
+		resources=malloc(sizeof (resourceStruct));
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
-		
+		fprintf(stderr,"foo\n");
 		resources->functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+		fprintf(stderr,"foo\n");
 		htabInit(resources->functionTable);
 		thTable * globalVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(globalVarTable);
-		
 		FILE *file;
 		if ((file = fopen(argv[1], "r")) != NULL){	//Checks for nonexistant file 
 			firstRun(globalVarTable,file);
@@ -31,7 +31,6 @@ int main(int argc, char *argv[]){
 		}
 
 		int result;
-		
 		FILE *f;
 		if ((f = fopen(argv[1], "r"))!= NULL){		//Checks for nonexistant file 
 			result = runSyntaxAnalysis(f,&list);

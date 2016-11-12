@@ -1,7 +1,7 @@
-#include "syntax.h"
+	#include "syntax.h"
 extern resourceStruct* resources;
 
-void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass, thTable * functionTable){
+void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass){
 	htabInsertReturnType(resources->functionTable, tokenName->name, tokenClass->name, tokenType->type);
 }
 
@@ -33,7 +33,7 @@ int firstRun(thTable * globalVarTable,FILE * f){
 			if (tokenPtr1 -> type == token_identifier ){
 				if(tokenPtr2!=NULL && (tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String || tokenPtr2->type==token_void)){
 					if(tokenPtr3!=NULL && tokenPtr3->type == token_static){
-						functionInsert(tokenPtr1, tokenPtr2, classPtr, resources->functionTable);
+						functionInsert(tokenPtr1, tokenPtr2, classPtr);
 					}
 				}
 			}
