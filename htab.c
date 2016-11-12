@@ -1,18 +1,16 @@
 #include "htab.h"
 
-char* concat(char* str1, char* str2) {
-
-
+char* concat(char* str1, char* str2) {          //Basic concatenate function to make CLASS.ID into one string
     int str1len = strlen(str1);
     int str2len = strlen(str2);
-    char *buff = (char*) malloc((str1len+str2len+2) * sizeof(char));
+    char *buff = (char*) malloc((str1len+str2len+2) * sizeof(char));        //Malloc memory of ideal length
     strcpy(buff,str2);
     strcat(buff,".");
     strcat(buff,str1);
-    return buff;
+    return buff;                               //return string
 }
 
-int hashFun(char* key) {                                    
+int hashFun(char* key) {                                    //this will hash your key into value of integer
     int hash = 0;
     int length = strlen(key);
     for(int i = 0; i < length; i++) {
@@ -21,7 +19,7 @@ int hashFun(char* key) {
     return hash % HTAB_SIZE;                                //return sum % (number of rows in hashtable)
 }
 
-void htabInit(thTable *htab) {
+void htabInit(thTable *htab) {  
     for (int i = 0; i < HTAB_SIZE; i++) {
         (*htab)[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
     }
@@ -151,8 +149,8 @@ void htabInsert(thTable *htab, char* key, int localVarType) {
     }else {
 		//printf("%s\n\n",key);
         thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
-        if (tempItem == NULL) {                             //item is not yet in hashtable
-            if ((*htab)[hashFun(key)] == NULL) {               //hashtable row is not created yet
+        if (tempItem == NULL) {                               //item is not yet in hashtable
+            if ((*htab)[hashFun(key)] == NULL) {              //hashtable row is not created yet
                 thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
                 insertItem->key = key;
                 insertItem->next = NULL;
@@ -182,40 +180,41 @@ void htabInsert(thTable *htab, char* key, int localVarType) {
 //    ; //used to read length of string etc if needed,
 //}
 
-void htabDelete (thTable *htab, char* key) {
-    thtabItem* prevItem = (*htab)[hashFun(key)];
+void htabDelete (thTable *htab, char* key) {                //Find by key and delete item
+    thtabItem* prevItem = (*htab)[hashFun(key)];            //find first item of row
     if (*htab == NULL || prevItem == NULL) {
         ;
     }else {
         thtabItem* tempItem = htabSearch(htab, key);        //ellegant solution via htabSearch, why is this banned in IAL??
         if (tempItem != NULL) {
             if (prevItem == tempItem) {                     //item is first in row
-                (*htab)[hashFun(key)] = tempItem->next;
+                (*htab)[hashFun(key)] = tempItem->next;     //move pointer to first item of row to the next item
             }else {
-                while(prevItem->next != tempItem) {
+                while(prevItem->next != tempItem) {         //If prevItem is not before item to delete, continue and move onto next item
                     prevItem = prevItem->next;
                 }
-                prevItem->next = tempItem->next;
+                prevItem->next = tempItem->next;            //Item is found so skip it
             }
-            free(tempItem);
+            free(tempItem);                                 //FREI
         }
     }
 }
 
+//This will take htab back to state after initialization
 void htabDispose(thTable *htab) {
-    for (int i = 0; i< HTAB_SIZE; i++) {
+    for (int i = 0; i< HTAB_SIZE; i++) {        //cycle through hashTable and delete/free all of them
         thtabItem* tempItem = (*htab)[i];
         thtabItem* delItem;
         while(tempItem != NULL) {
             delItem = tempItem;
             tempItem = tempItem->next;
-            free(delItem);
+            free(delItem);                      //FREI
         }
-        (*htab)[i] = NULL;
+        (*htab)[i] = NULL;                      //initialize array of pointers to NULL
     }
 }
 
-void printHtab(thTable *htab, int var) {
+void printHtab(thTable *htab, int var) {        // Multifunctional print function. for testing purposes
     //printf("aa\n");
     for (int i = 0; i< HTAB_SIZE; i++) {
         printf("|ROW %d|",i);
@@ -230,7 +229,7 @@ void printHtab(thTable *htab, int var) {
 }
 
 
-void printHtabLocal(thTable *htab){
+void printHtabLocal(thTable *htab){                 //Simple EZ PZ print, don't use
     for (int i = 0; i< HTAB_SIZE; i++) {
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
