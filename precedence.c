@@ -209,15 +209,15 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				}
 				break;
 			case token_identifier:											//2nd token is i
-				sprintf(buf, "_var%d",tmpCounter);
-				sprintf(buf2, "%d",lastToken->type);
-				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
-				tmpCounter++;
+				//sprintf(buf, "_var%d",tmpCounter);
+				//sprintf(buf2, "%d",lastToken->type);
+				//generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
+				//tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){				
 					rule= 12;												// rule 12 <i>
-					toBePushedE->name = buf;
+					toBePushedE->name = tokenPtr->name;
 					toBePushedE->type = token_expression;
 					
 				}else{
@@ -226,7 +226,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				}
 				break;
 			case token_intNumber:
-				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf, "#var%d",tmpCounter);
 				sprintf(buf2, "%d",28);
 				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
 				sprintf(buf2, "%s",tokenPtr->name);
@@ -245,7 +245,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				}
 				break;
 			case token_doubleNumber:
-				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf, "#var%d",tmpCounter);
 				sprintf(buf2, "%d",23);
 				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
 				sprintf(buf2, "%s",tokenPtr->name);
@@ -264,7 +264,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				}
 				break;
 			case token_string:
-				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf, "#var%d",tmpCounter);
 				sprintf(buf2, "%d",30);
 				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
 				sprintf(buf2, "%s",tokenPtr->name);
@@ -285,6 +285,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 			case token_bracketRightRound:
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
+				lastToken=tokenPtr;
 				if( tokenPtr -> type  == token_expression){
 					tokenPtr = stackTop(stack);					//read top of the stack
 					stackPop(stack);										//pop the token we dont need
@@ -292,7 +293,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 						tokenPtr = stackTop(stack);				//read top of the stack
 						stackPop(stack);									//pop the token we dont need
 						if(tokenPtr -> type  == token_leftHandle)
-							toBePushedE->name = buf;
+							//fprintf(stderr,"the name is %s\n",lastToken->name);
+							toBePushedE->name = lastToken->name;
 							toBePushedE->type = token_expression;	
 							rule= 11;										//rule 11 <(E)>
 					}
