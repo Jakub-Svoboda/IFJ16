@@ -18,6 +18,6 @@ Token* stackTop(tStack *s);
 int stackEmpty(tStack* s);
 int runPrecedenceAnalysis(FILE* f,Token* tokenPtr,int readFirst, tListOfInstr * list);
 void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack,  tListOfInstr * list);
-int whatRule(tStack* stack,tListOfInstr * list);
+Token* whatRule(tStack* stack,tListOfInstr * list);
 void printStack(tStack* s);
 Token* stackTopTerminal(tStack* s);

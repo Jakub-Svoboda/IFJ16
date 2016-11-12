@@ -22,8 +22,7 @@ char precedence_table[14][14]={
 //Returns int representing the reduction rule. Also pops the whole rule out of stack. Good luck reverse engineering this.
 void printStack(tStack* s){
 		int i=0;
-		while(i<=s->top)
-		{
+		while(i<=s->top){
 			fprintf(stderr,"%d ", s->arr[i]->type);
 			i++;
 		}
@@ -37,17 +36,24 @@ Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 	return tmpPtr;
 }
 
-int whatRule(tStack* stack, tListOfInstr * list){
-	//static int tmpCounter = 0;
+Token* whatRule(tStack* stack, tListOfInstr * list){
+	static int tmpCounter = 0;
 	int rule;
 	Token* tokenPtr = malloc(sizeof(Token));
-	//tInstr I;
+	char buf[2047];
+	char buf2[2047];
+	char buf3[2047];
+	tInstr I;
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
+	Token * lastToken;
+	//Token * last2Token;
+	Token * toBePushedE = malloc(sizeof(Token));		//TODO sort of a memory waste
 
 	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
+		Token * lastToken = tokenPtr;
 		switch (tokenPtr -> type){
 			case token_expression:											//2nd token is E
 				tokenPtr = stackTop(stack);					//read top of the stack
@@ -203,15 +209,72 @@ int whatRule(tStack* stack, tListOfInstr * list){
 				}
 				break;
 			case token_identifier:											//2nd token is i
-				case token_intNumber:
-				case token_doubleNumber:
-				case token_string:
-				//fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
-				//generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
-				//tmpCounter++;
+				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf2, "%d",lastToken->type);
+				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
+				tmpCounter++;
+				tokenPtr = stackTop(stack);						//read top of the stack
+				stackPop(stack);											//pop the token we dont need
+				if (tokenPtr -> type  == token_leftHandle){				
+					rule= 12;												// rule 12 <i>
+					toBePushedE->name = buf;
+					toBePushedE->type = token_expression;
+					
+				}else{
+					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
+					////printStack(stack);
+				}
+				break;
+			case token_intNumber:
+				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf2, "%d",28);
+				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
+				sprintf(buf2, "%s",tokenPtr->name);
+				generateInstruction(I,I_MOV_INT,buf,buf2,"",list);
+				tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
+					toBePushedE->name = buf;
+					toBePushedE->type = token_expression;
+					rule= 12;												// rule 12 <i>
+					
+				}else{
+					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
+					////printStack(stack);
+				}
+				break;
+			case token_doubleNumber:
+				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf2, "%d",23);
+				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
+				sprintf(buf2, "%s",tokenPtr->name);
+				generateInstruction(I,I_MOV_INT,buf,buf2,"",list);
+				tmpCounter++;
+				tokenPtr = stackTop(stack);						//read top of the stack
+				stackPop(stack);											//pop the token we dont need
+				if (tokenPtr -> type  == token_leftHandle){
+					toBePushedE->name = buf;
+					toBePushedE->type = token_expression;
+					rule= 12;												// rule 12 <i>
+					
+				}else{
+					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
+					////printStack(stack);
+				}
+				break;
+			case token_string:
+				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf2, "%d",30);
+				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
+				sprintf(buf2, "%s",tokenPtr->name);
+				generateInstruction(I,I_MOV_STRING,buf,buf2,"",list);
+				tmpCounter++;
+				tokenPtr = stackTop(stack);						//read top of the stack
+				stackPop(stack);											//pop the token we dont need
+				if (tokenPtr -> type  == token_leftHandle){
+					toBePushedE->name = buf;
+					toBePushedE->type = token_expression;
 					rule= 12;												// rule 12 <i>
 					
 				}else{
@@ -229,6 +292,8 @@ int whatRule(tStack* stack, tListOfInstr * list){
 						tokenPtr = stackTop(stack);				//read top of the stack
 						stackPop(stack);									//pop the token we dont need
 						if(tokenPtr -> type  == token_leftHandle)
+							toBePushedE->name = buf;
+							toBePushedE->type = token_expression;	
 							rule= 11;										//rule 11 <(E)>
 					}
 				}
@@ -247,10 +312,8 @@ int whatRule(tStack* stack, tListOfInstr * list){
 
 	//fprintf(stderr,"rule is: %d\n\n",rule);
 
-	//free(tokenPtr);
+	return toBePushedE;
 
-
-	return rule;
 }
 
 Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
@@ -320,9 +383,8 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
 			//printStack(stack);	//TODO delete
-			whatRule(stack, list);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
+			Token * toBePushedE = whatRule(stack, list);	//Find out what rule applies and pop the rule out of stack
 			if (tokenPtr->type != token_semicolon){	//NOT Semicolon
-				Token * toBePushedE = malloc(sizeof(Token));
 				toBePushedE->type = token_expression;		//if not ; push E
 				stackPush(stack, toBePushedE);
 				//printStack(stack);
@@ -341,9 +403,9 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
 			//printStack(stack);
-			whatRule(stack,list);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
+			Token * toBePushedE = whatRule(stack,list);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
 			//printStack(stack);
-			Token * toBePushedE = malloc(sizeof(Token));
+			 
 			toBePushedE->type = token_expression;		// push E
 			stackPush(stack, toBePushedE);
 			break;
