@@ -14,6 +14,9 @@ typedef struct thtabItem{
 	Token_type varType;
 //	int length;  needed?
 	struct thtabItem* next;
+	int intValue;
+	double doubleValue;
+	char* stringValue;
 } thtabItem;
 
 
