@@ -1,10 +1,7 @@
 #include "interpret.h"
 
 int runInterpret(tListOfInstr *list,thTable * globalVarTable){
-<<<<<<< HEAD
 	fprintf(stderr,"\n");
-=======
->>>>>>> b3ed9c2b1459686bbed0ef71202e854745079c69
 	listFirst(list);
 	
 	while(list->active->nextItem !=NULL){
