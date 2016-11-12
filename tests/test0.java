@@ -1,5 +1,5 @@
 class Main{
-	static void run(int a){
+	static void run(int a,double g ,String tvojemama){
 		int a;
 		funcb(a);
 		funcb(a);

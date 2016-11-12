@@ -8,6 +8,13 @@
 #define INIT 1
 //#define thTable thtabItem*
 
+typedef struct
+{
+	int argumentType;
+	char* argumentName;
+}argStruct;
+
+
 typedef struct thtabItem{
 	char* key;
 	char* name;
@@ -20,7 +27,9 @@ typedef struct thtabItem{
 	double doubleValue;
 	char* stringValue;
 	int isInit;
+	argStruct * arguments[];
 } thtabItem;
+
 
 
 typedef thtabItem* thTable[HTAB_SIZE];
@@ -37,3 +46,4 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
 void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type var);
 void printHtab(thTable *htab, int var);
 void printHtabLocal(thTable *htab);
+char* concat(char* str1, char* str2);

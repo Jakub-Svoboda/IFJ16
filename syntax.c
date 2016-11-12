@@ -1,7 +1,6 @@
 #include "syntax.h"
 
-	Token * classPtr=NULL;	//Pointer to active (last) class	//TODO merge into structure!!!!!
-	Token * funcPtr=NULL;	//Pointer to active (last) function	
+	extern resourceStruct* resources;
 
 void printType(Token* tokenPtr){
 	switch (tokenPtr -> type){
@@ -62,8 +61,8 @@ int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	tInstr I;		
 	Token* lastToken = malloc(sizeof(Token));
 	Token* tokenPtr = malloc(sizeof(Token));
-	classPtr= malloc(sizeof(Token));
-	funcPtr= malloc(sizeof(Token));
+	resources->classPtr= malloc(sizeof(Token));
+	resources->funcPtr= malloc(sizeof(Token));
 	generateInstruction(I,I_PROGRAM, "", "", "",list);
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list);
 	result =result; //TODO delete me
@@ -111,6 +110,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	tInstr I;
 	int result=1;	
 	static int counter=0; //TODO check if used	// coutner for loop labels
+	static int argCount=0;		//counter for arguments
 	char buf[1023];
 	char buf2[1023];
 	char buf3[1023];
@@ -134,7 +134,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 //******************class*******************//
 		case CLASS:
 			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))					!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
-			memcpy(classPtr,tokenPtr,sizeof(Token));	
+			memcpy(resources->classPtr,tokenPtr,sizeof(Token));	
 			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n{\n");goto EXIT;}
 			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lastToken, list))			!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
 			if ((result=syntaxCheck( RIGHT_CURLY_BRACKET_CURRENT, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n}\n");goto EXIT;}
@@ -218,7 +218,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if ((result=syntaxCheck( TYPE, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
 					if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
 					generateInstruction(I,I_LABEL, tokenPtr->name, "", "",list);
-					memcpy(funcPtr,tokenPtr,sizeof(Token));		
+					memcpy(resources->funcPtr,tokenPtr,sizeof(Token));		
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
@@ -251,17 +251,26 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 		case FUNCTION_DECLARE:
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
+			//fprintf(stderr,"%s\n\n",concat(resources->funcPtr->name,resources->classPtr->name));					//TODO delete
+			thtabItem *Item=htabSearch(resources->functionTable, concat(resources->funcPtr->name,resources->classPtr->name));				//find function in function table
 			if(tokenPtr -> type == token_bracketRightRound){
 				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
 			}else{
 				if ((result=syntaxCheck( TYPE_CURRENT, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nTYPE\n");goto EXIT;}
+					Item->arguments[argCount]=malloc(sizeof(argStruct));																	//alloc memory for current argument
+					Item->arguments[argCount]->argumentType=tokenPtr->type;																	//store type of current argument
 				if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
+					Item->arguments[argCount]->argumentName=tokenPtr->name;																	//store name of current argument
+					//fprintf(stderr,"type: %d\n\n",Item->arguments[argCount]->argumentType);			//TODO delete
+					//fprintf(stderr,"name: %s\n\n",Item->arguments[argCount]->argumentName);			//TODO delete
+					argCount++;																												//increment position in array
 				getModifiedToken(f,tokenPtr);
 				//printType(tokenPtr);
 				if(tokenPtr -> type == token_comma){
 					if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFD\n");goto EXIT;}
 				}else{
 					if(tokenPtr -> type == token_bracketRightRound){
+						argCount=0;																											//set position to zero(get ready for next function)
 						if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
 					}
 				}
@@ -306,7 +315,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			switch(tokenPtr -> type){
 				case token_bracketRightCurly:
 					generateInstruction(I,I_FN_END, "", "", "",list);
-					if(strcmp(classPtr->name,"Main")==0 && strcmp(funcPtr->name,"run")==0 ){
+					if(strcmp(resources->classPtr->name,"Main")==0 && strcmp(resources->funcPtr->name,"run")==0 ){
 						generateInstruction(I,I_STOP, "", "", "",list);
 					}
 					

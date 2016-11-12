@@ -1,7 +1,6 @@
 #include "interpret.h"
 
 int runInterpret(tListOfInstr *list,thTable * globalVarTable){
-	fprintf(stderr,"foo\n");
 	fprintf(stderr,"\n");
 	listFirst(list);
 	

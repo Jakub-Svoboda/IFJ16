@@ -1,4 +1,4 @@
-/*
+/**
 * Project: Implementace interpretu imperativniho jazyka IFJ16
 * File:    syntax.h
 * Date:    31.10.2016
@@ -14,6 +14,9 @@
 #include <string.h>
 #include "precedence.h"
 
+#define argInt	28
+#define argDouble	23
+#define argString 30
 
 void getModifiedToken(FILE *f,Token* tokenPtr);
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
@@ -31,7 +34,7 @@ typedef enum state{
 	STATIC_DECL,
 	ID,
 	CLASS_BODY,
-	TYPE,
+	TYPE,	
 	ASSIGN,
 	RIGHT_CURLY_BRACKET_CURRENT,
 	FUNCTION_DECLARE,
@@ -60,3 +63,4 @@ typedef struct{
 	Token* classPtr;
 	Token* funcPtr;
 }resourceStruct;
+
