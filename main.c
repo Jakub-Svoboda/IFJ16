@@ -10,9 +10,7 @@ int main(int argc, char *argv[]){
 		resources=malloc(sizeof (resourceStruct));
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
-		fprintf(stderr,"foo\n");
 		resources->functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
-		fprintf(stderr,"foo\n");
 		htabInit(resources->functionTable);
 		thTable * globalVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(globalVarTable);

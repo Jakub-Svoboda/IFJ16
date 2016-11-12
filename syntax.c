@@ -111,9 +111,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	tInstr I;
 	int result=1;	
 	static int counter=0; //TODO check if used	// coutner for loop labels
-	char buf[1023];
-	char buf2[1023];
-	char buf3[1023];
+	char buf[2047];
+	char buf2[2047];
+	char buf3[2047];
 
 
 	switch (state){

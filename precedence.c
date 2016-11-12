@@ -22,8 +22,7 @@ char precedence_table[14][14]={
 //Returns int representing the reduction rule. Also pops the whole rule out of stack. Good luck reverse engineering this.
 void printStack(tStack* s){
 		int i=0;
-		while(i<=s->top)
-		{
+		while(i<=s->top){
 			fprintf(stderr,"%d ", s->arr[i]->type);
 			i++;
 		}
@@ -38,16 +37,20 @@ Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 }
 
 int whatRule(tStack* stack, tListOfInstr * list){
-	//static int tmpCounter = 0;
+	static int tmpCounter = 0;
 	int rule;
 	Token* tokenPtr = malloc(sizeof(Token));
-	//tInstr I;
+	char buf[2047];
+	char buf2[2047];
+	char buf3[2047];
+	tInstr I;
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 
 	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
+		Token * lastToken = tokenPtr;
 		switch (tokenPtr -> type){
 			case token_expression:											//2nd token is E
 				tokenPtr = stackTop(stack);					//read top of the stack
@@ -203,12 +206,13 @@ int whatRule(tStack* stack, tListOfInstr * list){
 				}
 				break;
 			case token_identifier:											//2nd token is i
-				case token_intNumber:
-				case token_doubleNumber:
-				case token_string:
-				//fprintf(stderr,"tmp%d, =, %s, \n",tmpCounter,tokenPtr->name);
-				//generateInstruction(I,I_LABEL, NULL, NULL, NULL,list);
-				//tmpCounter++;
+			case token_intNumber:
+			case token_doubleNumber:
+			case token_string:
+				sprintf(buf, "_var%d",tmpCounter);
+				sprintf(buf2, "%d",lastToken->type);
+				generateInstruction(I,I_NEW_VAR, buf, buf2, "",list);
+				tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
