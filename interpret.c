@@ -57,6 +57,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_NEW_VAR******************************//
 			case I_NEW_VAR:
 				htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
+				
 
 			break;
 			

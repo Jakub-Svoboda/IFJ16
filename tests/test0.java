@@ -1,21 +1,18 @@
-class Main{
-	static void run(int a){
-		x=x;
-		//int a;
-		//a=(1);
-		a=b+a;
-		a=b-a;
-		a=b*a;
-		a=b/a;
-		a=b<a;
-		a=b>a;
-		a=b<=a;
-		a=b>=a;
-		a=b==a;
-		a=b!=a;
-		//double d;
-		//d=3.14159;
-		//String s;
-		//s="hi there!";
+class Main {
+	static void run(){
+//		while(a-a+4 < 0){
+//			a=a+b;
+//			a = lel;	
+//		}
+//		function(a,a,a);
+//		a=function(a,a,a);
+//		int a=function(a,a,a); 
+//		if ((podminka)){
+//			a=x;
+//			b=0+0+0/4;
+//		}else{
+//			a=x;
+			b=0*0*0/4;
+	//	}	
 	}
 }

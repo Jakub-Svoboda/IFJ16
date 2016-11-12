@@ -49,7 +49,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 	Token * lastToken;
 	Token * last2Token;
 	Token * toBePushedE = malloc(sizeof(Token));		//TODO sort of a memory waste
-
+	toBePushedE->name=malloc(sizeof(char)*2047);
+	
 	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
 		stackPop(stack);													//pop the token we dont need
@@ -71,9 +72,17 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
+		//				printf("foo %s \n",lastToken->name);
+						//printf("foo %s \n",lastToken->type);
+		//				printf("foo %s \n",lastToken2->name);
+						
+						//printf("foo %s \n",lastToken2->type);
 								generateInstruction(I,I_ADD, buf, lastToken->name, lastToken2->name, list);
+
 								rule = 1;									//rule 1 <E+E>
 							}else{
 								fprintf(stderr,"Error: Someting E+E>\n");
@@ -90,6 +99,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_SUB, buf, lastToken->name, lastToken2->name, list);
@@ -109,6 +120,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_MUL, buf, lastToken->name, lastToken2->name, list);
@@ -128,6 +141,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_DIV, buf, lastToken->name, lastToken2->name, list);
@@ -147,6 +162,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_LT, buf, lastToken->name, lastToken2->name, list);
@@ -166,6 +183,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_GT, buf, lastToken->name, lastToken2->name, list);
@@ -185,6 +204,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_LE, buf, lastToken->name, lastToken2->name, list);
@@ -204,6 +225,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_GE, buf, lastToken->name, lastToken2->name, list);
@@ -223,6 +246,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_EQ, buf, lastToken->name, lastToken2->name, list);
@@ -242,6 +267,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 							stackPop(stack);
 							if(tokenPtr -> type  == token_leftHandle){
 								sprintf(buf, "#var%d",tmpCounter);
+								strcpy(toBePushedE->name,buf);
+								toBePushedE->type = token_expression;
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_NE, buf, lastToken->name, lastToken2->name, list);
@@ -269,12 +296,12 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){				
 					rule= 12;												// rule 12 <i>
-					toBePushedE->name = lastToken->name;
+					strcpy(toBePushedE->name,lastToken->name);
 					toBePushedE->type = token_expression;
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_intNumber:
@@ -286,14 +313,16 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				tmpCounter++;
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
-				if (tokenPtr -> type  == token_leftHandle){
-					toBePushedE->name = buf;
+				if (tokenPtr -> type  == token_leftHandle){		
+					strcpy(toBePushedE->name,buf);
+	fprintf(stderr,"foo\n");					
 					toBePushedE->type = token_expression;
+	fprintf(stderr,"int to E: %s %d\n",toBePushedE->name,toBePushedE->type)				;
 					rule= 12;												// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_doubleNumber:
@@ -306,13 +335,13 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
-					toBePushedE->name = buf;
+					strcpy(toBePushedE->name,buf);
 					toBePushedE->type = token_expression;
 					rule= 12;												// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_string:
@@ -325,13 +354,13 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){
-					toBePushedE->name = buf;
+					strcpy(toBePushedE->name,buf);
 					toBePushedE->type = token_expression;
 					rule= 12;												// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_bracketRightRound:
@@ -344,10 +373,11 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					if( tokenPtr -> type  == token_bracketLeftRound){
 						tokenPtr = stackTop(stack);				//read top of the stack
 						stackPop(stack);									//pop the token we dont need
-						if(tokenPtr -> type  == token_leftHandle)
-							toBePushedE->name = lastToken->name;
+						if(tokenPtr -> type  == token_leftHandle){
+							strcpy(toBePushedE->name,lastToken->name);
 							toBePushedE->type = token_expression;	
 							rule= 11;										//rule 11 <(E)>
+						}
 					}
 				}
 				break;
@@ -406,9 +436,9 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 				whatToDo = precedence_table[stackTopPtr->type][tokenPtr->type];
 			}
 		}
-		//printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
-		//printf("stack top is %d\n", stackTopPtr->type);
-		//printf("What to do is: %c\n\n",whatToDo);
+		printf("input is:    %d\n", tokenPtr->type);					//TODO test-output,delete later
+		printf("stack top is %d\n", stackTopPtr->type);
+		printf("What to do is: %c\n\n",whatToDo);
 		if(whatToDo == '$'){
 			return;
 		}
@@ -421,30 +451,31 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 				stackPush(stack, toBePushed);
 				stackPush(stack, tmpPtr);					//push E back from temporary ptr
 				stackPush(stack, tokenPtr);					//push input token
-				//printStack(stack);
+				printStack(stack);
 
 			}else{
 				toBePushed -> type = token_leftHandle;		//IF E is not top token
 				stackPush(stack, toBePushed);				//push left handle and input TOken
 				stackPush(stack, tokenPtr);
 			}
-			//printStack(stack);
+			printStack(stack);
 
 			break;											//Break the cycle to get new token
 		}
 		if(whatToDo == '>'){				//IF precedence table returns >, we reduce
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
-			//printStack(stack);	//TODO delete
+			printStack(stack);	//TODO delete
 			Token * toBePushedE = whatRule(stack, list);	//Find out what rule applies and pop the rule out of stack
 			if (tokenPtr->type != token_semicolon){	//NOT Semicolon
-				toBePushedE->type = token_expression;		//if not ; push E
+				//toBePushedE->type = token_expression;		//if not ; push E
 				stackPush(stack, toBePushedE);
-				//printStack(stack);
+	fprintf(stderr,"\npushing: %s, %d\n\n",toBePushedE->name, toBePushedE->type);
+				printStack(stack);
 				}else{
 				if(stack->top == 0 && stack->arr[stack->top]->type == token_dollar){	//semicolon on input
 					fprintf(stderr,"Predictive syntax analysis is over\n");		//TODO return
-					//printStack(stack);
+					printStack(stack);
 					break;
 				}else{
 					fprintf(stderr,"Semicolon on input but stack not empty! \n");
@@ -455,9 +486,9 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 			stackPush(stack,tokenPtr);
 			toBePushed -> type = token_rightHandle;			//Close the rule with right handle
 			stackPush(stack,toBePushed);
-			//printStack(stack);
+			printStack(stack);
 			Token * toBePushedE = whatRule(stack,list);	//TODO assign somewhere		//Find out what rule applies and pop the rule out of stack
-			//printStack(stack);
+			printStack(stack);
 			 
 			toBePushedE->type = token_expression;		// push E
 			stackPush(stack, toBePushedE);
