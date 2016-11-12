@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "syntax.h"
 
-thTable * functionTable;
+resourceStruct * resources;
+
 
 int main(int argc, char *argv[]){
 	if(argc==2)
@@ -10,8 +11,8 @@ int main(int argc, char *argv[]){
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
 		
-		functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
-		htabInit(functionTable);
+		resources->functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+		htabInit(resources->functionTable);
 		thTable * globalVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(globalVarTable);
 		
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]){
 			firstRun(globalVarTable,file);
 			fclose(file);
 		char *key="Main.run";						//initialize variable for Main.run existence check
-		if(htabSearch(functionTable, key)==NULL){	//if function run in class Main does not exist
+		if(htabSearch(resources->functionTable, key)==NULL){	//if function run in class Main does not exist
 				fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
 				exit(3);					//TODO call garbage collector
 		}			

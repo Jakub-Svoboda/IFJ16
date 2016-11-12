@@ -53,3 +53,10 @@ typedef enum state{
 	FN_CALL_COMMA
 	
 }	State;
+
+
+typedef struct{
+	thTable* functionTable;
+	Token* classPtr;
+	Token* funcPtr;
+}resourceStruct;
