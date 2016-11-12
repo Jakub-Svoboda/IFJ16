@@ -4,6 +4,8 @@
 #include "scanner.h"
 
 #define HTAB_SIZE 5
+#define UNINIT 0
+#define INIT 1
 //#define thTable thtabItem*
 
 typedef struct thtabItem{
@@ -17,6 +19,7 @@ typedef struct thtabItem{
 	int intValue;
 	double doubleValue;
 	char* stringValue;
+	int isInit;
 } thtabItem;
 
 
