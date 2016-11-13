@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
+#ifndef	GARBAGE_H
+#define GARBAGE_H
+
+
 typedef struct tElem {			//List node
     struct tElem *next;			//Pointer to the next node
     void *memptr;			//Pointer to the allocated memory
@@ -10,6 +16,11 @@ typedef struct { 			//List
     tElemPtr First;			//Pointer to the first node
 } tList;
 
-void *memalloc(unsigned, tList *);			//Allocates memory and stores the pointer to that memory
-void memfreeall(tList *);			//Frees all allocated memory
-void memfree(void *, tList *);			//Frees memory on pointer specified
+void *memalloc(unsigned);			//Allocates memory and stores the pointer to that memory
+void memfreeall();			//Frees all allocated memory
+void memfree(void *);			//Frees memory on pointer specified
+
+
+
+#include "syntax.h"			//TODO check sometimes
+#endif

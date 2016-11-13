@@ -1,9 +1,11 @@
 #include <stdio.h>			//TODO check if this is ok or BS
 
 
+
+#ifndef SCANNER_H
+#define SCANNER_H 
 #define KEYWORD_OFFSET 18;  //Change if more types added before token_boolean
 #define BUFFER_SIZE 32;
-
 typedef enum{
 	//ArOp
 	token_add,				//0
@@ -81,3 +83,4 @@ typedef enum {
 Token *getToken(FILE *f);
 Token *tokenInit();
 Token *lookAhead(FILE *f, int steps);  // Choose 0/1 steps ahead , check usage
+#endif

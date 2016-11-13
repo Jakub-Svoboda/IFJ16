@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+#ifndef	ILIST_H
+#define ILIST_H 
+
 //types of instructions
 #define I_STOP    	0		//end of program
 #define I_LABEL		1		//jump label
@@ -55,3 +59,4 @@ void listNext(tListOfInstr *L);
 tInstr *listGetData(tListOfInstr *L);
 void listPrint(tListOfInstr *L);
 void *listGetPointerLast(tListOfInstr *L);
+#endif

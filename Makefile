@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -pedantic -std=c99 -I.
-DEPS=scanner.h precedence.h syntax.h 			htab.h	firstRun.h 	iList.h	interpret.h
-FILES=main.c precedence.c syntax.c scanner.c 	htab.c 	firstRun.c	iList.c	interpret.c
-OBJ=main.o precedence.o scanner.o syntax.o 		htab.o 	firstRun.o 	iList.o	interpret.o
+DEPS=scanner.h precedence.h syntax.h 			htab.h	firstRun.h 	iList.h	interpret.h garbage.h
+FILES=main.c precedence.c syntax.c scanner.c 		htab.c 	firstRun.c	iList.c	interpret.c garbage.c
+OBJ=main.o precedence.o scanner.o syntax.o 		htab.o 	firstRun.o 	iList.o	interpret.o garbage.o
 
 all: project
 
