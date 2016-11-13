@@ -1,10 +1,10 @@
 class Main {
 	static void run(){
-	
-		x= 2;
-		d1=3.1415926;
-		d2=1e3;
-		s="stringuru";
+		
+	//	int x= 2;
+		double d1=3.1415926;
+	//	double d2=1e3;
+	//	String s="stringuru";
 	
 	}
 }

@@ -23,8 +23,6 @@
 #define SYNTAX_H 
 #include "garbage.h"
 
-
-
 #define argInt	28
 #define argDouble	23
 #define argString 30

@@ -33,7 +33,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	char currentFunc[2047];
 	char currentClass[2047];
 	char* dot=".";
-	thtabItem* itemPtr = NULL;
+	thtabItem* itemPtr = NULL;		//pointer to 1st operand
+	thtabItem* itemPtr2 = NULL;		//pointer to 2nd operand
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -146,9 +147,6 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			case I_MOV_STRING:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
 					itemPtr->stringValue=malloc(0);		//TODO check what is going on, the strcpy chrashes without malloc, but malloc(0) and free works for some reason.
-					free(itemPtr->stringValue);
-					itemPtr->stringValue=malloc(sizeof(list->active->Instruction.addr2));
-					//free(itemPtr->stringValue);
 					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_STRING to nonexistant variable.\n");
@@ -209,6 +207,31 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 
 	//************************I_MOV******************************//
 			case I_MOV:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL && (itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) != NULL){
+					itemPtr->varType=itemPtr2->varType;		//copy operand2s type
+					itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
+					switch (itemPtr2->varType){
+						case 28:			//source is type int
+							itemPtr->intValue=itemPtr2->intValue;
+							break;
+						case 30:			//source is type String
+	
+							break;
+						case 23:			//source is type double
+							itemPtr->doubleValue=itemPtr2->doubleValue;						
+							break;
+							
+						default:
+
+							fprintf(stderr,"I_MOV source operand has unexpected type %d\n",itemPtr->varType);
+							exit(3);	//TODO this is our fault, exit code is hard to define....
+					}
+				}else{									//Variable is not in var table exist
+					printHtabLocal(localVarTable);
+					fprintf(stderr,"Sem_Error. I_MOV to nonexistant variable.\n");
+					exit(3);
+				}
+			break;	
 
 			break;	
 
