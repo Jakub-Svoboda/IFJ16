@@ -44,6 +44,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			case I_STOP:
 				
 				fprintf(stderr,"\nInterpret over.\n\n");	//TODO comment me
+				//memfreeall();
 				exit(0);	//TODO free stuff
 
 			break;

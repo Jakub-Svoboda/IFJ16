@@ -1,5 +1,5 @@
 #include <stdio.h>			//TODO check if this is ok or BS
-
+#include "garbage.h"
 
 
 #ifndef SCANNER_H
