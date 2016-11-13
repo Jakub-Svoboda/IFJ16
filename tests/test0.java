@@ -4,7 +4,10 @@ class Main {
 //			a=a+b;
 //			a = lel;	
 //		}
-//		function(a,a,a);
+		meineKlasse.f();
+		function();
+		meineKlasse.f();
+		function();
 //		a=function(a,a,a);
 //		int a=function(a,a,a); 
 //		if ((podminka)){
@@ -13,10 +16,11 @@ class Main {
 //		}else{
 //			a=x;
 
-	meineKlasse.f(a,1);
-
-	//	}	
-	}
+	
+		//	}	
+		return 0;
+		}
+		static int function(){return 0;}
 }
 
 class meineKlasse{

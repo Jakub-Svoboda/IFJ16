@@ -29,7 +29,9 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	struct listItem *lastActive;
 	thTable * nextCallTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
 	htabInit(nextCallTable);
-	
+	char currentFunc[2047];
+	char currentClass[2047];
+	char* dot=".";
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
 		switch (list->active->Instruction.instType){
@@ -44,8 +46,15 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			break;
 			
 	//************************I_LABEL******************************//
-			case I_LABEL:
-
+			case I_LABEL:	;
+				if(strstr(list->active->Instruction.addr1,dot)){
+					char buffer[2047];
+					char *buffer2;
+					strcpy(buffer, list->active->Instruction.addr1);
+					strtok_r(buffer, ".", &buffer2);
+					strcpy(currentClass,buffer);
+					strcpy(currentFunc,buffer2);
+				}
 
 			break;
 			
@@ -79,16 +88,23 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			
 	//************************I_FN_CALL******************************//
 			case I_FN_CALL:
+				if(!strstr(list->active->Instruction.addr1,dot)){
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					fprintf(stderr,"\n%s\n\n\n", list->active->Instruction.addr1);
+				}
+
 				lastActive=list->active;	//save pointer to active instr
 				listFirst(list);			//reset active to first for label search
 				while(1){
 					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr1)==0){
 						break;
 					}	
-					if(list->active->nextItem == NULL) break;
+					if(list->active->nextItem == NULL){
+						fprintf(stderr,"\ncalled function not found\n\n\n"); 
+						exit(3);		//TODO free		
+					}
 					listNext(list);
 				}
-				
 				interpretEval(list,nextCallTable,globalVarTable);
 				htabDispose(nextCallTable);
 				htabInit(nextCallTable);
@@ -97,6 +113,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	
 	//************************I_PROGRAM******************************//
 			case I_PROGRAM:
+				strcpy(currentClass, "Main");
+				strcpy(currentFunc, "run");
 				listNext(list);
 			break;
 			
