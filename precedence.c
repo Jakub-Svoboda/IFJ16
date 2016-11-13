@@ -39,7 +39,7 @@ Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 
 Token* whatRule(tStack* stack, tListOfInstr * list){
 	static int tmpCounter = 0;
-	Token* tokenPtr = malloc(sizeof(Token));
+	Token* tokenPtr = memalloc(sizeof(Token));
 	char buf[2047];
 	char buf2[2047];
 	//char buf3[2047];
@@ -47,8 +47,8 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 	Token * lastToken;
-	Token * toBePushedE = malloc(sizeof(Token));		//TODO sort of a memory waste
-	toBePushedE->name=malloc(sizeof(char)*2047);
+	Token * toBePushedE = memalloc(sizeof(Token));		//TODO sort of a memory waste
+	toBePushedE->name=memalloc(sizeof(char)*2047);
 	
 	if((tokenPtr -> type)==token_rightHandle){
 		tokenPtr = stackTop(stack);							//read top of the stack
@@ -411,7 +411,7 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 }
 
 Token* reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr * list){
-	Token *toBePushed = malloc(sizeof(Token));
+	Token *toBePushed = memalloc(sizeof(Token));
 	while(1){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
 		char whatToDo;	//This deals with how to access the precedence table when number or string gets on input/ stack top
@@ -530,7 +530,7 @@ int stackEmpty (tStack* s){
 }
 
 char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * list){
-	tStack* stack=malloc(sizeof(tStack));	//initialize stack
+	tStack* stack=memalloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
 	Token* tokenPtrTmp = tokenInit();			//init for the first $
 	tokenPtrTmp->type=token_dollar;
@@ -544,7 +544,7 @@ char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr 
 		Token * precedencePtr;
 		if (readFirst == 0){
 			readFirst++;
-			precedencePtr = malloc(sizeof(Token));
+			precedencePtr = memalloc(sizeof(Token));
 			memcpy(precedencePtr,tokenPtr,sizeof(Token));
 		}else{
 			precedencePtr = getModifiedTokenPrecedence(f,tokenPtr);

@@ -10,11 +10,12 @@ int main(int argc, char *argv[]){
 	if(argc==2)
 	{	
 		resources=malloc(sizeof (resourceStruct));			//Do NOT memalloc
+		resources->memList=malloc(sizeof(tList));			//DO NOT MEMALLOC
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
-		resources->functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+		resources->functionTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(resources->functionTable);
-		thTable * globalVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+		thTable * globalVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(globalVarTable);
 		FILE *file;
 		if ((file = fopen(argv[1], "r")) != NULL){	//Checks for nonexistant file 

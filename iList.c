@@ -9,7 +9,7 @@ void listInit(tListOfInstr *L){
 
 void listInsertLast(tListOfInstr *L, tInstr I){
 	tListItem *newItem;
-	newItem = malloc(sizeof (tListItem));
+	newItem = memalloc(sizeof (tListItem));
 	newItem->Instruction = I;
 	newItem->nextItem = NULL;
 	if (L->first == NULL){

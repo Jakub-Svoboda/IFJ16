@@ -2,11 +2,13 @@
 
 extern resourceStruct *resources;
 
-void *memalloc(unsigned size) {			//Function allocates memory given and stores poiter to that memory
+void *memalloc(unsigned int size) {			//Function allocates memory given and stores poiter to that memory
 	tElemPtr hPtr = malloc(sizeof(struct tElem));			//Allocating memory for new list node
 	hPtr->memptr = malloc(size);
 	//printf("%p\n", hPtr->memptr);			//Allocating memory given
+	fprintf(stderr,"Hura potreti\n");
 	hPtr->next = resources->memList->First;
+	fprintf(stderr, "Hura podruhe\n");
 	//printf("%p\n", hPtr->memptr);			//Set new node next pointer to the first node
 	resources->memList->First = hPtr;			//First is now new node
 
@@ -21,6 +23,8 @@ void memfreeall() {			//Dispose pointer list and free all memory
 		resources->memList->First = resources->memList->First->next;			//First now points to the next node
 		free(hPtr->memptr);			//Free help memptr memory
 		free(hPtr);			//Free help node memory	
+		free(resources->memList);
+		free(resources);
 	}
 }
 

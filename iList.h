@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "garbage.h"
 
 #ifndef	ILIST_H
 #define ILIST_H 

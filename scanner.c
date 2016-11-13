@@ -23,7 +23,8 @@ int isKeyword(char *string) {							//return index value of choosen keyword in a
 }
 
 Token *tokenInit() {									//allocate space
-	Token *t = (Token *)malloc(sizeof(Token));
+	Token *t = (Token *)memalloc(sizeof(Token));
+fprintf(stderr,"Huraaaa");
 	if(t == NULL) {
 		printf("tokenInit malloc error\n");				//propably BS
 		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type
@@ -84,7 +85,7 @@ Token *lookAhead(FILE *f, int steps) { //TODO : Is there better way of passing F
 Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Call lookAhead instead of getToken();
 							// Lex errors: id. is not ok
 	int buffSize = BUFFER_SIZE;
-	char *buff = (char*) malloc(buffSize * sizeof(char));
+	char *buff = (char*) memalloc(buffSize * sizeof(char));
 
 //	buffSize += 2;
 //    buff = realloc(buff, buffSize);

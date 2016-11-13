@@ -15,7 +15,7 @@ int runInterpret(tListOfInstr *list,thTable * globalVarTable){
 	fprintf(stderr,"\n");
 	
 	listFirst(list);
-	thTable * localVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 	htabInit(localVarTable);
 	
 	fprintf(stderr,"\n");	//TODO comment me
@@ -28,7 +28,7 @@ return 0;
 
 void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVarTable){
 	struct listItem *lastActive;
-	thTable * nextCallTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
+	thTable * nextCallTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
 	htabInit(nextCallTable);
 	char currentFunc[2047];
 	char currentClass[2047];
@@ -44,7 +44,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			case I_STOP:
 				
 				fprintf(stderr,"\nInterpret over.\n\n");	//TODO comment me
-				//memfreeall();
+				memfreeall();
 				exit(0);	//TODO free stuff
 
 			break;
@@ -145,7 +145,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_MOV_STRING******************************//
 			case I_MOV_STRING:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
-					itemPtr->stringValue=malloc(sizeof(list->active->Instruction.addr2));
+					itemPtr->stringValue=memalloc(sizeof(list->active->Instruction.addr2));
 					//free(itemPtr->stringValue);
 					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
 				}else{
