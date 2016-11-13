@@ -164,6 +164,16 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_NE******************************//
 			case I_NE:
 
+			break;	
+
+	//************************I_MOV******************************//
+			case I_MOV:
+
+			break;	
+
+	//************************I_WHILE_GOTO******************************//
+			case I_WHILE_GOTO:
+
 			break;				
 			
 			
@@ -200,7 +210,8 @@ void printInstType(int instructionType){
 		case I_GE:		fprintf(stderr,"  I_GE:\t\t"); 	break;
 		case I_EQ:		fprintf(stderr,"  I_EQ:\t\t"); 	break;
 		case I_NE:		fprintf(stderr,"  I_NE:\t\t"); 	break;
-		
+		case I_MOV:		fprintf(stderr,"  I_MOV:\t"); 	break;
+		case I_WHILE_GOTO:		fprintf(stderr,"  I_WHILE_GOTO:\t"); 	break;
 	
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}

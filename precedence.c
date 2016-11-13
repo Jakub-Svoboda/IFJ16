@@ -47,7 +47,6 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
 	Token * lastToken;
-	Token * last2Token;
 	Token * toBePushedE = malloc(sizeof(Token));		//TODO sort of a memory waste
 	toBePushedE->name=malloc(sizeof(char)*2047);
 	
@@ -412,7 +411,7 @@ Token* stackTopTerminal(tStack* s){	//Returns the top terminal on stack
 	return stackTopPtr;
 }
 
-void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr * list){
+Token* reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr * list){
 	Token *toBePushed = malloc(sizeof(Token));
 	while(1){
 		stackTopPtr=stackTopTerminal(stack);	//find first Terminal on stack
@@ -435,7 +434,9 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 	//	printf("stack top is %d\n", stackTopPtr->type);
 	//	printf("What to do is: %c\n\n",whatToDo);
 		if(whatToDo == '$'){
-			return;
+			tokenPtr=stackTop(stack);
+			stackPop(stack);	
+			return tokenPtr;
 		}
 		if(whatToDo == '<'){				//When table returns <
 			stackTopPtr=stackTop(stack);	//check what is the very top of stack
@@ -453,6 +454,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 				stackPush(stack, toBePushed);				//push left handle and input TOken
 				stackPush(stack, tokenPtr);
 			}
+				return NULL;
 			//printStack(stack);
 
 			break;											//Break the cycle to get new token
@@ -463,14 +465,13 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 			//printStack(stack);	//TODO delete
 			Token * toBePushedE = whatRule(stack, list);	//Find out what rule applies and pop the rule out of stack
 			if (tokenPtr->type != token_semicolon){	//NOT Semicolon
-				//toBePushedE->type = token_expression;		//if not ; push E
 				stackPush(stack, toBePushedE);
-//	fprintf(stderr,"\npushing: %s, %d\n\n",toBePushedE->name, toBePushedE->type);
 				//printStack(stack);
 				}else{
 				if(stack->top == 0 && stack->arr[stack->top]->type == token_dollar){	//semicolon on input
 					fprintf(stderr,"Predictive syntax analysis is over\n");		//TODO return
 					//printStack(stack);
+					return NULL;
 					break;
 				}else{
 					fprintf(stderr,"Semicolon on input but stack not empty! \n");
@@ -495,6 +496,7 @@ void reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr *
 
 		}
 	}
+	return NULL; 	//TODO check if ok
 	//free(toBePushed);
 }
 
@@ -528,7 +530,7 @@ int stackEmpty (tStack* s){
 	return(-1 == s->top);
 }
 
-int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * list){
+char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * list){
 	Token * tokenPtrTmp2 = malloc(sizeof(Token));
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
@@ -538,6 +540,7 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * 
 	Token* stackTopPtr=stackTop(stack);	//initialize stack pointer
 	int tokenCnt =0;			//if no expression is present, this causes error
 	int depth=0;	//Defines how many brackets are yet to come to finish expression
+	Token * lastVarPtr=NULL;
 	while(1){
 		tokenCnt++;
 		Token * precedencePtr;
@@ -560,8 +563,9 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * 
 			//fprintf(stderr,"Stak top ptr is: %d\n",tokenPtr->type);
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
 			tokenPtrTmp->type = token_dollar;
-			reduction(tokenPtrTmp,stackTopPtr,stack,list);
-			break;
+			lastVarPtr=reduction(tokenPtrTmp,stackTopPtr,stack,list);
+		fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);	
+			return lastVarPtr->name;
 		}
 		if (tokenPtr->type == token_bracketLeftRound){depth++;}
 		if (tokenPtr->type == token_bracketRightRound){
@@ -570,16 +574,17 @@ int runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * 
 			if (depth<0){
 				Token* tokenPtrTmp = tokenInit();			//init for the last $
 				tokenPtrTmp->type = token_dollar;
-				reduction(tokenPtrTmp,stackTopPtr,stack,list);
+				lastVarPtr=reduction(tokenPtrTmp,stackTopPtr,stack,list);
 				//fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
-				return 0;
+		fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);
+				return lastVarPtr->name;
 			}
 		}
 		stackTopPtr = stackTopTerminal(stack);
-		reduction(precedencePtr, stackTopPtr, stack,list);
-
+		lastVarPtr=reduction(precedencePtr, stackTopPtr, stack,list);
+//fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);
 	}
-	free(tokenPtrTmp2);
-	free(stack);
+	//free(tokenPtrTmp2);
+	//free(stack);
 	return 0;
 }
