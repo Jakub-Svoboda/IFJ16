@@ -24,7 +24,6 @@ int isKeyword(char *string) {							//return index value of choosen keyword in a
 
 Token *tokenInit() {									//allocate space
 	Token *t = (Token *)memalloc(sizeof(Token));
-fprintf(stderr,"Huraaaa");
 	if(t == NULL) {
 		printf("tokenInit malloc error\n");				//propably BS
 		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type

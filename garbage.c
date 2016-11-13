@@ -5,13 +5,8 @@ extern resourceStruct *resources;
 void *memalloc(unsigned int size) {			//Function allocates memory given and stores poiter to that memory
 	tElemPtr hPtr = malloc(sizeof(struct tElem));			//Allocating memory for new list node
 	hPtr->memptr = malloc(size);
-	//printf("%p\n", hPtr->memptr);			//Allocating memory given
-	fprintf(stderr,"Hura potreti\n");
 	hPtr->next = resources->memList->First;
-	fprintf(stderr, "Hura podruhe\n");
-	//printf("%p\n", hPtr->memptr);			//Set new node next pointer to the first node
 	resources->memList->First = hPtr;			//First is now new node
-
 	return(resources->memList->First->memptr);			//Return pointer to the newly allocated memory
 }
 
