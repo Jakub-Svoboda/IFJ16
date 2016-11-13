@@ -9,7 +9,7 @@ resourceStruct* resources;
 int main(int argc, char *argv[]){
 	if(argc==2)
 	{	
-		resources=malloc(sizeof (resourceStruct));
+		resources=malloc(sizeof (resourceStruct));			//Do NOT memalloc
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
 		resources->functionTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);

@@ -4,7 +4,7 @@ class Main {
 		x= 2;
 		d1=3.1415926;
 		d2=1e3;
-		s="stringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringurustringuru";
+		s="stringuru";
 	
 	}
 }
