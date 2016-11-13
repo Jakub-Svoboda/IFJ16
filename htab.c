@@ -3,7 +3,7 @@
 char* concat(char* str1, char* str2) {          //Basic concatenate function to make CLASS.ID into one string
     int str1len = strlen(str1);
     int str2len = strlen(str2);
-    char *buff = (char*) malloc((str1len+str2len+2) * sizeof(char));        //Malloc memory of ideal length
+    char *buff = (char*) memalloc((str1len+str2len+2) * sizeof(char));        //Malloc memory of ideal length
     strcpy(buff,str2);
     strcat(buff,".");
     strcat(buff,str1);
@@ -71,7 +71,7 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
         if (tempItem == NULL) {
 
             if ((*htab)[hashFun(conKey)] == NULL) {               //hashtable row is not created yet
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                thtabItem* insertItem = (thtabItem*)memalloc(sizeof(thtabItem));
 
                 insertItem->key = conKey;
                 insertItem->name = funcName;
@@ -81,7 +81,7 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
                 //insertItem->returnType = token;
                 (*htab)[hashFun(conKey)] = insertItem;            //insert created item on the first position in hashtable row
             }else {
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                thtabItem* insertItem = (thtabItem*)memalloc(sizeof(thtabItem));
 
                 insertItem->key = conKey;
                 insertItem->name = funcName;
@@ -111,7 +111,7 @@ void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type 
 
             if ((*htab)[hashFun(conKey)] == NULL) {               //hashtable row is not created yet
                 //printf("novy v htabInsertReturnType\n");
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                thtabItem* insertItem = (thtabItem*)memalloc(sizeof(thtabItem));
 
                 insertItem->key = conKey;
                 insertItem->name = varName;
@@ -121,7 +121,7 @@ void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type 
                 //insertItem->returnType = token;
                 (*htab)[hashFun(conKey)] = insertItem;            //insert created item on the first position in hashtable row
             }else {
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                thtabItem* insertItem = (thtabItem*)memalloc(sizeof(thtabItem));
 
                 insertItem->key = conKey;
                 insertItem->name = varName;
@@ -151,7 +151,7 @@ void htabInsert(thTable *htab, char* key, int localVarType) {
         thtabItem* tempItem = htabSearch(htab, key);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
         if (tempItem == NULL) {                               //item is not yet in hashtable
             if ((*htab)[hashFun(key)] == NULL) {              //hashtable row is not created yet
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                thtabItem* insertItem = (thtabItem*)memalloc(sizeof(thtabItem));
                 insertItem->key = key;
                 insertItem->next = NULL;
                 insertItem->varType=localVarType;
@@ -159,7 +159,7 @@ void htabInsert(thTable *htab, char* key, int localVarType) {
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }else {
                                                         //hashtable has already created row
-                thtabItem* insertItem = (thtabItem*)malloc(sizeof(thtabItem));
+                thtabItem* insertItem = (thtabItem*)memalloc(sizeof(thtabItem));
                 insertItem->key = key;
                 //insertItem->returnType = token_invalid;
                 insertItem->next = (*htab)[hashFun(key)];      //link pointer to next item of created item to 1st item of hashtable row

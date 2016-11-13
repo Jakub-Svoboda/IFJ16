@@ -59,10 +59,10 @@ void printType(Token* tokenPtr){
 
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	tInstr I;		
-	Token* lastToken = malloc(sizeof(Token));
-	Token* tokenPtr = malloc(sizeof(Token));
-	resources->classPtr= malloc(sizeof(Token));
-	resources->funcPtr= malloc(sizeof(Token));
+	Token* lastToken = memalloc(sizeof(Token));
+	Token* tokenPtr = memalloc(sizeof(Token));
+	resources->classPtr= memalloc(sizeof(Token));
+	resources->funcPtr= memalloc(sizeof(Token));
 	generateInstruction(I,I_PROGRAM, "", "", "",list);
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list);
 	result =result; //TODO delete me
@@ -73,7 +73,7 @@ int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 }
 
 thTable* enterScope(){
-	thTable * localVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
+	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 	htabInit(localVarTable);
 	return 	(localVarTable);	
 }		
