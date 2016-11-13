@@ -1,4 +1,5 @@
 #include "syntax.h"
+#include "precedence.h"
 
 
 char precedence_table[14][14]={

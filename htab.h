@@ -3,6 +3,8 @@
 #include <string.h>
 #include "scanner.h"
 
+#ifndef	HTAB_H
+#define HTAB_H 
 #define HTAB_SIZE 5
 #define UNINIT 0
 #define INIT 1
@@ -47,3 +49,4 @@ void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type 
 void printHtab(thTable *htab, int var);
 void printHtabLocal(thTable *htab);
 char* concat(char* str1, char* str2);
+#endif

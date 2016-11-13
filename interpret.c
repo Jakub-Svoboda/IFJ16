@@ -144,8 +144,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_MOV_STRING******************************//
 			case I_MOV_STRING:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
-					itemPtr->stringValue=malloc(0);
-					free(itemPtr->stringValue);
+					itemPtr->stringValue=malloc(sizeof(list->active->Instruction.addr2));
+					//free(itemPtr->stringValue);
 					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_STRING to nonexistant variable.\n");

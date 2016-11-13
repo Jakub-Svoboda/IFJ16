@@ -12,7 +12,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "scanner.h"
+#include "iList.h"
+#include "htab.h"
 #include "precedence.h"
+
+
+#ifndef	SYNTAX_H
+#define SYNTAX_H 
+#include "garbage.h"
+
+
 
 #define argInt	28
 #define argDouble	23
@@ -62,5 +73,9 @@ typedef struct{
 	thTable* functionTable;
 	Token* classPtr;
 	Token* funcPtr;
+	tList* memList;
 }resourceStruct;
 
+
+
+#endif

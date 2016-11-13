@@ -1,9 +1,9 @@
 #define MAX_STACK 1023
 #include <stdio.h>
 #include <stdlib.h>
-#include "firstRun.h"
 #include <string.h>
-
+#ifndef PRECEDENCE_H
+#define PRECEDENCE_H
 
 
 typedef struct{
@@ -21,3 +21,6 @@ Token* reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack,  tListOfInst
 Token* whatRule(tStack* stack,tListOfInstr * list);
 void printStack(tStack* s);
 Token* stackTopTerminal(tStack* s);
+
+
+#endif
