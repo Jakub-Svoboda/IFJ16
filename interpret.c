@@ -1,6 +1,6 @@
 #include "interpret.h"
 
-extern char *strtok_r(char *, const char *, char **);
+char *strtok_r(char *, const char *, char **);	//required for strtok_r function
 
 int runInterpret(tListOfInstr *list,thTable * globalVarTable){
 	fprintf(stderr,"\n");
@@ -33,6 +33,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	char currentFunc[2047];
 	char currentClass[2047];
 	char* dot=".";
+	thtabItem* itemPtr = NULL;
+	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
 		switch (list->active->Instruction.instType){
@@ -121,17 +123,35 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			
 	//************************I_MOV_INT******************************//
 			case I_MOV_INT:
-
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
+					itemPtr->intValue = atoi(list->active->Instruction.addr2);
+				}else{
+					fprintf(stderr,"Sem_Error. I_MOV_INT to nonexistant variable.\n");
+					exit(3);
+				}
 			break;		
 			
 	//************************I_MOV_DOUBLE******************************//
 			case I_MOV_DOUBLE:
-
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
+					itemPtr->doubleValue = atof(list->active->Instruction.addr2);
+				}else{
+					fprintf(stderr,"Sem_Error. I_MOV_DOUBLE to nonexistant variable.\n");
+					exit(3);
+				}
 			break;	
 			
 	//************************I_MOV_STRING******************************//
 			case I_MOV_STRING:
-
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
+					itemPtr->stringValue=malloc(0);
+					free(itemPtr->stringValue);
+					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
+				}else{
+					fprintf(stderr,"Sem_Error. I_MOV_STRING to nonexistant variable.\n");
+					exit(3);
+				}
+				printHtabLocal(localVarTable);
 			break;	
 
 	//************************I_ADD******************************//
