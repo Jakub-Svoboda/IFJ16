@@ -18,9 +18,9 @@ void memfreeall() {			//Dispose pointer list and free all memory
 		resources->memList->First = resources->memList->First->next;			//First now points to the next node
 		free(hPtr->memptr);			//Free help memptr memory
 		free(hPtr);			//Free help node memory	
-		free(resources->memList);
-		free(resources);
 	}
+	free(resources->memList);
+	free(resources);
 }
 
 void memfree(void *ptr) {			//Function frees memory on specified pointer (must be allocated using memalloc, NOT malloc)
