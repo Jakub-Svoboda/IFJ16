@@ -217,7 +217,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_static:
 					if ((result=syntaxCheck( TYPE, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
 					if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
-					generateInstruction(I,I_LABEL, tokenPtr->name, "", "",list);
+					generateInstruction(I,I_LABEL, concat(tokenPtr->name,resources->classPtr->name), "", "",list);
 					memcpy(resources->funcPtr,tokenPtr,sizeof(Token));		
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
