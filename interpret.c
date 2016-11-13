@@ -1,5 +1,7 @@
 #include "interpret.h"
 
+extern char *strtok_r(char *, const char *, char **);
+
 int runInterpret(tListOfInstr *list,thTable * globalVarTable){
 	fprintf(stderr,"\n");
 	listFirst(list);
@@ -23,7 +25,6 @@ int runInterpret(tListOfInstr *list,thTable * globalVarTable){
 	
 return 0;	
 }
-
 
 void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVarTable){
 	struct listItem *lastActive;
@@ -90,7 +91,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 			case I_FN_CALL:
 				if(!strstr(list->active->Instruction.addr1,dot)){
 					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
-					fprintf(stderr,"\n%s\n\n\n", list->active->Instruction.addr1);
+		//			fprintf(stderr,"\n%s\n\n\n", list->active->Instruction.addr1);
 				}
 
 				lastActive=list->active;	//save pointer to active instr
