@@ -144,7 +144,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_MOV_STRING******************************//
 			case I_MOV_STRING:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
-					itemPtr->stringValue=malloc(0);
+					itemPtr->stringValue=malloc(0);		//TODO check what is going on, the strcpy chrashes without malloc, but malloc(0) and free works for some reason.
 					free(itemPtr->stringValue);
 					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
 				}else{
