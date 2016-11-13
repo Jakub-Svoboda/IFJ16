@@ -38,11 +38,10 @@ Token* getModifiedTokenPrecedence(FILE *f,Token* tokenPtr){
 
 Token* whatRule(tStack* stack, tListOfInstr * list){
 	static int tmpCounter = 0;
-	int rule;
 	Token* tokenPtr = malloc(sizeof(Token));
 	char buf[2047];
 	char buf2[2047];
-	char buf3[2047];
+	//char buf3[2047];
 	tInstr I;
 	tokenPtr = stackTop(stack);				//read top of the stack
 	stackPop(stack);						//pop the token we dont need
@@ -76,8 +75,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_ADD, buf, lastToken->name, lastToken2->name, list);
-
-								rule = 1;									//rule 1 <E+E>
+								//rule 1 <E+E>
 							}else{
 								fprintf(stderr,"Error: Someting E+E>\n");
 							}
@@ -98,7 +96,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_SUB, buf, lastToken->name, lastToken2->name, list);
-								rule = 2;									//rule 2 <E-E>
+								//rule 2 <E-E>
 							}else{
 								fprintf(stderr,"Error: Someting E-E>\n");
 							}
@@ -119,7 +117,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_MUL, buf, lastToken->name, lastToken2->name, list);
-								rule = 3;									//rule 3 <E*E>
+								//rule 3 <E*E>
 							}else{
 								fprintf(stderr,"Error: Someting E*E>\n");
 							}
@@ -140,7 +138,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_DIV, buf, lastToken->name, lastToken2->name, list);
-								rule = 4;									//rule 4 <E/E>
+								//rule 4 <E/E>
 							}else{
 								fprintf(stderr,"Error: Someting E/E>\n");
 							}
@@ -161,7 +159,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_LT, buf, lastToken->name, lastToken2->name, list);
-								rule = 5;									//rule 5 <E<E>
+								//rule 5 <E<E>
 							}else{
 								fprintf(stderr,"Error: Someting E<E>\n");
 							}
@@ -182,7 +180,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_GT, buf, lastToken->name, lastToken2->name, list);
-								rule = 6;									//rule 6 <E>E>
+								//rule 6 <E>E>
 							}else{
 								fprintf(stderr,"Error: Someting E>E>\n");
 							}
@@ -203,7 +201,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_LE, buf, lastToken->name, lastToken2->name, list);
-								rule = 7;									//rule 7 <E<=E>
+								//rule 7 <E<=E>
 							}else{
 								fprintf(stderr,"Error: Someting E<=E>\n");
 							}
@@ -224,7 +222,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_GE, buf, lastToken->name, lastToken2->name, list);
-								rule = 8;									//rule 8 <E>=E>
+								//rule 8 <E>=E>
 							}else{
 								fprintf(stderr,"Error: Someting E>=E>\n");
 							}
@@ -245,7 +243,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_EQ, buf, lastToken->name, lastToken2->name, list);
-								rule = 9;									//rule 9 <E==E>
+								//rule 9 <E==E>
 							}else{
 								fprintf(stderr,"Error: Someting E!=E>\n");
 							}
@@ -266,7 +264,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 								generateInstruction(I,I_NEW_VAR, buf, "", "",list);
 								tmpCounter++;
 								generateInstruction(I,I_NE, buf, lastToken->name, lastToken2->name, list);
-								rule = 10;									// rule 10 <E!=E>
+								// rule 10 <E!=E>
 							}else{
 								fprintf(stderr,"Error: Someting E!=E>\n");
 							}
@@ -289,7 +287,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){				
-					rule= 12;												// rule 12 <i>
+					// rule 12 <i>
 					strcpy(toBePushedE->name,lastToken->name);
 					toBePushedE->type = token_expression;
 					
@@ -312,7 +310,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 //	fprintf(stderr,"foo\n");					
 					toBePushedE->type = token_expression;
 //	fprintf(stderr,"int to E: %s %d\n",toBePushedE->name,toBePushedE->type)				;
-					rule= 12;												// rule 12 <i>
+					// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
@@ -331,7 +329,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				if (tokenPtr -> type  == token_leftHandle){
 					strcpy(toBePushedE->name,buf);
 					toBePushedE->type = token_expression;
-					rule= 12;												// rule 12 <i>
+					// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
@@ -350,7 +348,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				if (tokenPtr -> type  == token_leftHandle){
 					strcpy(toBePushedE->name,buf);
 					toBePushedE->type = token_expression;
-					rule= 12;												// rule 12 <i>
+					// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
@@ -370,7 +368,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 						if(tokenPtr -> type  == token_leftHandle){
 							strcpy(toBePushedE->name,lastToken->name);
 							toBePushedE->type = token_expression;	
-							rule= 11;										//rule 11 <(E)>
+							//rule 11 <(E)>
 						}
 					}
 				}
@@ -531,7 +529,6 @@ int stackEmpty (tStack* s){
 }
 
 char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr * list){
-	Token * tokenPtrTmp2 = malloc(sizeof(Token));
 	tStack* stack=malloc(sizeof(tStack));	//initialize stack
 	stack->top=-1;
 	Token* tokenPtrTmp = tokenInit();			//init for the first $
@@ -564,7 +561,7 @@ char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr 
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
 			tokenPtrTmp->type = token_dollar;
 			lastVarPtr=reduction(tokenPtrTmp,stackTopPtr,stack,list);
-		fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);	
+	//	fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);	
 			return lastVarPtr->name;
 		}
 		if (tokenPtr->type == token_bracketLeftRound){depth++;}
@@ -576,7 +573,7 @@ char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr 
 				tokenPtrTmp->type = token_dollar;
 				lastVarPtr=reduction(tokenPtrTmp,stackTopPtr,stack,list);
 				//fprintf(stderr,"Predictive syntax analysis over, returning ) to recursive analysis %d\n",depth); //TODO return!!!!!!!!
-		fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);
+	//	fprintf(stderr,"lastVarPtr->name: %s\n",lastVarPtr->name);
 				return lastVarPtr->name;
 			}
 		}

@@ -12,11 +12,18 @@ class Main {
 //			b=0+0+0/4;
 //		}else{
 //			a=x;
+			int a=1+2;
+			meineKlasse.f();
+			a=42;
 
-			while(a+b){
-				a=b;
-			}
-			
 	//	}	
 	}
+}
+
+class meineKlasse{
+	static int f(){
+		int a =4;
+		return;
+	}
+	
 }

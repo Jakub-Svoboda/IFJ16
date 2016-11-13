@@ -16,7 +16,7 @@ int runInterpret(tListOfInstr *list,thTable * globalVarTable){
 	thTable * localVarTable = malloc(sizeof(struct thtabItem) * HTAB_SIZE);
 	htabInit(localVarTable);
 	
-	
+	fprintf(stderr,"\n");	//TODO comment me
 	interpretEval(list,localVarTable,globalVarTable);
 	
 
@@ -38,7 +38,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_STOP******************************//
 			case I_STOP:
 				
-				exit(0);
+				fprintf(stderr,"\nInterpret over.\n\n");	//TODO comment me
+				exit(0);	//TODO free stuff
 
 			break;
 			
@@ -57,8 +58,6 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 	//************************I_NEW_VAR******************************//
 			case I_NEW_VAR:
 				htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
-				
-
 			break;
 			
 	//************************I_FN_END******************************//
