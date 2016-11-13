@@ -318,7 +318,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(strcmp(resources->classPtr->name,"Main")==0 && strcmp(resources->funcPtr->name,"run")==0 ){
 						generateInstruction(I,I_STOP, "", "", "",list);
 					}
-					
 					return 0;
 					break;
 				case token_identifier:								//id
@@ -334,7 +333,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						getModifiedToken(f,tokenPtr);
 						//printType(tokenPtr);
 						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
-							runPrecedenceAnalysis(f,tokenPtr,0,list);
+							sprintf(buf, "%s",lastToken->name);
+							char* buffer=runPrecedenceAnalysis(f,tokenPtr,0,list);
+							generateInstruction(I,I_MOV, buf,buffer,"", list);
 							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						}else{									// id = functionid
 							getModifiedToken(f,tokenPtr);
@@ -366,10 +367,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					int gotoLabel = counter;
 					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
+					char * buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#while_end%d",gotoLabel);
-					generateInstruction(I,I_IF_GOTO, "", buf, "",list);
+					generateInstruction(I,I_WHILE_GOTO, buffer, buf, "",list);
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					sprintf(buf, "#while%d",gotoLabel);
 					generateInstruction(I,I_GOTO, buf, "", "",list);
