@@ -380,10 +380,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return result;
 				case token_if:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
+					char * buffer2=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#else%d",counter);
-					generateInstruction(I,I_IF_GOTO, "", buf, "",list);
+					generateInstruction(I,I_IF_GOTO, buffer2, buf, "",list);
 					int counterLast = counter;
 					counter++;
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
@@ -401,10 +401,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if(tokenPtr-> type == token_semicolon){
-						generateInstruction(I,I_RETURN, "", "", "",list);
+						generateInstruction(I,I_RETURN_NOTHING, "", "", "",list);
 					}else{
-						runPrecedenceAnalysis(f,tokenPtr,0,list);
-						generateInstruction(I,I_RETURN, "", "", "",list);	//TODO assign expr
+						char* buffer2=runPrecedenceAnalysis(f,tokenPtr,0,list);
+						generateInstruction(I,I_RETURN, buffer2, "", "",list);	//TODO assign expr
 						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}
 					}
 					if ((result=syntaxCheck(FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
@@ -469,7 +469,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 			sprintf(buf,"%s",tokenPtr->name);
 			sprintf(buf2,"%d",lastToken->type);
-			generateInstruction(I,I_NEW_VAR, buf, buf2,"",list);				//TODO check if not redeclaration
+			generateInstruction(I,I_NEW_VAR, buf, buf2,"",list);				
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			switch (tokenPtr -> type){
@@ -478,7 +478,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_assign:
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
-						if(tokenPtr-> type == token_identifier){
+						if(tokenPtr-> type == token_identifier){	//	type ID=func
 							if(isItFunction(f,tokenPtr) == 1){
 								getModifiedToken(f,tokenPtr);
 								//printType(tokenPtr);
@@ -486,7 +486,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 								if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 							}else{
-								runPrecedenceAnalysis(f,tokenPtr,0,list);
+								char* buffer =runPrecedenceAnalysis(f,tokenPtr,0,list);
+								generateInstruction(I,I_MOV, buf, buffer,"",list);
 								if (tokenPtr->type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 							}
 						}else{
@@ -610,10 +611,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return result;
 				case token_if:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
+					char * buffer2=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#else%d",counter);
-					generateInstruction(I,I_IF_GOTO, "", buf, "",list);
+					generateInstruction(I,I_IF_GOTO, buffer2, buf, "",list);
 					int counterLast = counter;
 					counter++;
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nCBB\n");goto EXIT;}
@@ -631,8 +632,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if(tokenPtr-> type == token_semicolon){
+						generateInstruction(I,I_RETURN_NOTHING, "", "", "",list);
 					}else{
-						runPrecedenceAnalysis(f,tokenPtr,0,list);
+						char* buffer2=runPrecedenceAnalysis(f,tokenPtr,0,list);
+						generateInstruction(I,I_RETURN, buffer2, "", "",list);	//TODO assign expr
 						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}
 					}
 					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nCMB\n");goto EXIT;}

@@ -12,9 +12,11 @@ class Main {
 //			b=0+0+0/4;
 //		}else{
 //			a=x;
-			int a=1+2;
-			meineKlasse.f();
-			a=42;
+			if (1+1){
+				if(2+2){}else{}
+			}else{
+				e=1;
+			}
 
 	//	}	
 	}

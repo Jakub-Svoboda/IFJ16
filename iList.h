@@ -26,6 +26,7 @@
 #define	I_NE			21
 #define I_MOV			22
 #define I_WHILE_GOTO	23	//cond jump to while statement (jump if not zero)
+#define I_RETURN_NOTHING	24	//return;
 
 typedef struct		//List of instructions
 {
