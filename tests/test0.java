@@ -13,7 +13,9 @@ class Main {
 //		}else{
 //			a=x;
 
-			while(a+b){}
+			while(a+b){
+				a=b;
+			}
 			
 	//	}	
 	}

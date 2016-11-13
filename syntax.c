@@ -594,10 +594,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					int gotoLabel = counter;
 					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
+					char * buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#while_end%d",gotoLabel);
-					generateInstruction(I,I_IF_GOTO, "", buf, "",list);
+					generateInstruction(I,I_WHILE_GOTO, buffer, buf, "",list);
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					sprintf(buf, "#while%d",gotoLabel);
 					generateInstruction(I,I_GOTO, buf, "", "",list);
