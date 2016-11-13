@@ -12,11 +12,8 @@ class Main {
 //			b=0+0+0/4;
 //		}else{
 //			a=x;
-			if (1+1){
-				if(2+2){}else{}
-			}else{
-				e=1;
-			}
+
+	meineKlasse.f(a,1);
 
 	//	}	
 	}
@@ -24,8 +21,7 @@ class Main {
 
 class meineKlasse{
 	static int f(){
-		int a =4;
-		return;
+		return 0;
 	}
 	
 }

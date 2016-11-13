@@ -326,8 +326,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					//printType(tokenPtr);
 					if(tokenPtr -> type == token_bracketLeftRound){	// id(
 						sprintf(buf, "%s",lastToken->name);
-						generateInstruction(I,I_FN_CALL, buf,"","", list);
 						if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+						generateInstruction(I,I_FN_CALL, buf,"","", list);
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 					}else if (tokenPtr -> type == token_assign){	//id=
 						getModifiedToken(f,tokenPtr);
@@ -513,8 +513,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_identifier:
 				case token_string:
 				case token_intNumber:
-				case token_doubleNumber:
-					runPrecedenceAnalysis(f,tokenPtr,0,list);
+				case token_doubleNumber:;
+					char * buffer = runPrecedenceAnalysis(f,tokenPtr,0,list);
+					generateInstruction(I,I_PUSH,buffer,"","",list);
 					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
 					return result;
 					break;
@@ -530,8 +531,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_bracketRightRound:
 					return 0;
 					break;
-				case token_comma:
-					runPrecedenceAnalysis(f,tokenPtr,1,list);
+				case token_comma:;
+					char * buffer = runPrecedenceAnalysis(f,tokenPtr,1,list);
+					generateInstruction(I,I_PUSH,buffer,"","",list);
 					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
 					return result;
 					break;
