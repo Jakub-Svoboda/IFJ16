@@ -8,7 +8,7 @@
 #define INTERPRET_H 
 
 
-int runInterpret(tListOfInstr *list, thTable * globalVarTable );
-void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVarTable);
+int runInterpret(tListOfInstr *list);
+void interpretEval(tListOfInstr *list, thTable* localVarTable);
 void printInstType(int instructionType);
 #endif

@@ -69,6 +69,7 @@ typedef enum state{
 
 typedef struct{
 	thTable* functionTable;
+	thTable* globalVarTable;
 	Token* classPtr;
 	Token* funcPtr;
 	tList* memList;

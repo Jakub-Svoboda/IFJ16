@@ -3,6 +3,8 @@
 #include <string.h>
 #include "scanner.h"
 
+
+
 #ifndef	HTAB_H
 #define HTAB_H 
 #define HTAB_SIZE 5
@@ -45,7 +47,7 @@ void htabInsert(thTable *htab, char* key, int localVarType);
 void htabDelete(thTable *htab, char* key);
 void htabDispose(thTable *htab);
 void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_type ret);
-void htabInsertVarType(thTable *htab, char* varName, char* classKey, Token_type var);
+void htabInsertVarType(char* varName, char* classKey, Token_type var);
 void printHtab(thTable *htab, int var);
 void printHtabLocal(thTable *htab);
 char* concat(char* str1, char* str2);

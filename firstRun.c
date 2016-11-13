@@ -5,12 +5,12 @@ void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass){
 	htabInsertReturnType(resources->functionTable, tokenName->name, tokenClass->name, tokenType->type);
 }
 
-void globalVarInsert(Token * tokenName, Token * tokenType,Token * tokenClass, thTable * globalVarTable){
+void globalVarInsert(Token * tokenName, Token * tokenType,Token * tokenClass){
 	//htabInsert(globalVarTable, tokenName -> name);
-	htabInsertVarType(globalVarTable, tokenName->name, tokenClass->name, tokenType->type);
+	htabInsertVarType(tokenName->name, tokenClass->name, tokenType->type);
 }
 
-int firstRun(thTable * globalVarTable,FILE * f){
+int firstRun(FILE * f){
 	Token * tokenPtr = NULL;
 	Token * tokenPtr1 = NULL;
 	Token * tokenPtr2 = NULL;
@@ -44,7 +44,7 @@ int firstRun(thTable * globalVarTable,FILE * f){
 				if(tokenPtr2!= NULL && (tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String)){
 					if(tokenPtr3!=NULL && tokenPtr3->type == token_static){
 						//printf("PISU STACICKOU PROMENNOU YO\n\n\n\n\n");
-						globalVarInsert(tokenPtr1, tokenPtr2, classPtr, globalVarTable);
+						globalVarInsert(tokenPtr1, tokenPtr2, classPtr);
 					}
 
 				}

@@ -1,8 +1,9 @@
 #include "interpret.h"
 
 char *strtok_r(char *, const char *, char **);	//required for strtok_r function
+extern resourceStruct * resources;
 
-int runInterpret(tListOfInstr *list,thTable * globalVarTable){
+int runInterpret(tListOfInstr *list){
 	fprintf(stderr,"\n");
 	listFirst(list);
 	
@@ -19,14 +20,14 @@ int runInterpret(tListOfInstr *list,thTable * globalVarTable){
 	htabInit(localVarTable);
 	
 	fprintf(stderr,"\n");	//TODO comment me
-	interpretEval(list,localVarTable,globalVarTable);
+	interpretEval(list,localVarTable);
 	
 
 	
 return 0;	
 }
 
-void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVarTable){
+void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	struct listItem *lastActive;
 	thTable * nextCallTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
 	htabInit(nextCallTable);
@@ -110,7 +111,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 					}
 					listNext(list);
 				}
-				interpretEval(list,nextCallTable,globalVarTable);
+				interpretEval(list,nextCallTable);
 				htabDispose(nextCallTable);
 				htabInit(nextCallTable);
 				list->active=lastActive;	//restore active position before fn call
@@ -207,33 +208,46 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable,thTable* globalVar
 
 	//************************I_MOV******************************//
 			case I_MOV:
-				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL && (itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) != NULL){
-					itemPtr->varType=itemPtr2->varType;		//copy operand2s type
-					itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
-					switch (itemPtr2->varType){
-						case 28:			//source is type int
-							itemPtr->intValue=itemPtr2->intValue;
-							break;
-						case 30:			//source is type String
-	
-							break;
-						case 23:			//source is type double
-							itemPtr->doubleValue=itemPtr2->doubleValue;						
-							break;
-							
-						default:
-
-							fprintf(stderr,"I_MOV source operand has unexpected type %d\n",itemPtr->varType);
-							exit(3);	//TODO this is our fault, exit code is hard to define....
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_MOV to nonexistant target variable.\n");
+						exit(3);
 					}
-				}else{									//Variable is not in var table exist
-					printHtabLocal(localVarTable);
-					fprintf(stderr,"Sem_Error. I_MOV to nonexistant variable.\n");
-					exit(3);
+				}
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_MOV to nonexistant source variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr->varType != itemPtr2->varType){		//Types are not matching, error4
+					fprintf(stderr,"I_MOV source and target type not matching.\n");
+					exit(4);
+				}
+				itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
+				switch (itemPtr2->varType){
+					case 28:			//source is type int
+						itemPtr->intValue=itemPtr2->intValue;
+						break;
+					case 30:			//source is type String
+						break;
+					case 23:			//source is type double
+						itemPtr->doubleValue=itemPtr2->doubleValue;						
+						break;
+						
+					default:
+						fprintf(stderr,"I_MOV source operand has unexpected type %d\n",itemPtr->varType);
+						exit(3);	//TODO this is our fault, exit code is hard to define....
 				}
 			break;	
 
-			break;	
 
 	//************************I_WHILE_GOTO******************************//
 			case I_WHILE_GOTO:

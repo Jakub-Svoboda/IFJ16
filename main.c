@@ -15,17 +15,17 @@ int main(int argc, char *argv[]){
 		listInit(&list);	//pointer to the list of instructions
 		resources->functionTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 		htabInit(resources->functionTable);
-		thTable * globalVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
-		htabInit(globalVarTable);
+		resources->globalVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
+		htabInit(resources->globalVarTable);
 		FILE *file;
 		if ((file = fopen(argv[1], "r")) != NULL){	//Checks for nonexistant file 
-			firstRun(globalVarTable,file);
+			firstRun(file);
 			fclose(file);
-		char *key="Main.run";						//initialize variable for Main.run existence check
-		if(htabSearch(resources->functionTable, key)==NULL){	//if function run in class Main does not exist
-				fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
-				exit(3);					//TODO call garbage collector
-		}			
+			char *key="Main.run";						//initialize variable for Main.run existence check
+			if(htabSearch(resources->functionTable, key)==NULL){	//if function run in class Main does not exist
+					fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
+					exit(3);					//TODO call garbage collector
+			}			
 		}
 		else{
 			exit(99);								//exits if file does not exist
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 			exit(99);								//exits if file does not exist
 		}
 		
-		result =runInterpret(&list,globalVarTable);
+		result =runInterpret(&list);
 		
 	}
 	return 0;
