@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include "builtin.h"
 
+//////////////////////////////
+//  AS SIMPLE AS IT CAN BE  //
+//  SO PLEASE CHECK IT      //
+//////////////////////////////
+
 int readInt() {
     ;
 }
@@ -29,11 +34,11 @@ int length(String s){
 }
 
 String substr(String s, int i, int n) {
-    if(length(s) < i+n) {
+    if(length(s) < i+n || i < 0 || n < 0) {
         fprintf(stderr, "Substring error, invalid values\n");
         exit(10);
     }
-    char *buff = (char*) malloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
+    char *buff = (char*) memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
@@ -52,10 +57,11 @@ String sort(String s) {
     ;
 }
 
-/*testing purposes
+//testing purposes
+/*
 int main() {
-    String s = "Kekel je z pekel.";
-    printf("Zadarilo se a substr je: {%s}\n", substr(s, 2, 100));
+    String s = "Kekel";
+    printf("Zadarilo se a substr je: {%s}\n", substr(s, 0, 6));
     return 1;
 }
 */
