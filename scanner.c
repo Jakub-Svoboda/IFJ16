@@ -138,7 +138,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					return t;
 				}
 				break;
-			case state_readingString:
+			case state_readingString:						//reading string now doesn't store ""
 				if(c == EOF) {
 					exit(1);
 					//TODO: remove
