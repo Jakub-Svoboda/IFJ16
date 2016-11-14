@@ -16,7 +16,7 @@ class Main {
 			j=j-1;
 		}
 	}	
-	static void f(){
+	static int f(){
 		
 	}
 }

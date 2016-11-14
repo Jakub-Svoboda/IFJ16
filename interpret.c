@@ -95,13 +95,13 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_FN_END******************************//
 			case I_FN_END:
-	printHtab(resources->globalVarTable,0);	
 				buf=concat(currentFunc,currentClass);
-	fprintf(stderr,"im in a function called %s\n",buf);
-				itemPtr=htabSearch(resources->globalVarTable,buf);
-	fprintf(stderr,"return type is %p\n", itemPtr);			
-	fprintf(stderr,"return type is %d\n", itemPtr->returnType);
-					
+				itemPtr=htabSearch(resources->functionTable,buf);
+				if(itemPtr->returnType != 33){			//return type is not void, but no return was found
+					fprintf(stderr,"I_FN_END. Function has ended but no return found.\n");
+					memfreeall();
+					exit(8);
+				}
 				return;
 			break;
 			
@@ -119,6 +119,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
+						memfreeall();
 						exit(3);
 					}
 				}	
