@@ -106,7 +106,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 
 	while(1) {					//TODO ?
 		c = fgetc(f);
-		printf("\nCHAR INPUT %c |||| ",c);
+		//printf("\nCHAR INPUT %c |||| ",c);
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
 				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_'){			//id's may contain numbers and characters or 1 dot
@@ -206,7 +206,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						t->type = token_doubleNumber;
 						t->name = buff;
 						//TODO hashtable insert
-						printf("DABL'%s'",buff);		//shout out its double
+						//printf("DABL'%s'",buff);		//shout out its double
 					}else {
 						t->type = token_intNumber;
 						t->name = buff;
