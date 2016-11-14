@@ -1,11 +1,10 @@
 class Main {
 	static void run(){
-		int a;
-		int b;
-	//	while(a){
-			a=1-b;
-			//a=a;
-	//	}
+		String a = "tvojemama";
+		int b  = 10;
 	
+	
+		String c=922337203685477580+a;
+
 	}
 }

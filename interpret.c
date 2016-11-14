@@ -181,7 +181,153 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 	//************************I_ADD******************************//
 			case I_ADD:
-
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_SUB nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_SUB nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_SUB nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28 && itemPtr->varType != 30){
+					fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
+					memfreeall();
+					exit(3);
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+				
+				
+				
+				
+				
+				
+				if(itemPtr2->varType == 28){			// INT + 
+					if(itemPtr3->varType == 28){		// INT + INT	
+						if(itemPtr->varType == 23){ itemPtr->varType=23;}
+						else if(itemPtr->varType == 0 || itemPtr->varType == 28){ itemPtr->varType=28;}
+						else{
+							fprintf(stderr,"I_ADD target not valid type.\n");
+							memfreeall();
+							exit(4);
+						}
+						itemPtr->intValue=itemPtr2->intValue+itemPtr3->intValue;
+						itemPtr->isInit=1;
+					}else if(itemPtr3->varType == 23){	// INT + D
+						if(itemPtr->varType == 23){ itemPtr->varType=23;}
+						else if(itemPtr->varType == 0 || itemPtr->varType == 28){ itemPtr->varType=23;}
+						else{
+							fprintf(stderr,"I_ADD target not valid type.\n");
+							memfreeall();
+							exit(4);
+						}
+						itemPtr->intValue=itemPtr->intValue+itemPtr3->doubleValue;
+						itemPtr->isInit=1;
+					}else if(itemPtr3->varType == 30){	// INT + STR
+						if(itemPtr->varType == 23){ 
+							fprintf(stderr,"I_ADD target not valid type.\n");
+							memfreeall();
+							exit(4);
+						}
+						else if(itemPtr->varType == 28){ 
+							fprintf(stderr,"I_ADD target not valid type.\n");
+							memfreeall();
+							exit(4);
+						}
+						else if(itemPtr->varType == 30 || itemPtr->varType == 0){
+							itemPtr->stringValue=memalloc(sizeof(itemPtr2->intValue)+sizeof(itemPtr3->stringValue));
+							sprintf(itemPtr->stringValue,"%d%s",itemPtr2->intValue, itemPtr3->stringValue);
+							itemPtr->isInit=1;
+							itemPtr->varType=30;
+						}
+						else{
+							fprintf(stderr,"I_ADD target not valid type.\n");
+							memfreeall();
+							exit(4);
+						}
+						itemPtr->intValue=itemPtr2->intValue+itemPtr3->doubleValue;
+						itemPtr->isInit=1;
+					}else{
+						fprintf(stderr, "I_ADD right operand not INT or DOUBLE \n");
+						memfreeall();
+						exit(4);
+					}
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+				}else if(itemPtr2->varType == 23){		// DOUBLE +
+					if(itemPtr3->varType == 28){		// DOUBLE + INT
+					
+					}else if(itemPtr3->varType == 23){	// DOUBLE + DOUBLE
+					
+					}else if(itemPtr3->varType == 30){	// DOUBLE + STR
+				
+					}else{
+						fprintf(stderr, "I_ADD right operand not INT or DOUBLE \n");
+						memfreeall();
+						exit(3);
+					}	
+						
+							
+				}else if(itemPtr2->varType == 30){		// STRING + 
+					if(itemPtr3->varType == 28){		// STRING + INT
+					
+					}else if(itemPtr3->varType == 23){	// STRING + DOUBLE
+					
+					}else if(itemPtr3->varType == 30){	// STRING + STRING
+				
+					}else{
+						fprintf(stderr, "I_ADD right operand not INT or DOUBLE \n");
+						memfreeall();
+						exit(3);
+					}		
+							
+		
+				}else{
+					fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
+					memfreeall();
+					exit(3);
+				}
+				
+					
+				
+			
 			break;
 	
 	//************************I_SUB******************************//
@@ -577,6 +723,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						break;
 					case 30:			//source is type String		
+						itemPtr->stringValue = memalloc(sizeof(itemPtr2->stringValue));	
 						strcpy(itemPtr->stringValue,itemPtr2->stringValue);
 						itemPtr->varType=itemPtr2->varType;
 						break;
