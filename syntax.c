@@ -221,7 +221,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
-						runPrecedenceAnalysis(f,tokenPtr,1,list);
+						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
+						runPrecedenceAnalysis(f,tokenPtr,1,list);		//TODO probalby invalid to have expression here
 						if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						//printType(tokenPtr);
 						break;
@@ -333,6 +334,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						//printType(tokenPtr);
 						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
 							sprintf(buf, "%s",lastToken->name);
+							generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 							char* buffer=runPrecedenceAnalysis(f,tokenPtr,0,list);
 							generateInstruction(I,I_MOV, buf,buffer,"", list);
 							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
@@ -366,6 +368,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					int gotoLabel = counter;
 					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#while_end%d",gotoLabel);
@@ -379,6 +382,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return result;
 				case token_if:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * buffer2=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#else%d",counter);
@@ -402,6 +406,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr-> type == token_semicolon){
 						generateInstruction(I,I_RETURN_NOTHING, "", "", "",list);
 					}else{
+						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 						char* buffer2=runPrecedenceAnalysis(f,tokenPtr,0,list);
 						generateInstruction(I,I_RETURN, buffer2, "", "",list);	//TODO assign expr
 						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}
@@ -485,11 +490,13 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 								if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 							}else{
+								generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 								char* buffer =runPrecedenceAnalysis(f,tokenPtr,0,list);
 								generateInstruction(I,I_MOV, buf, buffer,"",list);
 								if (tokenPtr->type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 							}
 						}else{
+							generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 							char * buffer=runPrecedenceAnalysis(f,tokenPtr,0,list);
 							generateInstruction(I,I_MOV, buf, buffer,"",list);
 							if (tokenPtr->type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
@@ -513,6 +520,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_string:
 				case token_intNumber:
 				case token_doubleNumber:;
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * buffer = runPrecedenceAnalysis(f,tokenPtr,0,list);
 					generateInstruction(I,I_PUSH,buffer,"","",list);
 					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
@@ -531,6 +539,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return 0;
 					break;
 				case token_comma:;
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * buffer = runPrecedenceAnalysis(f,tokenPtr,1,list);
 					generateInstruction(I,I_PUSH,buffer,"","",list);
 					if ((result=syntaxCheck( FN_CALL_COMMA, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL_COMMA\n");goto EXIT;}					
@@ -578,6 +587,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						//printType(tokenPtr);
 						if (isItFunction(f,tokenPtr) == 0){		//id=EXPRESSION;
 							sprintf(buf, "%s",lastToken->name);
+							generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 							char* buffer=runPrecedenceAnalysis(f,tokenPtr,0,list);
 							generateInstruction(I,I_MOV, buf,buffer,"", list);
 							if (tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
@@ -599,6 +609,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					int gotoLabel = counter;
 					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#while_end%d",gotoLabel);
@@ -612,6 +623,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return result;
 				case token_if:
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * buffer2=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#else%d",counter);
@@ -635,6 +647,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr-> type == token_semicolon){
 						generateInstruction(I,I_RETURN_NOTHING, "", "", "",list);
 					}else{
+						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 						char* buffer2=runPrecedenceAnalysis(f,tokenPtr,0,list);
 						generateInstruction(I,I_RETURN, buffer2, "", "",list);	//TODO assign expr
 						if(tokenPtr-> type != token_semicolon) {fprintf(stderr,"\n;\n");goto EXIT;}

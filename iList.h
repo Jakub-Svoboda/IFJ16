@@ -32,6 +32,7 @@
 #define I_WHILE_GOTO	23	//cond jump to while statement (jump if not zero)
 #define I_RETURN_NOTHING	24	//return;
 #define I_PUSH				25	//signals a argument: type, name
+#define	I_CLEAR_TMPS		26	//clears a local var table of temporary variables used for expressions			
 
 typedef struct		//List of instructions
 {

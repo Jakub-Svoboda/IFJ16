@@ -1,10 +1,12 @@
 class Main {
 	static void run(){
-		String a = "tvojemama";
-		double b  = 3.1415926;
-	
-	
-		String c=b+a;
+		int a =4;
+		String b;
+		while(a){
+			b="aaaaaaaaaaaaaaaaa";
+			a=a-1;
+		}
+		
 
 
 	}

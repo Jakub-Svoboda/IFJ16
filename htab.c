@@ -222,7 +222,7 @@ void htabDelete (thTable *htab, char* key) {                //Find by key and de
                 }
                 prevItem->next = tempItem->next;            //Item is found so skip it
             }
-            free(tempItem);                                 //FREI
+				//free(tempItem);                                 //FREI
         }
     }
 }
@@ -235,7 +235,7 @@ void htabDispose(thTable *htab) {
         while(tempItem != NULL) {
             delItem = tempItem;
             tempItem = tempItem->next;
-            free(delItem);                      //FREI
+            //free(delItem);                      //FREI
         }
         (*htab)[i] = NULL;                      //initialize array of pointers to NULL
     }
