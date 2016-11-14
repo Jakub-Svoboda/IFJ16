@@ -1,10 +1,10 @@
 class Main {
 	static void run(){
 		String a = "tvojemama";
-		int b  = 10;
+		double b  = 3.1415926;
 	
 	
-		String c=922337203685477580+a;
+		String c=b+a;
 
 
 	}
