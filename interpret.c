@@ -53,7 +53,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 				fprintf(stderr,"\nInterpret over.\n\n");	//TODO comment me
 		printHtabLocal(localVarTable);	//TODO delete me		
 				memfreeall();
-				exit(0);	//TODO free stuff
+				exit(0);	
 
 			break;
 			
@@ -72,6 +72,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_GOTO******************************//
 			case I_GOTO:
+				lastActive=list->active;	//save pointer to active instr
 				listFirst(list);			//reset active to first for label search
 				while(1){				//search through instructions and stop when label with same name as searched for is found
 					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr1)==0){
