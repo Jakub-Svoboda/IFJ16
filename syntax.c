@@ -113,7 +113,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	static int argCount=0;		//counter for arguments
 	char buf[2047];
 	char buf2[2047];
-	char buf3[2047];
 
 
 	switch (state){
