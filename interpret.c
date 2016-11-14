@@ -41,7 +41,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	thtabItem* itemPtr2 = NULL;		//pointer to 2nd address
 	thtabItem* itemPtr3 = NULL;		//pointer to 3rd address
 	int jumpBool=0;					//if !0 then jump is executed
-
+	char* buf;
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -95,8 +95,14 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_FN_END******************************//
 			case I_FN_END:
-
-
+	printHtab(resources->globalVarTable,0);	
+				buf=concat(currentFunc,currentClass);
+	fprintf(stderr,"im in a function called %s\n",buf);
+				itemPtr=htabSearch(resources->globalVarTable,buf);
+	fprintf(stderr,"return type is %p\n", itemPtr);			
+	fprintf(stderr,"return type is %d\n", itemPtr->returnType);
+					
+				return;
 			break;
 			
 	//************************I_RETURN******************************//
