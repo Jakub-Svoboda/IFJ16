@@ -1,4 +1,5 @@
 #include "htab.h"
+//#define memalloc malloc
 extern resourceStruct * resources;
 
 char* concat(char* str1, char* str2) {          //Basic concatenate function to make CLASS.ID into one string
@@ -20,9 +21,35 @@ int hashFun(char* key) {                                    //this will hash you
     return hash % HTAB_SIZE;                                //return sum % (number of rows in hashtable)
 }
 
-void htabInit(thTable *htab) {  
+void htabInit(thTable *htab) {
     for (int i = 0; i < HTAB_SIZE; i++) {
         (*htab)[i] = NULL;                                     //initialize array of NULL's with size of HTAB_SIZE
+    }
+}
+
+void htabDeleteHashtag(thTable *htab) {
+    char* search = htabSearchHashtag(htab);                     //temp string
+    while( search[0] != '|') {                                  //while temp strin is not '|'
+        htabDelete(htab, search);                               //delete item with this key
+        search = htabSearchHashtag(htab);                       //new search so it can be deleted again
+    }
+}
+
+
+char* htabSearchHashtag(thTable *htab) {
+
+    if (*htab == NULL) {       //return NULL if hashtable or matching row is not initialized
+        return NULL;
+    }else {                          //simple debug...
+        for (int i = 0; i < HTAB_SIZE; i++) {
+            thtabItem* tempItem =(*htab)[i];
+    		while(tempItem != NULL) {                                      //cycle through row
+    			if(tempItem->key[0] == '#')  {return tempItem->key;}       //return item key that we were looking for
+    			tempItem = tempItem->next;
+            }
+        }
+        //    printf("foo2\n");
+        return "|";                                                     //or end point
     }
 }
 
@@ -41,7 +68,6 @@ thtabItem* htabSearch(thTable *htab, char* key) {
         //    printf("foo2\n");
         return tempItem;                                        //or NULL
     }
-
 }
 
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
@@ -251,36 +277,22 @@ int main() {
     htabInit(htab);
 
     char* kocka = "kocka";
-    printf("HASH KOCKA %d\n", hashFun(kocka));                          //test hashFun
 
-    htabInsert(htab, "kaock");                                          //few tests of insert
-    htabInsert(htab, "cakko");
-        htabInsert(htab, "sysel");
-    htabInsert(htab, "kacko");
-    htabInsert(htab, "sysel");
+    htabInsert(htab, "3kok", 0);                                          //few tests of insert
+    htabInsert(htab, "c#akko",0);
+    htabInsert(htab, "ca#kko",0);
+    htabInsert(htab, "cak#ko",0);
+    htabInsert(htab, "#cakko",0);
+    htabInsert(htab, "cakko",0);
 
-    htabInsert(htab, "televiza");
-    htabInsert(htab, "balon");
-    htabInsert(htab, kocka);
+    htabInsert(htab, "slyse#",0);
+    htabInsert(htab, "#sysel",0);
+    htabInsert(htab, "slys#e",0);
+    htabInsert(htab, "kacko",0);
+    printHtabLocal(htab);
+    htabDeleteHashtag(htab);
+    printHtabLocal(htab);
 
-
-    if(htabSearch(htab, kocka) != NULL) printf("Kocka je tam\n");       //test search
-
-    printHtab(htab);
-    printf("\n");
-    htabDelete(htab, "televiza");
-    printHtab(htab);
-    printf("\n");
-    htabDelete(htab, "kaock");
-    printHtab(htab);
-
-    htabInsert(htab, "kaock");
-    printf("\n");
-    printHtab(htab);
-
-    printf("\n");
-    htabDispose(htab);
-    printHtab(htab);
     return 0;
 }
 */

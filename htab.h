@@ -6,7 +6,7 @@
 
 
 #ifndef	HTAB_H
-#define HTAB_H 
+#define HTAB_H
 #define HTAB_SIZE 5
 #define UNINIT 0
 #define INIT 1
@@ -41,6 +41,8 @@ typedef thtabItem* thTable[HTAB_SIZE];
 int hashFun(char* key);
 void htabInit(thTable *htab);
 thtabItem* htabSearch(thTable *htab, char* key);
+void htabDeleteHashtag(thTable *htab);
+char* htabSearchHashtag(thTable *htab);
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey);
 void htabInsert(thTable *htab, char* key, int localVarType);
 //const char* htabRead(thtabItem* htab[], char* key);
