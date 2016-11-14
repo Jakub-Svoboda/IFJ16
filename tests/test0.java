@@ -1,8 +1,10 @@
 class Main {
 	static void run(){
 		int a;
+		int b;
 	//	while(a){
-			a=a-1-2-3-4;
+			a=1-b;
+			//a=a;
 	//	}
 	
 	}

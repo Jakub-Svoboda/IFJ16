@@ -534,6 +534,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 	//************************I_MOV******************************//
 			case I_MOV:
+			
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
 					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
@@ -560,6 +561,12 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(4);
 					}
 				}
+				if(itemPtr2->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+				
 				itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
 				switch (itemPtr2->varType){
 					case 28:			//source is type int
