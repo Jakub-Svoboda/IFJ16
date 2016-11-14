@@ -106,6 +106,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_IF_GOTO******************************//
 			case I_IF_GOTO:
+				
 
 			break;
 			
@@ -145,6 +146,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
 					itemPtr->varType = INT;
 					itemPtr->intValue = atoi(list->active->Instruction.addr2);
+					itemPtr->isInit=1;
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_INT to nonexistant variable.\n");
 					exit(3);
@@ -156,6 +158,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
 					itemPtr->varType = DOUBLE;
 					itemPtr->doubleValue = atof(list->active->Instruction.addr2);
+					itemPtr->isInit=1;
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_DOUBLE to nonexistant variable.\n");
 					exit(3);
@@ -168,6 +171,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					itemPtr->varType = STRING;
 					itemPtr->stringValue=memalloc(sizeof(list->active->Instruction.addr2));
 					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
+					itemPtr->isInit=1;
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_STRING to nonexistant variable.\n");
 					exit(3);
@@ -216,12 +220,19 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					exit(3);
 				}
 				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+				
 				if(itemPtr2->varType == 28){	//left operand is int	INT-
 					if(itemPtr3->varType == 28){	//and right operand is also int	INT-INT
 						if(itemPtr->varType == 0 ){		//tmp var not initialized
 							itemPtr->varType = 28;			//new var will be int
 						}
 						itemPtr->intValue = itemPtr2->intValue - itemPtr3->intValue;
+						itemPtr->isInit = 1;
 					}else{
 						if(itemPtr3->varType == 23){		//INT - double 
 							if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -230,6 +241,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 							if(itemPtr->varType == 23 || itemPtr->varType == 28){
 								itemPtr->varType = 23;		//target will be double
 								itemPtr->doubleValue = itemPtr2->intValue - itemPtr3->doubleValue;
+								itemPtr->isInit = 1;
 							}else{
 								fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
 								memfreeall();
@@ -246,6 +258,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}	
 							itemPtr->varType = 23;		//target will be double
 							itemPtr->doubleValue = itemPtr2->doubleValue - itemPtr3->intValue;
+							itemPtr->isInit = 1;
 						}else{
 							if(itemPtr3->varType == 23){		//double - double
 								if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -253,6 +266,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 								}	
 								itemPtr->varType = 23;		//target will be double
 								itemPtr->doubleValue = itemPtr2->doubleValue - itemPtr3->doubleValue;
+								itemPtr->isInit = 1;
 									
 							}else{								//double - X
 								fprintf(stderr, "I_SUB right operand not INT or DOUBLE \n");
@@ -304,12 +318,19 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					exit(3);
 				}
 				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+				
 				if(itemPtr2->varType == 28){	//left operand is int	INT*
 					if(itemPtr3->varType == 28){	//and right operand is also int	INT*INT
 						if(itemPtr->varType == 0 ){		//tmp var not initialized
 							itemPtr->varType = 28;			//new var will be int
 						}
 						itemPtr->intValue = itemPtr2->intValue * itemPtr3->intValue;
+						itemPtr->isInit = 1;
 					}else{
 						if(itemPtr3->varType == 23){		//INT * double 
 							if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -318,6 +339,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 							if(itemPtr->varType == 23 || itemPtr->varType == 28){
 								itemPtr->varType = 23;		//target will be double
 								itemPtr->doubleValue = itemPtr2->intValue * itemPtr3->doubleValue;
+								itemPtr->isInit = 1;
 							}else{
 								fprintf(stderr, "I_MUL target not INT or DOUBLE \n");
 								memfreeall();
@@ -334,6 +356,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}	
 							itemPtr->varType = 23;		//target will be double
 							itemPtr->doubleValue = itemPtr2->doubleValue * itemPtr3->intValue;
+							itemPtr->isInit = 1;
 						}else{
 							if(itemPtr3->varType == 23){		//double * double
 								if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -341,6 +364,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 								}	
 								itemPtr->varType = 23;		//target will be double
 								itemPtr->doubleValue = itemPtr2->doubleValue * itemPtr3->doubleValue;
+								itemPtr->isInit = 1;
 									
 							}else{								//double * X
 								fprintf(stderr, "I_MUL right operand not INT or DOUBLE \n");
@@ -395,6 +419,12 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					exit(3);
 				}
 				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+				
 				if(itemPtr2->varType == 28){	//left operand is int	INT/
 					if(itemPtr3->varType == 28){	//and right operand is also int	INT/INT
 						if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -406,6 +436,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 									exit(9);
 						}
 						itemPtr->intValue = itemPtr2->intValue / itemPtr3->intValue;
+						itemPtr->isInit = 1;
 					}else{
 						if(itemPtr3->varType == 23){		//INT / double 
 							if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -419,6 +450,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 									exit(9);
 								}
 								itemPtr->doubleValue = itemPtr2->intValue / itemPtr3->doubleValue;
+								itemPtr->isInit = 1;
 							}else{
 								fprintf(stderr, "I_DIV target not INT or DOUBLE \n");
 								memfreeall();
@@ -440,6 +472,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 									exit(9);
 							}
 							itemPtr->doubleValue = itemPtr2->doubleValue / itemPtr3->intValue;
+							itemPtr->isInit = 1;
 						}else{
 							if(itemPtr3->varType == 23){		//double / double
 								if(itemPtr->varType == 0 ){		//tmp var not initialized
@@ -452,6 +485,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 									exit(9);
 								}
 								itemPtr->doubleValue = itemPtr2->doubleValue / itemPtr3->doubleValue;
+								itemPtr->isInit = 1;
 									
 							}else{								//double / X
 								fprintf(stderr, "I_DIV right operand not INT or DOUBLE \n");
@@ -535,9 +569,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 							itemPtr->intValue=itemPtr2->intValue;	
 						}
 						break;
-					case 30:			//source is type String
-		//TODO STRING				
-						
+					case 30:			//source is type String		
+						strcpy(itemPtr->stringValue,itemPtr2->stringValue);
 						itemPtr->varType=itemPtr2->varType;
 						break;
 					case 23:			//source is type double
