@@ -72,8 +72,18 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_GOTO******************************//
 			case I_GOTO:
-
-
+				listFirst(list);			//reset active to first for label search
+				while(1){				//search through instructions and stop when label with same name as searched for is found
+					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr1)==0){
+						break;
+					}	
+					if(list->active->nextItem == NULL){		//the label was not found, This is likely error in OUR code.
+						fprintf(stderr,"\ncalled function not found\n\n\n"); 
+						memfreeall();
+						exit(3);			
+					}
+					listNext(list);
+				}
 			break;
 			
 	//************************I_NEW_VAR******************************//
@@ -100,25 +110,24 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_FN_CALL******************************//
 			case I_FN_CALL:
-				if(!strstr(list->active->Instruction.addr1,dot)){
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
-		//			fprintf(stderr,"\n%s\n\n\n", list->active->Instruction.addr1);
-				}
-
+				if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+				}	
 				lastActive=list->active;	//save pointer to active instr
 				listFirst(list);			//reset active to first for label search
-				while(1){
+				while(1){			//search through instructions until the same label is found
 					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr1)==0){
 						break;
 					}	
-					if(list->active->nextItem == NULL){
+					if(list->active->nextItem == NULL){		//if label was not found
 						fprintf(stderr,"\ncalled function not found\n\n\n"); 
-						exit(3);		//TODO free		
+						memfreeall();			//user has called a function that does not exist.
+						exit(3);		
 					}
 					listNext(list);
 				}
-				interpretEval(list,nextCallTable);
-				htabDispose(nextCallTable);
+				interpretEval(list,nextCallTable);		//recursive call this function
+				htabDispose(nextCallTable);				//after return we dispose the variable table from called function
 				htabInit(nextCallTable);
 				list->active=lastActive;	//restore active position before fn call
 			break;		
