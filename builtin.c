@@ -38,7 +38,7 @@ String substr(String s, int i, int n) {
         fprintf(stderr, "Substring error, invalid values\n");
         exit(10);
     }
-    char *buff = (char*) malloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
+    char *buff = (char*) memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
