@@ -107,7 +107,36 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_IF_GOTO******************************//
 			case I_IF_GOTO:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
+						exit(3);
+					}
+				}	
+				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
+				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is BOOL
+				else {jumpBool=0;}
 				
+				if(jumpBool){	
+					lastActive=list->active;	//save pointer to active instr
+					listFirst(list);			//reset active to first for label search
+					while(1){			//search through instructions until the same label is found
+						if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr2)==0){					
+							break;
+						}	
+						if(list->active->nextItem == NULL){		//if label was not found
+							fprintf(stderr,"\ncalled function not found\n\n\n"); 
+							memfreeall();			//user has called a function that does not exist.
+							exit(3);		
+						}
+						listNext(list);
+					}				
+				}
+
+				jumpBool=0;
 
 			break;
 			
@@ -836,9 +865,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						listNext(list);
 					}				
-				}else{
 				}	
-				
 				
 				jumpBool=0;
 			break;		
