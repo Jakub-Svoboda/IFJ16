@@ -6,6 +6,7 @@
 #include "scanner.h"
 //#include "htab.c"
 
+//#define memalloc malloc
 #define true 1
 #define false 0
 
@@ -160,6 +161,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					}
 				}
 				if(state == state_default) {			//same as readingIdentifier
+					position--;							//I won't store '"'
 					buff[position] = '\0';
 					t->type = token_string;
 					t->name = buff;
@@ -266,8 +268,8 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						break;
 					case '\"':									//beggining of " had been found, set state to readingString and buffer the char
 						state = state_readingString;
-						buff[position] = c;
-						position++;								//increment position of buffer
+						//buff[position] = c;					// I won't store '"'
+						//position++;								//increment position of buffer
 						break;
 					//Delimiters
 					case '.':
