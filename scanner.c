@@ -23,7 +23,7 @@ int isKeyword(char *string) {							//return index value of choosen keyword in a
 }
 
 Token *tokenInit() {									//allocate space
-	Token *t = (Token *)memalloc(sizeof(Token));
+	Token *t = (Token *)memalloc(sizeof(Token));		//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
 	if(t == NULL) {
 		printf("tokenInit malloc error\n");				//propably BS
 		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type
@@ -84,7 +84,7 @@ Token *lookAhead(FILE *f, int steps) { //TODO : Is there better way of passing F
 Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Call lookAhead instead of getToken();
 							// Lex errors: id. is not ok
 	int buffSize = BUFFER_SIZE;
-	char *buff = (char*) memalloc(buffSize * sizeof(char));
+	char *buff = (char*) memalloc(buffSize * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
 
 //	buffSize += 2;
 //    buff = realloc(buff, buffSize);
@@ -106,7 +106,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 
 	while(1) {					//TODO ?
 		c = fgetc(f);
-		//printf("%c,",c);
+		//printf("\nCHAR INPUT %c |||| ",c);
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
 				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_'){			//id's may contain numbers and characters or 1 dot
@@ -188,13 +188,17 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						buffSize += 2;
 						buff = realloc(buff, buffSize);
 					}
-				}else { //Osetrit double				//is this OK now?
-					if(isalpha(c)) {
-						fprintf(stderr, "Lexical error, invalid number\n");
-						exit(1);
-					}
+				}else {									//no lex error in case of s=3.14159+a because it is + id?
+					//if(isalpha(c)) {
+					//	fprintf(stderr, "Lexical error, invalid number\n");
+					//	exit(1);
+					//}
 					ungetc(c,f);
 					state = state_default;				//end reading state
+					if(tempc == '+' || tempc == '-') {
+						ungetc(tempc, f);
+						position--;
+					}
 				}
 				if(state == state_default) {
 					buff[position] = '\0';
@@ -213,6 +217,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					isDouble = false;					//reset
 					return t;
 				}
+				tempc = c;
 				break;
 			case state_default:									//this will be done at every beginning of token reading
 				switch (c) {
@@ -337,6 +342,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					default:
 						if(isdigit(c)){								//if c is number, set state to readingNumber
 							state = state_readingNumber;
+							tempc = c;
 						}else {										//strings and numbers are alredy handled, it must be ID or KW
 							state = state_readingIdentifier;
 						}
