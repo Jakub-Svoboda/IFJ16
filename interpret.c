@@ -40,9 +40,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	thtabItem* itemPtr = NULL;		//pointer to 1st address
 	thtabItem* itemPtr2 = NULL;		//pointer to 2nd address
 	thtabItem* itemPtr3 = NULL;		//pointer to 3rd address
-	void * valuePtr = NULL;
-	void * valuePtr2 = NULL;
-	void * valuePtr3 = NULL;	
+
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -53,6 +51,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			case I_STOP:
 				
 				fprintf(stderr,"\nInterpret over.\n\n");	//TODO comment me
+		printHtabLocal(localVarTable);	//TODO delete me		
 				memfreeall();
 				exit(0);	//TODO free stuff
 
@@ -173,7 +172,90 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	
 	//************************I_SUB******************************//
 			case I_SUB:
-
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_SUB nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_SUB nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_SUB nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28){
+					fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
+					memfreeall();
+					exit(3);
+				}
+				
+				if(itemPtr2->varType == 28){	//left operand is int	INT-
+					if(itemPtr3->varType == 28){	//and right operand is also int	INT-INT
+						if(itemPtr->varType == 0 ){		//tmp var not initialized
+							itemPtr->varType = 28;			//new var will be int
+						}
+						itemPtr->intValue = itemPtr2->intValue - itemPtr3->intValue;
+					}else{
+						if(itemPtr3->varType == 23){		//INT - double 
+							if(itemPtr->varType == 0 ){		//tmp var not initialized
+								itemPtr->varType = 23;			//new var will be double
+							}
+							if(itemPtr->varType == 23 || itemPtr->varType == 28){
+								itemPtr->varType = 23;		//target will be double
+								itemPtr->doubleValue = itemPtr2->intValue - itemPtr3->doubleValue;
+							}else{
+								fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
+								memfreeall();
+								exit(3);
+							}
+						}
+					}
+					
+				}else{
+					if (itemPtr2->varType == 23){	//left operand is double	
+						if(itemPtr3->varType == 28){		// double - int
+							if(itemPtr->varType == 0 ){		//tmp var not initialized
+								itemPtr->varType = 23;			//new var will be double
+							}	
+							itemPtr->varType = 23;		//target will be double
+							itemPtr->doubleValue = itemPtr2->doubleValue - itemPtr3->intValue;
+						}else{
+							if(itemPtr3->varType == 23){		//double - double
+								if(itemPtr->varType == 0 ){		//tmp var not initialized
+									itemPtr->varType = 23;			//new var will be double
+								}	
+								itemPtr->varType = 23;		//target will be double
+								itemPtr->doubleValue = itemPtr2->doubleValue - itemPtr3->doubleValue;
+									
+							}else{								//double - X
+								fprintf(stderr, "I_SUB right operand not INT or DOUBLE \n");
+								memfreeall();
+								exit(3);
+							}
+						}
+					}else{
+						fprintf(stderr, "I_SUB left operand not INT or DOUBLE \n");
+						memfreeall();
+						exit(3);
+					}
+				} 	
 			break;	
 			
 	//************************I_MUL******************************//
@@ -203,31 +285,6 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MUL nonexistant right operand variable.\n");
 						exit(3);
-					}
-				}
-
-				//left operand variable type 
-				if(itemPtr2->varType == 28){
-					valuePtr2=&(itemPtr2->intValue);
-				}else{
-					if(itemPtr2->varType == 23){
-						valuePtr2=&(itemPtr2->doubleValue);
-					}else{
-						fprintf(stderr,"I_MUL left operand has invalid type.\n");
-						exit(3);		
-					}
-					
-				}
-				
-				//right operand variable type
-				if(itemPtr3->varType == 28){
-					valuePtr3=&(itemPtr3->intValue);
-				}else{
-					if(itemPtr3->varType == 23){
-						valuePtr3=&(itemPtr3->doubleValue);
-					}else{
-						fprintf(stderr,"I_MUL right operand has invalid type.\n");
-						exit(3);		
 					}
 				}
 				
@@ -291,7 +348,113 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;	
 			
 	//************************I_DIV******************************//
-			case I_DIV:
+			case I_DIV: //adress search
+			
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_DIV nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_DIV nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_DIV nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+
+				
+				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28){
+					fprintf(stderr, "I_DIV target not INT or DOUBLE \n");
+					memfreeall();
+					exit(3);
+				}
+				
+				if(itemPtr2->varType == 28){	//left operand is int	INT/
+					if(itemPtr3->varType == 28){	//and right operand is also int	INT/INT
+						if(itemPtr->varType == 0 ){		//tmp var not initialized
+							itemPtr->varType = 28;			//new var will be int
+						}
+						if(itemPtr3->intValue == 0){
+									fprintf(stderr,"Division by zero.\n");
+									memfreeall();
+									exit(9);
+						}
+						itemPtr->intValue = itemPtr2->intValue / itemPtr3->intValue;
+					}else{
+						if(itemPtr3->varType == 23){		//INT / double 
+							if(itemPtr->varType == 0 ){		//tmp var not initialized
+								itemPtr->varType = 23;			//new var will be double
+							}
+							if(itemPtr->varType == 23 || itemPtr->varType == 28){
+								itemPtr->varType = 23;		//target will be double
+								if(itemPtr3->doubleValue == 0){
+									fprintf(stderr,"Division by zero.\n");
+									memfreeall();
+									exit(9);
+								}
+								itemPtr->doubleValue = itemPtr2->intValue / itemPtr3->doubleValue;
+							}else{
+								fprintf(stderr, "I_DIV target not INT or DOUBLE \n");
+								memfreeall();
+								exit(3);
+							}
+						}
+					}
+					
+				}else{
+					if (itemPtr2->varType == 23){	//left operand is double	
+						if(itemPtr3->varType == 28){		// double / int
+							if(itemPtr->varType == 0 ){		//tmp var not initialized
+								itemPtr->varType = 23;			//new var will be double
+							}	
+							itemPtr->varType = 23;		//target will be double
+							if(itemPtr3->intValue == 0){
+									fprintf(stderr,"Division by zero.\n");
+									memfreeall();
+									exit(9);
+							}
+							itemPtr->doubleValue = itemPtr2->doubleValue / itemPtr3->intValue;
+						}else{
+							if(itemPtr3->varType == 23){		//double / double
+								if(itemPtr->varType == 0 ){		//tmp var not initialized
+									itemPtr->varType = 23;			//new var will be double
+								}	
+								itemPtr->varType = 23;		//target will be double
+								if(itemPtr3->doubleValue == 0){
+									fprintf(stderr,"Division by zero.\n");
+									memfreeall();
+									exit(9);
+								}
+								itemPtr->doubleValue = itemPtr2->doubleValue / itemPtr3->doubleValue;
+									
+							}else{								//double / X
+								fprintf(stderr, "I_DIV right operand not INT or DOUBLE \n");
+								memfreeall();
+								exit(3);
+							}
+						}
+					}else{
+						fprintf(stderr, "I_DIV left operand not INT or DOUBLE \n");
+						memfreeall();
+						exit(3);
+					}
+				}
 
 			break;	
 			
@@ -347,7 +510,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 				
 				if(itemPtr->varType != itemPtr2->varType){		//Types are not matching, error4
-					if(itemPtr->varType != 23 && itemPtr->varType != 28 ||  itemPtr2->varType != 23 && itemPtr2->varType != 28){		
+					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (itemPtr2->varType != 23 && itemPtr2->varType != 28)){		
 						printHtabLocal(localVarTable);
 						fprintf(stderr,"I_MOV source and target type not matching.\n");
 						exit(4);
