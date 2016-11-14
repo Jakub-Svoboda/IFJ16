@@ -58,6 +58,11 @@ int firstRun(FILE * f){
 
 
 	}
+	thtabItem* ptr =htabSearch(resources->functionTable,"Main.run");
+	if(ptr->returnType!=token_void){
+		memfreeall();
+		exit(3);
+	}
 	//printHtab(resources->functionTable, 0);
 	//printHtab(globalVarTable, 1);
 	return 0;
