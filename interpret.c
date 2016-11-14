@@ -1,4 +1,7 @@
 #include "interpret.h"
+#define INT 28
+#define DOUBLE 23
+#define STRING 30
 
 char *strtok_r(char *, const char *, char **);	//required for strtok_r function
 extern resourceStruct * resources;
@@ -34,8 +37,12 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	char currentFunc[2047];
 	char currentClass[2047];
 	char* dot=".";
-	thtabItem* itemPtr = NULL;		//pointer to 1st operand
-	thtabItem* itemPtr2 = NULL;		//pointer to 2nd operand
+	thtabItem* itemPtr = NULL;		//pointer to 1st address
+	thtabItem* itemPtr2 = NULL;		//pointer to 2nd address
+	thtabItem* itemPtr3 = NULL;		//pointer to 3rd address
+	void * valuePtr = NULL;
+	void * valuePtr2 = NULL;
+	void * valuePtr3 = NULL;	
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -127,6 +134,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_MOV_INT******************************//
 			case I_MOV_INT:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
+					itemPtr->varType = INT;
 					itemPtr->intValue = atoi(list->active->Instruction.addr2);
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_INT to nonexistant variable.\n");
@@ -137,6 +145,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_MOV_DOUBLE******************************//
 			case I_MOV_DOUBLE:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
+					itemPtr->varType = DOUBLE;
 					itemPtr->doubleValue = atof(list->active->Instruction.addr2);
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_DOUBLE to nonexistant variable.\n");
@@ -147,6 +156,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_MOV_STRING******************************//
 			case I_MOV_STRING:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
+					itemPtr->varType = STRING;
 					itemPtr->stringValue=memalloc(sizeof(list->active->Instruction.addr2));
 					strcpy(itemPtr->stringValue,list->active->Instruction.addr2);
 				}else{
@@ -167,8 +177,117 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;	
 			
 	//************************I_MUL******************************//
-			case I_MUL:
+			case I_MUL:		//first adress search
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_MUL nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_MUL nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_MUL nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
 
+				//left operand variable type 
+				if(itemPtr2->varType == 28){
+					valuePtr2=&(itemPtr2->intValue);
+				}else{
+					if(itemPtr2->varType == 23){
+						valuePtr2=&(itemPtr2->doubleValue);
+					}else{
+						fprintf(stderr,"I_MUL left operand has invalid type.\n");
+						exit(3);		
+					}
+					
+				}
+				
+				//right operand variable type
+				if(itemPtr3->varType == 28){
+					valuePtr3=&(itemPtr3->intValue);
+				}else{
+					if(itemPtr3->varType == 23){
+						valuePtr3=&(itemPtr3->doubleValue);
+					}else{
+						fprintf(stderr,"I_MUL right operand has invalid type.\n");
+						exit(3);		
+					}
+				}
+				
+				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28){
+					fprintf(stderr, "I_MUL target not INT or DOUBLE \n");
+					memfreeall();
+					exit(3);
+				}
+				
+				if(itemPtr2->varType == 28){	//left operand is int	INT*
+					if(itemPtr3->varType == 28){	//and right operand is also int	INT*INT
+						if(itemPtr->varType == 0 ){		//tmp var not initialized
+							itemPtr->varType = 28;			//new var will be int
+						}
+						itemPtr->intValue = itemPtr2->intValue * itemPtr3->intValue;
+					}else{
+						if(itemPtr3->varType == 23){		//INT * double 
+							if(itemPtr->varType == 0 ){		//tmp var not initialized
+								itemPtr->varType = 23;			//new var will be double
+							}
+							if(itemPtr->varType == 23 || itemPtr->varType == 28){
+								itemPtr->varType = 23;		//target will be double
+								itemPtr->doubleValue = itemPtr2->intValue * itemPtr3->doubleValue;
+							}else{
+								fprintf(stderr, "I_MUL target not INT or DOUBLE \n");
+								memfreeall();
+								exit(3);
+							}
+						}
+					}
+					
+				}else{
+					if (itemPtr2->varType == 23){	//left operand is double	
+						if(itemPtr3->varType == 28){		// double * int
+							if(itemPtr->varType == 0 ){		//tmp var not initialized
+								itemPtr->varType = 23;			//new var will be double
+							}	
+							itemPtr->varType = 23;		//target will be double
+							itemPtr->doubleValue = itemPtr2->doubleValue * itemPtr3->intValue;
+						}else{
+							if(itemPtr3->varType == 23){		//double * double
+								if(itemPtr->varType == 0 ){		//tmp var not initialized
+									itemPtr->varType = 23;			//new var will be double
+								}	
+								itemPtr->varType = 23;		//target will be double
+								itemPtr->doubleValue = itemPtr2->doubleValue * itemPtr3->doubleValue;
+									
+							}else{								//double * X
+								fprintf(stderr, "I_MUL right operand not INT or DOUBLE \n");
+								memfreeall();
+								exit(3);
+							}
+						}
+					}else{
+						fprintf(stderr, "I_MUL left operand not INT or DOUBLE \n");
+						memfreeall();
+						exit(3);
+					}
+				} 	
+				
 			break;	
 			
 	//************************I_DIV******************************//
@@ -228,17 +347,30 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 				
 				if(itemPtr->varType != itemPtr2->varType){		//Types are not matching, error4
-					fprintf(stderr,"I_MOV source and target type not matching.\n");
-					exit(4);
+					if(itemPtr->varType != 23 && itemPtr->varType != 28 ||  itemPtr2->varType != 23 && itemPtr2->varType != 28){		
+						printHtabLocal(localVarTable);
+						fprintf(stderr,"I_MOV source and target type not matching.\n");
+						exit(4);
+					}
 				}
 				itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
 				switch (itemPtr2->varType){
 					case 28:			//source is type int
-						itemPtr->intValue=itemPtr2->intValue;
+						if(itemPtr->varType == 23){
+							itemPtr->doubleValue=itemPtr2->intValue;
+						}else{
+							itemPtr->intValue=itemPtr2->intValue;	
+						}
 						break;
 					case 30:			//source is type String
+		//TODO STRING				
+						
+						itemPtr->varType=itemPtr2->varType;
 						break;
 					case 23:			//source is type double
+						if(itemPtr->varType == 28){
+							itemPtr->varType=23;
+						}
 						itemPtr->doubleValue=itemPtr2->doubleValue;						
 						break;
 						
