@@ -231,9 +231,9 @@ void htabDelete (thTable *htab, char* key) {                //Find by key and de
 void htabDispose(thTable *htab) {
     for (int i = 0; i< HTAB_SIZE; i++) {        //cycle through hashTable and delete/free all of them
         thtabItem* tempItem = (*htab)[i];
-        thtabItem* delItem;
+        //thtabItem* delItem;
         while(tempItem != NULL) {
-            delItem = tempItem;
+            //delItem = tempItem;	//Kuba-edit, not needed to free now since we have a garbage collector
             tempItem = tempItem->next;
             //free(delItem);                      //FREI
         }
