@@ -9,6 +9,6 @@
 
 
 int runInterpret(tListOfInstr *list);
-void interpretEval(tListOfInstr *list, thTable* localVarTable);
+thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable);
 void printInstType(int instructionType);
 #endif

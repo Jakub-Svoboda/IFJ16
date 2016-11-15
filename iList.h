@@ -33,6 +33,7 @@
 #define I_RETURN_NOTHING	24	//return;
 #define I_PUSH				25	//signals a argument: type, name
 #define	I_CLEAR_TMPS		26	//clears a local var table of temporary variables used for expressions			
+#define I_RETURN_MOV		27	//where returned variable has to be assigned
 
 typedef struct		//List of instructions
 {

@@ -24,13 +24,14 @@ int runInterpret(tListOfInstr *list){
 	
 	fprintf(stderr,"\n");	//TODO comment me
 	interpretEval(list,localVarTable);
-	
-
+		
+	memfreeall();
+	exit(0);
 	
 return 0;	
 }
 
-void interpretEval(tListOfInstr *list, thTable* localVarTable){
+thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	struct listItem *lastActive;
 	thTable * nextCallTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
 	htabInit(nextCallTable);
@@ -102,13 +103,26 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
-				return;
+		printHtabLocal(localVarTable)		;
+				return NULL;
 			break;
 			
 	//************************I_RETURN******************************//
 			case I_RETURN:
-
-				return;
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_RETURN. Returning nonexistant variable.\n");
+						memfreeall();
+						exit(3);
+					}
+				}
+				thtabItem *returnPtr = memalloc(sizeof(thtabItem));
+				returnPtr = memcpy(returnPtr,itemPtr,sizeof(thtabItem));
+				
+				return returnPtr;
 			break;
 			
 	//************************I_IF_GOTO******************************//
@@ -118,7 +132,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
-						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
+						fprintf(stderr,"Sem_Error. I_IF_GOTO expression based on nonexistant variable\n");
 						memfreeall();
 						exit(3);
 					}
@@ -824,7 +838,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						break;
 					case 30:			//source is type String		
-						itemPtr->stringValue = memalloc(sizeof(itemPtr2->stringValue));	
+						itemPtr->stringValue = memalloc(4*sizeof(itemPtr2->stringValue));	
 						strcpy(itemPtr->stringValue,itemPtr2->stringValue);
 						itemPtr->varType=itemPtr2->varType;
 						break;
@@ -892,14 +906,19 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 				htabDeleteHashtag(localVarTable);
 			break;		
 
-			
+	//************************I_RETURN_MOV******************************//
+			case I_RETURN_MOV:
+
+			break;			
 			
 			
 			default:
 				fprintf(stderr,"Interpreting an unknown instruction %d\n",list->active->Instruction.instType);
-			return;
+			return NULL;
 		}
 		listNext(list);
+		
+		
 	}
 }
 
@@ -933,6 +952,7 @@ void printInstType(int instructionType){
 		case I_RETURN_NOTHING:		fprintf(stderr,"  I_RETURN_NOTHING:\t"); 	break;
 		case I_PUSH:		fprintf(stderr,"  I_PUSH:\t"); 	break;
 		case I_CLEAR_TMPS:		fprintf(stderr,"  I_CLEAR_TMPS:\t"); 	break;
+		case I_RETURN_MOV:		fprintf(stderr,"  I_RETURN_MOV:\t"); 	break;
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }
