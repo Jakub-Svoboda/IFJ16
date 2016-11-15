@@ -45,6 +45,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	thtabItem* itemPtr3 = NULL;		//pointer to 3rd address
 	int jumpBool=0;					//if !0 then jump is executed
 	char* buf;
+	thtabItem *returnPtr;	//Table item with returned variable
+	returnPtr=NULL;
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -105,7 +107,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
+
 	printHtabLocal(localVarTable);
+
 				return NULL;
 
 
@@ -123,16 +127,17 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(3);
 					}
 				}
-				thtabItem *returnPtr = memalloc(sizeof(thtabItem));
-				returnPtr = memcpy(returnPtr,itemPtr,sizeof(thtabItem));
-				
+
+				returnPtr = itemPtr;
 				return returnPtr;
 			break;
 			
 	//************************I_IF_GOTO******************************//
 			case I_IF_GOTO:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -183,7 +188,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 					listNext(list);
 				}
-				interpretEval(list,nextCallTable);		//recursive call this function
+				returnPtr=interpretEval(list,nextCallTable);		//recursive call this function
 				htabDispose(nextCallTable);				//after return we dispose the variable table from called function
 				htabInit(nextCallTable);
 				list->active=lastActive;	//restore active position before fn call
@@ -236,7 +241,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_ADD******************************//
 			case I_ADD:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -245,7 +252,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//second adress search
 				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
@@ -254,7 +263,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//third adress search
 				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -309,7 +320,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(4);
 						}
 						else if(itemPtr->varType == 30 || itemPtr->varType == 0){
-							itemPtr->stringValue=memalloc(sizeof(itemPtr2->intValue)+sizeof(itemPtr3->stringValue));
+							itemPtr->stringValue=memalloc(sizeof(itemPtr2->intValue)+sizeof(char)*(strlen(itemPtr3->stringValue)+1));
 							sprintf(itemPtr->stringValue,"%d%s",itemPtr2->intValue, itemPtr3->stringValue);
 							itemPtr->isInit=1;
 							itemPtr->varType=30;
@@ -363,7 +374,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(4);
 						}
 						else if(itemPtr->varType == 30 || itemPtr->varType == 0){
-							itemPtr->stringValue=memalloc(sizeof(itemPtr2->doubleValue)+sizeof(itemPtr3->stringValue));
+							itemPtr->stringValue=memalloc(sizeof(itemPtr2->doubleValue)+sizeof(char)*(strlen(itemPtr3->stringValue)+1));
 							sprintf(itemPtr->stringValue,"%g%s",itemPtr2->doubleValue, itemPtr3->stringValue);
 							itemPtr->isInit=1;
 							itemPtr->varType=30;
@@ -395,7 +406,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							memfreeall();
 							exit(4);
 						}
-						itemPtr->stringValue=memalloc(sizeof(itemPtr2->stringValue)+sizeof(itemPtr3->intValue));
+						itemPtr->stringValue=memalloc(sizeof(char)*(strlen(itemPtr2->stringValue)+1)+sizeof(itemPtr3->intValue));
 						sprintf(itemPtr->stringValue,"%s%d",itemPtr2->stringValue, itemPtr3->intValue);
 						itemPtr->isInit=1;
 						itemPtr->varType=30;
@@ -411,7 +422,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							memfreeall();
 							exit(4);
 						}
-						itemPtr->stringValue=memalloc(sizeof(itemPtr2->stringValue)+sizeof(itemPtr3->doubleValue));
+						itemPtr->stringValue=memalloc(sizeof(char)*(strlen(itemPtr2->stringValue)+1)+sizeof(itemPtr3->doubleValue));
 						sprintf(itemPtr->stringValue,"%s%g",itemPtr2->stringValue, itemPtr3->doubleValue);
 						itemPtr->isInit=1;
 						itemPtr->varType=30;
@@ -427,7 +438,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							memfreeall();
 							exit(4);
 						}
-						itemPtr->stringValue=memalloc(sizeof(itemPtr2->stringValue)+sizeof(itemPtr3->stringValue));
+						itemPtr->stringValue=memalloc(sizeof(char)*(strlen(itemPtr2->stringValue)+1)+sizeof(char)*(strlen(itemPtr3->stringValue)+1));
 						sprintf(itemPtr->stringValue,"%s%s",itemPtr2->stringValue, itemPtr3->stringValue);
 						itemPtr->isInit=1;
 						itemPtr->varType=30;
@@ -452,7 +463,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_SUB******************************//
 			case I_SUB:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -461,7 +474,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//second adress search
 				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
@@ -470,7 +485,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//third adress search
 				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -550,7 +567,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_MUL******************************//
 			case I_MUL:		//first adress search
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -559,7 +578,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//second adress search
 				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
@@ -568,7 +589,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//third adress search
 				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -650,7 +673,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			case I_DIV: //adress search
 			
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -659,7 +684,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//second adress search
 				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
@@ -668,7 +695,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}			//third adress search
 				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -801,7 +830,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			case I_MOV:
 			
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -810,7 +841,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}
 				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
-					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -913,6 +946,55 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 	//************************I_RETURN_MOV******************************//
 			case I_RETURN_MOV:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr->varType != returnPtr->varType){		//Types are not matching, error4
+					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (returnPtr->varType != 23 && returnPtr->varType != 28)){		
+						printHtabLocal(localVarTable);
+						fprintf(stderr,"I_RETURN_MOV  source and target type not matching.\n");
+						exit(4);
+					}
+				}
+				if(returnPtr->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"I_RETURN_MOV Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+				
+				itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
+				switch (returnPtr->varType){
+					case 28:			//source is type int
+						if(itemPtr->varType == 23){
+							itemPtr->doubleValue=returnPtr->intValue;
+						}else{
+							itemPtr->intValue=returnPtr->intValue;	
+						}
+						break;
+
+					case 30:			//source is type String
+						itemPtr->stringValue = memalloc(sizeof(char)*(strlen(returnPtr->stringValue)+1));	
+						strcpy(itemPtr->stringValue,returnPtr->stringValue);	
+						itemPtr->varType=returnPtr->varType;
+						break;
+					case 23:			//source is type double
+						if(itemPtr->varType == 28){
+							itemPtr->varType=23;
+						}
+						itemPtr->doubleValue=returnPtr->doubleValue;						
+						break;
+						
+					default:
+						fprintf(stderr,"I_RETURN_MOV source operand has unexpected type %d\n",itemPtr->varType);
+						exit(3);	//TODO this is our fault, exit code is hard to define....
+				}
 
 			break;			
 			

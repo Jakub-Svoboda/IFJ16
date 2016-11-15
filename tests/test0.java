@@ -1,12 +1,27 @@
 class Main {
+	static int i;
+	static int value;
 	static void run(){
-		String s="eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-		int a=4;
-		while(a){
-			a=a-1;
-			s=s+s;
+		i=1;
+		value=0;
+		int a=f();
+		a=a+value;
+		
+	}
+	
+	static int f(){
+		int a;
+		if(i){
+			i=i-1;
+			a=f();
+			return a;
+		}else{
+			value=value+40;
+			return 40;
 		}
-	}	
-
-
+		
+		
+		
+		return a;
+	}
 }

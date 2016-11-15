@@ -113,7 +113,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	static int argCount=0;		//counter for arguments
 	char buf[2047];
 	char buf2[2047];
-
+	char buf3[2047];
 
 	switch (state){
 
@@ -480,6 +480,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 			sprintf(buf,"%s",tokenPtr->name);
 			sprintf(buf2,"%d",lastToken->type);
+			Token *evenLasterToken = memalloc(sizeof(Token));
+			evenLasterToken = memcpy(evenLasterToken,tokenPtr,sizeof(Token));
 			generateInstruction(I,I_NEW_VAR, buf, buf2,"",list);				
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
@@ -488,13 +490,19 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					return 0;
 				case token_assign:
 					getModifiedToken(f,tokenPtr);
+					lastToken=tokenPtr;
+					sprintf(buf3, "%s",lastToken->name);
 					//printType(tokenPtr);
 						if(tokenPtr-> type == token_identifier){	//	type ID=func
 							if(isItFunction(f,tokenPtr) == 1){
 								getModifiedToken(f,tokenPtr);
 								//printType(tokenPtr);
 								if (tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n(\n");goto EXIT;}
+								generateInstruction(I,I_FN_CALL, buf3, "","",list);
 								if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
+								
+						sprintf(buf2, "%s",evenLasterToken->name);
+						generateInstruction(I,I_RETURN_MOV, buf2,"","", list);
 								if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 							}else{
 								generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
