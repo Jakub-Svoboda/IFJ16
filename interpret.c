@@ -843,8 +843,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						break;
 
 					case 30:			//source is type String
-						itemPtr->stringValue = memalloc(sizeof(char)*strlen(itemPtr2->stringValue));	
-						strcpy(itemPtr->stringValue,itemPtr2->stringValue);
+						itemPtr->stringValue = memalloc(sizeof(char)*(strlen(itemPtr2->stringValue)+1));	
+						strcpy(itemPtr->stringValue,itemPtr2->stringValue);	
 						itemPtr->varType=itemPtr2->varType;
 						break;
 					case 23:			//source is type double
