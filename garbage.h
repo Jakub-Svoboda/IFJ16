@@ -19,7 +19,7 @@ typedef struct { 			//List
 void *memalloc(unsigned int);			//Allocates memory and stores the pointer to that memory
 void memfreeall();			//Frees all allocated memory
 void memfree(void *);			//Frees memory on pointer specified
-
+void *memrealloc(void *ptr, unsigned int size);
 
 
 #include "syntax.h"			//TODO check sometimes

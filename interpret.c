@@ -24,9 +24,11 @@ int runInterpret(tListOfInstr *list){
 	
 	fprintf(stderr,"\n");	//TODO comment me
 	interpretEval(list,localVarTable);
+
 		
 	memfreeall();
 	exit(0);
+
 	
 return 0;	
 }
@@ -103,8 +105,13 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
+<<<<<<< HEAD
 		printHtabLocal(localVarTable)		;
 				return NULL;
+=======
+				//printHtabLocal(localVarTable);
+				return;
+>>>>>>> dc0a1cdedcef61a16218f8c255f5deac1486adda
 			break;
 			
 	//************************I_RETURN******************************//
@@ -837,8 +844,13 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							itemPtr->intValue=itemPtr2->intValue;	
 						}
 						break;
+<<<<<<< HEAD
 					case 30:			//source is type String		
 						itemPtr->stringValue = memalloc(4*sizeof(itemPtr2->stringValue));	
+=======
+					case 30:			//source is type String
+						itemPtr->stringValue = memalloc(sizeof(char)*strlen(itemPtr2->stringValue));	
+>>>>>>> dc0a1cdedcef61a16218f8c255f5deac1486adda
 						strcpy(itemPtr->stringValue,itemPtr2->stringValue);
 						itemPtr->varType=itemPtr2->varType;
 						break;
