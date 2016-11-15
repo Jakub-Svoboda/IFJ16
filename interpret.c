@@ -105,7 +105,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
-
+	printHtabLocal(localVarTable);
 				return NULL;
 
 
