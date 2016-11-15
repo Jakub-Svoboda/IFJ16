@@ -24,7 +24,8 @@ int runInterpret(tListOfInstr *list){
 	
 	fprintf(stderr,"\n");	//TODO comment me
 	interpretEval(list,localVarTable);
-	
+	memfreeall();
+	exit(0);
 
 	
 return 0;	
@@ -102,6 +103,7 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
+				//printHtabLocal(localVarTable);
 				return;
 			break;
 			
@@ -823,8 +825,8 @@ void interpretEval(tListOfInstr *list, thTable* localVarTable){
 							itemPtr->intValue=itemPtr2->intValue;	
 						}
 						break;
-					case 30:			//source is type String		
-						itemPtr->stringValue = memalloc(sizeof(itemPtr2->stringValue));	
+					case 30:			//source is type String
+						itemPtr->stringValue = memalloc(sizeof(char)*strlen(itemPtr2->stringValue));	
 						strcpy(itemPtr->stringValue,itemPtr2->stringValue);
 						itemPtr->varType=itemPtr2->varType;
 						break;

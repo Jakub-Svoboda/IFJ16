@@ -1,5 +1,4 @@
 #include "garbage.h"
-
 extern resourceStruct *resources;
 
 void *memalloc(unsigned int size) {			//Function allocates memory given and stores poiter to that memory
@@ -21,6 +20,19 @@ void memfreeall() {			//Dispose pointer list and free all memory
 	}
 	free(resources->memList);
 	free(resources);
+}
+
+void *memrealloc(void *ptr, unsigned int size)
+{
+	tElemPtr hPtr = memalloc(sizeof(struct tElem));
+	hPtr = resources->memList->First;
+	while(1){
+		hPtr=hPtr->next;
+		if(ptr==hPtr->memptr)
+			break;
+	}
+	hPtr->memptr=realloc(hPtr->memptr,size);
+	return hPtr->memptr;	
 }
 
 void memfree(void *ptr) {			//Function frees memory on specified pointer (must be allocated using memalloc, NOT malloc)

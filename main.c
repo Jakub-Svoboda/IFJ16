@@ -11,6 +11,7 @@ int main(int argc, char *argv[]){
 	{	
 		resources=malloc(sizeof (resourceStruct));			//Do NOT memalloc
 		resources->memList=malloc(sizeof(tList));			//DO NOT MEMALLOC
+		resources->memList->First=NULL;
 		tListOfInstr list;
 		listInit(&list);	//pointer to the list of instructions
 		resources->functionTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);

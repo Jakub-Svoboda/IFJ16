@@ -29,6 +29,7 @@ Token *tokenInit() {									//allocate space
 		printf("tokenInit malloc error\n");				//propably BS
 		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type
 	}
+	t->type=-1;
 	t->name = NULL;
 	return t;
 }
@@ -88,7 +89,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	char *buff = (char*) memalloc(buffSize * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
 
 //	buffSize += 2;
-//    buff = realloc(buff, buffSize);
+//    buff = memrealloc(buff, buffSize);
 
 	//printf("AYA");
 	Token *t = tokenInit();	//TODO Kuba-edit
@@ -116,7 +117,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					position++;
 					if(position+2 == buffSize) {
 						buffSize += 2;
-					    buff = realloc(buff, buffSize);
+					    buff = memrealloc(buff, buffSize);
 					}
 				}else {									//end of allowed chars
 					state = state_default;				//set state to default so we'll know we are not reading id anymore
@@ -154,7 +155,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					position++;
 					if(position+2 == buffSize) {
 						buffSize += 2;
-						buff = realloc(buff, buffSize);
+						buff = memrealloc(buff, buffSize);
 					}
 					if((c == '\"' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
 						state = state_default;						//if found, end reading
@@ -181,14 +182,14 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					position++;
 					if(position+2 == buffSize) {
 						buffSize += 2;
-						buff = realloc(buff, buffSize);
+						buff = memrealloc(buff, buffSize);
 					}
 				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
 						buffSize += 2;
-						buff = realloc(buff, buffSize);
+						buff = memrealloc(buff, buffSize);
 					}
 				}else {									//no lex error in case of s=3.14159+a because it is + id?
 					//if(isalpha(c)) {
