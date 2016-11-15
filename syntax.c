@@ -203,8 +203,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			}
 			break;
 
-
-
 //******************CLASS_BODY*******************//
 		case CLASS_BODY:
 			getModifiedToken(f,tokenPtr);

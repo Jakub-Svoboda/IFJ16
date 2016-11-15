@@ -2,10 +2,10 @@ class Main {
 	static int i;
 	static int value;
 	static void run(){
-		i=1;
+		i=2;
 		value=0;
 		int a=f();
-		a=a+value;
+		
 		
 	}
 	
@@ -13,11 +13,13 @@ class Main {
 		int a;
 		if(i){
 			i=i-1;
+			value=value+10;
 			a=f();
-			return a;
+			value = value + 100;
+			return value;
 		}else{
-			value=value+40;
-			return 40;
+			value = value + 1;
+			return value;
 		}
 		
 		

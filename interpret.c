@@ -118,7 +118,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_RETURN******************************//
 			case I_RETURN:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -897,7 +899,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_WHILE_GOTO******************************//
 			case I_WHILE_GOTO:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
@@ -947,7 +951,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_RETURN_MOV******************************//
 			case I_RETURN_MOV:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
