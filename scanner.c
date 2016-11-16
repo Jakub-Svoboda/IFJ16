@@ -6,8 +6,8 @@
 #include "scanner.h"
 //#include "htab.c"
 
-#define memalloc malloc
-#define memrealloc realloc
+//#define memalloc malloc
+//#define memrealloc realloc
 #define true 1
 #define false 0
 
