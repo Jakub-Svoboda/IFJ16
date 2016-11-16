@@ -6,7 +6,8 @@
 #include "scanner.h"
 //#include "htab.c"
 
-//#define memalloc malloc
+#define memalloc malloc
+#define memrealloc realloc
 #define true 1
 #define false 0
 
@@ -95,7 +96,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	Token *t = tokenInit();	//TODO Kuba-edit
 							// add to garbage collector?
 //	char buff[1024];
-    int c, position = 0, tempc, kwIndex = 0, isDouble = 0, isComplex = 0;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
+    int c, position = 0, tempc, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
 	State_type state = state_default;					//choose between states
 	//t = malloc(sizeof(Token));
 	//tokenInit(t);
@@ -173,8 +174,12 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				}
 				break;
 			case state_readingNumber:
-				if(c == '.' || c == 'e' || c == 'E') {	//when any character is <- , it is not average number, it is DOUBLE
+				if(c == '.' && hasE == false && isDouble == false){
 					isDouble = true;
+				}else if((c == 'e' || c == 'E') && hasE == false) {	//when any character is <- , it is not average number, it is DOUBLE
+					hasE = true;
+				}else if(c == 'e' || c=='E' || c=='.'){
+					isDouble = false;
 				}
 
 				if(isdigit(c)){							//not sure why I did if and else if,.. when it does the same thing
@@ -192,10 +197,6 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						buff = memrealloc(buff, buffSize);
 					}
 				}else {									//no lex error in case of s=3.14159+a because it is + id?
-					//if(isalpha(c)) {
-					//	fprintf(stderr, "Lexical error, invalid number\n");
-					//	exit(1);
-					//}
 					ungetc(c,f);
 					state = state_default;				//end reading state
 					if(tempc == '+' || tempc == '-') {
@@ -205,11 +206,11 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 				}
 				if(state == state_default) {
 					buff[position] = '\0';
-					if(isDouble) {
+					if((isDouble) || (!isDouble && hasE)) {
 						t->type = token_doubleNumber;
 						t->name = buff;
 						//TODO hashtable insert
-						//printf("DABL'%s'",buff);		//shout out its double
+						//printf("DABL'%s'\n",buff);		//shout out its double
 					}else {
 						t->type = token_intNumber;
 						t->name = buff;
@@ -218,6 +219,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					}
 					position = 0;						//reset
 					isDouble = false;					//reset
+					hasE = false;
 					return t;
 				}
 				tempc = c;
@@ -357,8 +359,9 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 		}
 	}	//while 1 ends here
 }
-/*
-  ///TESTING SECTION DON'T DELETE
+
+ ///TESTING SECTION DON'T DELETE
+ /*
 void identifyToken(Token *tempTok) {
 	if(tempTok->type == token_identifier) printf("id ");
 	if(tempTok->type == token_invalid) printf("invalid ");

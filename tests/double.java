@@ -1,6 +1,6 @@
-double kekel = "ojojojojoj dkdkdk";
-/*double kek = 14.4e+3;
-double keke = 10e-10;
-double kekelek = 1e4242;*/
-s=3.14159+a;
-s=3.14159-a;
+0.5e1e2
+0.2E+10E+10
+0.2e-10e-10
+0.2E-10E-10
+0.2e10e10
+0.2E10E10
