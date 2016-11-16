@@ -214,7 +214,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_static:
 					if ((result=syntaxCheck( TYPE, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\ntype\n");goto EXIT;}
 					if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nid\n");goto EXIT;}
-					generateInstruction(I,I_LABEL, concat(tokenPtr->name,resources->classPtr->name), "", "",list);
+					sprintf(buf, "%s",tokenPtr->name);
 					memcpy(resources->funcPtr,tokenPtr,sizeof(Token));		
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
@@ -226,6 +226,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						break;
 					}else{
 						if (tokenPtr -> type == token_bracketLeftRound){
+							generateInstruction(I,I_LABEL, concat(buf,resources->classPtr->name), "", "",list);
 							if ((result=syntaxCheck( FUNCTION_DECLARE, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 							break;
 						}

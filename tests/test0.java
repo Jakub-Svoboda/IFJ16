@@ -4,13 +4,14 @@ class Main {
 	static void run(){
 		i=2;
 		value=0;
-		int a=f();
+		int a=f(a);
 		
 		
 	}
 	
 	static int f(){
 		int a;
+		String s;
 		if(i){
 			i=i-1;
 			value=value+10;
@@ -24,6 +25,6 @@ class Main {
 		
 		
 		
-		return a;
+		return s;
 	}
 }

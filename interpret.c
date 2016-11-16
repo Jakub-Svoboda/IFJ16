@@ -111,25 +111,37 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	printHtabLocal(localVarTable);
 
 				return NULL;
-
-
 			break;
 			
 	//************************I_RETURN******************************//
 			case I_RETURN:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if short identifier
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtabLocal(localVarTable);	//Variable is not in var table 
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_RETURN. Returning nonexistant variable.\n");
 						memfreeall();
 						exit(3);
 					}
 				}
-
+				thtabItem* tmpPtr = htabSearch(resources ->functionTable,concat(currentFunc,currentClass));		
+				if(itemPtr->varType != tmpPtr->returnType){			//check if returned variable has correct type
+					printHtabLocal(localVarTable);	//Variable is not in var table 
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable type does not match with definied return type.\n");
+					memfreeall();
+					exit(4);
+				}
+				if(itemPtr->isInit==0){
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable is not initialized.\n");
+					memfreeall();
+					exit(8);		
+				}
 				returnPtr = itemPtr;
 				return returnPtr;
 			break;
