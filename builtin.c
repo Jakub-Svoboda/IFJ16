@@ -40,7 +40,7 @@ String substr(String s, int i, int n) {
         fprintf(stderr, "Substring error, invalid values\n");
         exit(10);
     }
-    char *buff = (char*) memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
+    char *buff = (char*) malloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ			//This also does not work with memalloc when i try it
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
@@ -52,15 +52,13 @@ int compare(String s1, String s2) {
 }
 
 int find(String s, String search) {
-    char *T = s;
-    char *P = search;
+	int P_len = length(search);
+    int T_len = length(s);
 
-    int P_len = strlen(P);
-    int T_len = strlen(T);
-    int CharJump[256];
+    int CharJump[256];          //Max char
     int MatchJump[P_len];
 
-    int res = bma(P, T, CharJump, MatchJump);
+    int res = bma(search, s, CharJump, MatchJump);
 
     if(res < T_len) {
         return(res);
@@ -71,7 +69,7 @@ int find(String s, String search) {
 }
 
 String sort(String s) {
-	int s_len = strlen(s);
+	int s_len = length(s);
     char *str = (char*)malloc(sizeof(char)*s_len);          //Does not work whem memalloc is used, don't know why..
     for(int x = 0; x < s_len; x++) {
         str[x] = s[x];
