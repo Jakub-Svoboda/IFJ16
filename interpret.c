@@ -131,7 +131,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr->varType != tmpPtr->returnType){			//check if returned variable has correct type
 					printHtabLocal(localVarTable);	
 					printHtab(resources->globalVarTable,1);
-					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable type does not match with definied return type.\n");
+					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable type does not match with defined return type.\n");
 					memfreeall();
 					exit(4);
 				}

@@ -10,7 +10,7 @@
 int readInt();
 double readDouble();
 String readString();
-char* printCreate(char* rule);
+char* printCreate(Token *t);
 void print();
 int length(String s);
 String substr(String s, int i, int n);
