@@ -9,7 +9,41 @@
 //////////////////////////////
 
 int readInt() {
-    return 0;
+    int c, num, sign = 1;
+
+    while((c = getchar()) == ' ') {
+        ;                           //skip empty chars
+    }
+
+    if((c == '-') || (c == '+'))    //first char may be sign
+    {
+         if(c == '-') sign = -1;
+         c = getchar();
+    }
+    if(isdigit(c) == 0 || c == EOF) {
+        //nothing on input, now what? Exit I guess
+        fprintf(stderr,"Invalid input in readInt() function.\n");
+        exit(99);
+    }
+    if(isdigit(c)) {
+        num = c - '0';              //So input is valid number
+
+        c = getchar();
+        while(isdigit(c))
+        {
+            num *= 10;
+            num += c - '0';
+            c = getchar();
+        }
+        if(c != '\n'){
+            fprintf(stderr,"Invalid input in readInt() function.\n");
+            exit(99);
+        }
+        ungetc(c, stdin);           //input is not number anymore
+
+    }
+
+    return num*sign;
 }
 
 double readDouble() {
