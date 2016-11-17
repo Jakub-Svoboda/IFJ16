@@ -218,14 +218,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
-	sprintf(buf3, "#PRE%d",counter);
-	counter++;
-	generateInstruction(I,I_GLOBAL_PRE, buf3, "", "",list);
+						sprintf(buf3, "#PRE%d",counter);
+						counter++;
+						generateInstruction(I,I_GLOBAL_PRE, buf3, "", "",list);
 						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 						char* buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);	
 						generateInstruction(I,I_MOV, buf,buffer,"", list);	
 						sprintf(buf3, "#POST%d",counter-1);
-	generateInstruction(I,I_GLOBAL_POST, buf3, "", "",list);
+						generateInstruction(I,I_GLOBAL_POST, buf3, "", "",list);
 						if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						//printType(tokenPtr);
 						break;
