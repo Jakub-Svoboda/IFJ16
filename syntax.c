@@ -220,7 +220,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
 						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
-						runPrecedenceAnalysis(f,tokenPtr,1,list);		//TODO probalby invalid to have expression here
+						char* buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);	
+						generateInstruction(I,I_MOV, buf,buffer,"", list);						
 						if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						//printType(tokenPtr);
 						break;

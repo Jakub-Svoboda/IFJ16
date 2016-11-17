@@ -295,7 +295,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28 && itemPtr->varType != 30){
 					fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 				
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -407,7 +407,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}else{
 						fprintf(stderr, "I_ADD right operand not INT,double or string \n");
 						memfreeall();
-						exit(3);
+						exit(4);
 					}	
 						
 							
@@ -463,14 +463,14 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}else{
 						fprintf(stderr, "I_ADD right operand not INT or DOUBLE \n");
 						memfreeall();
-						exit(3);
+						exit(4);
 					}		
 							
 		
 				}else{
 					fprintf(stderr, "I_ADD target not INT or DOUBLE \n");
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 				
 					
@@ -517,7 +517,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28){
 					fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 				
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -545,7 +545,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}else{
 								fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
 								memfreeall();
-								exit(3);
+								exit(4);
 							}
 						}
 					}
@@ -571,13 +571,13 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}else{								//double - X
 								fprintf(stderr, "I_SUB right operand not INT or DOUBLE \n");
 								memfreeall();
-								exit(3);
+								exit(4);
 							}
 						}
 					}else{
 						fprintf(stderr, "I_SUB left operand not INT or DOUBLE \n");
 						memfreeall();
-						exit(3);
+						exit(4);
 					}
 				} 	
 			break;	
@@ -621,7 +621,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28){
 					fprintf(stderr, "I_MUL target not INT or DOUBLE \n");
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 				
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -649,7 +649,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}else{
 								fprintf(stderr, "I_MUL target not INT or DOUBLE \n");
 								memfreeall();
-								exit(3);
+								exit(4);
 							}
 						}
 					}
@@ -675,13 +675,13 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}else{								//double * X
 								fprintf(stderr, "I_MUL right operand not INT or DOUBLE \n");
 								memfreeall();
-								exit(3);
+								exit(4);
 							}
 						}
 					}else{
 						fprintf(stderr, "I_MUL left operand not INT or DOUBLE \n");
 						memfreeall();
-						exit(3);
+						exit(4);
 					}
 				} 	
 				
@@ -728,7 +728,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28){
 					fprintf(stderr, "I_DIV target not INT or DOUBLE \n");
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 				
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -766,7 +766,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}else{
 								fprintf(stderr, "I_DIV target not INT or DOUBLE \n");
 								memfreeall();
-								exit(3);
+								exit(4);
 							}
 						}
 					}
@@ -802,13 +802,13 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							}else{								//double / X
 								fprintf(stderr, "I_DIV right operand not INT or DOUBLE \n");
 								memfreeall();
-								exit(3);
+								exit(4);
 							}
 						}
 					}else{
 						fprintf(stderr, "I_DIV left operand not INT or DOUBLE \n");
 						memfreeall();
-						exit(3);
+						exit(4);
 					}
 				}
 
@@ -1548,6 +1548,17 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 			break;			
 			
+	//************************I_GLOBAL_PRE******************************//
+			case I_GLOBAL_PRE:
+				
+			break;	
+	
+	//************************I_GLOBAL_POST******************************//
+			case I_GLOBAL_POST:
+				
+			break;		
+			
+			
 			
 			default:
 				fprintf(stderr,"Interpreting an unknown instruction %d\n",list->active->Instruction.instType);
@@ -1590,6 +1601,9 @@ void printInstType(int instructionType){
 		case I_PUSH:		fprintf(stderr,"  I_PUSH:\t"); 	break;
 		case I_CLEAR_TMPS:		fprintf(stderr,"  I_CLEAR_TMPS:\t"); 	break;
 		case I_RETURN_MOV:		fprintf(stderr,"  I_RETURN_MOV:\t"); 	break;
+		case I_GLOBAL_PRE:		fprintf(stderr,"  I_GLOBAL_PRE:\t"); 	break;
+		case I_GLOBAL_POST:		fprintf(stderr,"  I_GLOBAL_POST:\t"); 	break;
+		
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }
