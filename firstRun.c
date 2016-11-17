@@ -43,8 +43,15 @@ int firstRun(FILE * f){
 			if (tokenPtr1!=NULL && tokenPtr1 -> type == token_identifier ){
 				if(tokenPtr2!= NULL && (tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String)){
 					if(tokenPtr3!=NULL && tokenPtr3->type == token_static){
-						//printf("PISU STACICKOU PROMENNOU YO\n\n\n\n\n");
-						globalVarInsert(tokenPtr1, tokenPtr2, classPtr);
+						char *dot=".";
+						if(strstr(tokenPtr1->name,dot)){
+							fprintf(stderr,"Fully qualified identifier in declaration\n");
+							memfreeall();
+							exit(2);				//TODO check if right exit value
+						}
+						else{
+							globalVarInsert(tokenPtr1, tokenPtr2, classPtr);
+						}
 					}
 
 				}
