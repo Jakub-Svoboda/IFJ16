@@ -24,6 +24,7 @@ int main(int argc, char *argv[]){
 			fclose(file);
 		}
 		else{
+			memfreeall();
 			exit(99);								//exits if file does not exist
 		}
 		int result;
@@ -33,6 +34,7 @@ int main(int argc, char *argv[]){
 			result = result; 	//TODO delete me
 			fclose(f);	
 		}else{
+			memfreeall();
 			exit(99);								//exits if file does not exist
 		}
 		

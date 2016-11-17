@@ -93,6 +93,7 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
     if (*htab == NULL) {
 
     }else {
+
         char *conKey = concat(funcName, classKey);
         thtabItem* tempItem = htabSearch(htab, conKey);          //EDIT reminder (thtabItem*)malloc(sizeof(thtabItem));
         if (tempItem == NULL) {
@@ -120,6 +121,7 @@ void htabInsertReturnType(thTable *htab, char* funcName, char* classKey, Token_t
             }
         }else {
             fprintf(stderr, "Error function redeclaration.\n");
+            memfreeall();
             exit(3);
              //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
             //tempItem->returnType = ret;
@@ -160,6 +162,7 @@ void htabInsertVarType(char* varName, char* classKey, Token_type var) {
             }
         }else {
             fprintf(stderr, "Error variable redeclaration.\n");
+            memfreeall();
             exit(3);
             //printf("edit v htabInsertReturnType\n");
              //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
@@ -196,6 +199,7 @@ void htabInsert(thTable *htab, char* key, int localVarType) {
         }else {
             ; //item is already in hashtable, but it's not possible for scanner to actualize value if the only value is key,. now what?
             fprintf(stderr, "Semanticky error htab\n");
+            memfreeall();
             exit(3);
         }
 

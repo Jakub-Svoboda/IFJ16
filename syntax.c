@@ -699,6 +699,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	EXIT:
 		fprintf(stderr, "Syntax Error! \n");
 		//printType(tokenPtr);
+		memfreeall();
 		exit(2);
 		return result;
 

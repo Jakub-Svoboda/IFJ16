@@ -274,6 +274,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 
 					default:
 						fprintf(stderr,"Unexpected token\n");
+						memfreeall();
 						exit(2);//TODO improve?
 						break;
 
@@ -376,6 +377,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				break;
 			default:
 				fprintf(stderr,"Unexpected token\n");
+				memfreeall();
 				exit(2);//TODO improve?
 				break;
 
@@ -491,6 +493,7 @@ Token* reduction(Token* tokenPtr, Token* stackTopPtr,tStack* stack, tListOfInstr
 		}
 		if(whatToDo == '0'){
 			fprintf(stderr,"Syntax Error\n");	//TODO improve?
+			memfreeall();
 			exit(2);
 
 		}
@@ -552,11 +555,12 @@ char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr 
 		if(tokenPtr->type>token_identifier && tokenPtr->type != token_comma && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string)
 		{
 			fprintf(stderr,"syntax error, unexpected token\n");
+			memfreeall();
 			exit(2);	//TODO free all stuff
 		}
 
 		if (tokenPtr->type==token_semicolon || tokenPtr->type == token_comma){
-			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
+			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); memfreeall(); exit(2);}
 			stackTopPtr=stackTopTerminal(stack);
 			//fprintf(stderr,"Stak top ptr is: %d\n",tokenPtr->type);
 			Token* tokenPtrTmp = tokenInit();			//init for the last $
@@ -567,7 +571,7 @@ char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr 
 		}
 		if (tokenPtr->type == token_bracketLeftRound){depth++;}
 		if (tokenPtr->type == token_bracketRightRound){
-			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); exit(2);}
+			if(tokenCnt==1){fprintf(stderr,"Syntax Error, expression expected.\n"); memfreeall(); exit(2);}
 			depth--;
 			if (depth<0){
 				Token* tokenPtrTmp = tokenInit();			//init for the last $

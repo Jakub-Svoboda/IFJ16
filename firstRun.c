@@ -58,6 +58,7 @@ int firstRun(FILE * f){
 				if(tokenPtr2!=NULL && tokenPtr3!=NULL && tokenPtr2->type==token_void && tokenPtr3->type==token_static)
 				{
 					fprintf(stderr, "Syntax error, variable type void\n");
+					memfreeall();
 					exit(2);
 				}
 			}
@@ -68,7 +69,8 @@ int firstRun(FILE * f){
 	char *key="Main.run";						//initialize variable for Main.run existence check
 			if(htabSearch(resources->functionTable, key)==NULL){	//if function run in class Main does not exist
 					fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
-					exit(3);					//TODO call garbage collector
+					memfreeall();
+					exit(3);
 			}			
 		if(ptr->returnType!=token_void){
 			memfreeall();
