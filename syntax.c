@@ -67,12 +67,10 @@ int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list);
 	result =result; //TODO delete me
 
-
-	//free(tokenPtr);
 	return result;
 }
 
-thTable* enterScope(){
+thTable* enterScope(){		//TODO <<not used?
 	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 	htabInit(localVarTable);
 	return 	(localVarTable);	
@@ -219,9 +217,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
 					if (tokenPtr -> type == token_assign){
+	sprintf(buf3, "#PRE%d",counter);
+	counter++;
+	generateInstruction(I,I_GLOBAL_PRE, buf3, "", "",list);
 						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 						char* buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);	
-						generateInstruction(I,I_MOV, buf,buffer,"", list);						
+						generateInstruction(I,I_MOV, buf,buffer,"", list);	
+						sprintf(buf3, "#POST%d",counter-1);
+	generateInstruction(I,I_GLOBAL_POST, buf3, "", "",list);
 						if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n;\n");goto EXIT;}
 						//printType(tokenPtr);
 						break;
@@ -240,7 +243,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				default:
 					return -1;
 			}
-
 			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lastToken, list))			!= 0) {fprintf(stderr,"\nCBC\n");goto EXIT;}
 			return result;
 			break;

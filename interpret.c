@@ -213,9 +213,18 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	
 	//************************I_PROGRAM******************************//
 			case I_PROGRAM:
-				strcpy(currentClass, "Main");
-				strcpy(currentFunc, "run");
-				listNext(list);
+				while(1){			//search through instructions until the same label is found				
+					if(list->active->Instruction.instType == 28 && strcmp(list->active->Instruction.addr1, "#PRE0")==0){
+						break;
+					}	
+					if(list->active->nextItem == NULL){		//no #PRE0 wrapper was found, starting in Main.run
+						strcpy(currentClass, "Main");
+						strcpy(currentFunc, "run");
+						break;		
+					}
+					listNext(list);
+				}
+
 			break;
 			
 	//************************I_MOV_INT******************************//
@@ -1340,12 +1349,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
 					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
-						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name				
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
-						fprintf(stderr,"Sem_Error. I_MOV to nonexistant target variable.\n");
+						fprintf(stderr,"Sem_Error. I_MOV to nonexistant target variable. %s\n", list->active->Instruction.addr1);
 						exit(3);
 					}
 				}
@@ -1407,7 +1416,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			case I_WHILE_GOTO:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
 					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
-						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name				
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
@@ -1555,8 +1564,20 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	
 	//************************I_GLOBAL_POST******************************//
 			case I_GLOBAL_POST:
+				while(1){			//search through instructions until the same label is found
+					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, "Main.run")==0){
+						break;
+					}	
+					if(list->active->nextItem == NULL){		//Main.run not was found
+						fprintf(stderr,"I_PROGRAM, cannot jump to Main.run due to missing label\n");
+						memfreeall();
+						exit(8);
+						break;		
+					}
+					listNext(list);
+				}
 				
-			break;		
+				break;		
 			
 			
 			
@@ -1601,7 +1622,7 @@ void printInstType(int instructionType){
 		case I_PUSH:		fprintf(stderr,"  I_PUSH:\t"); 	break;
 		case I_CLEAR_TMPS:		fprintf(stderr,"  I_CLEAR_TMPS:\t"); 	break;
 		case I_RETURN_MOV:		fprintf(stderr,"  I_RETURN_MOV:\t"); 	break;
-		case I_GLOBAL_PRE:		fprintf(stderr,"  I_GLOBAL_PRE:\t"); 	break;
+		case I_GLOBAL_PRE:		fprintf(stderr,"  I_GLOBAL_PRE:\t\t"); 	break;
 		case I_GLOBAL_POST:		fprintf(stderr,"  I_GLOBAL_POST:\t"); 	break;
 		
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
