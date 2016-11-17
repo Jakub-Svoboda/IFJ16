@@ -1475,10 +1475,11 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
 						exit(3);
 				}
-				argumentCounter=0;
-	//			while( argumentCounter < itemPtr2->argumentNumber){
-	//	printf("arg %d check\n",argumentCounter);			
-	//			}
+				
+				while( argumentCounter < itemPtr2->argumentNumber){
+		printf("arg %d check\n",argumentCounter);	
+					argumentCounter++;
+				}
 				
 
 			break;
