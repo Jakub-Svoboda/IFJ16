@@ -54,39 +54,40 @@ double readDouble() {             //Will convert string into integer
     char* stringNum = readString();     //make use of readString();
 
     do{
-        if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {    //first char may be sign, IDK if it's right
-            printf("exponent sign read, ");
+        if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
+            //printf("exponent sign read, ");
             if(*stringNum == '-') eSign *= -1;
-        }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //first char may be sign, IDK if it's right
-            printf("num sign read, ");
+        }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
+            //printf("num sign read, ");
             if(*stringNum == '-') sign *= -1;
-        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {
-            printf("int read, ");                          //if it's digit
+        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
+            //printf("int read, ");
             intNum *= 10;
             intNum += *stringNum - '0';
-        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {                                 //if it's digit
+        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {              //read part of number past .
             mantissa += *stringNum - '0';
             mantissa *= 0.1;
-            printf("mantissa read %f, ",mantissa);
-        }else if(isdigit(*stringNum) && hasE == 1) {                                 //if it's digit
-            printf("exponent read, ");
+            //printf("mantissa read %f, ",mantissa);
+        }else if(isdigit(*stringNum) && hasE == 1) {                             //read part of number past e
+            //printf("exponent read, ");
             exponent *= 10;
             exponent += *stringNum - '0';
-        }else if(*stringNum == 'e' || *stringNum == 'E') {
-            printf("e read, ");
+        }else if(*stringNum == 'e' || *stringNum == 'E') {                       //check if number has exponent
+            //printf("e read, ");
             hasE = 1;
-        }else if(*stringNum == '.'){   //if it is not digit, print error and exit
-            printf("dot read, ");
+        }else if(*stringNum == '.'){                                             //check if number has mantissa
+            //printf("dot read, ");
             hasDot = 1;
         }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
             fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            memfreeall();
             exit(7);
         }
         *stringNum++;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
     double fullExp = 1;
-    if(hasE) {
+    if(hasE) {                                      //simple pow-like function to calculate exponent
         for (int i = 0; i < exponent; i++) {
             if(eSign == 1) {
                 fullExp *= 10;
