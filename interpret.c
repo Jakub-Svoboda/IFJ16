@@ -217,6 +217,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					if(list->active->Instruction.instType == 28 && strcmp(list->active->Instruction.addr1, "#PRE0")==0){
 						break;
 					}	
+					if(list->active->Instruction.instType == 30) {
+						strcpy(currentClass, list->active->Instruction.addr1);
+					}
 					if(list->active->nextItem == NULL){		//no #PRE0 wrapper was found, starting in Main.run
 						strcpy(currentClass, "Main");
 						strcpy(currentFunc, "run");
@@ -1349,7 +1352,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
 					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
-						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name				
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name						
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
@@ -1579,6 +1582,10 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				
 				break;		
 			
+	//************************I_CLASS:******************************//
+			case I_CLASS:
+				strcpy(currentClass, list->active->Instruction.addr1);
+			break;			
 			
 			
 			default:
@@ -1623,8 +1630,8 @@ void printInstType(int instructionType){
 		case I_CLEAR_TMPS:		fprintf(stderr,"  I_CLEAR_TMPS:\t"); 	break;
 		case I_RETURN_MOV:		fprintf(stderr,"  I_RETURN_MOV:\t"); 	break;
 		case I_GLOBAL_PRE:		fprintf(stderr,"  I_GLOBAL_PRE:\t\t"); 	break;
-		case I_GLOBAL_POST:		fprintf(stderr,"  I_GLOBAL_POST:\t"); 	break;
-		
+		case I_GLOBAL_POST:		fprintf(stderr,"  I_GLOBAL_POST:\t"); 	break;								
+		case I_CLASS:		fprintf(stderr,"  I_CLASS:\t"); 	break;
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }

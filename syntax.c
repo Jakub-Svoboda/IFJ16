@@ -132,6 +132,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 		case CLASS:
 			if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))					!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
 			memcpy(resources->classPtr,tokenPtr,sizeof(Token));	
+			generateInstruction(I,I_CLASS,tokenPtr->name,"","",list);
 			if ((result=syntaxCheck( LEFT_CURLY_BRACKET, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n{\n");goto EXIT;}
 			if ((result=syntaxCheck( CLASS_BODY, f, tokenPtr, lastToken, list))			!= 0) {fprintf(stderr,"\nCB\n");goto EXIT;}
 			if ((result=syntaxCheck( RIGHT_CURLY_BRACKET_CURRENT, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n}\n");goto EXIT;}

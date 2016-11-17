@@ -36,6 +36,7 @@
 #define I_RETURN_MOV		27	//where returned variable has to be assigned
 #define I_GLOBAL_PRE		28	//upper wrapper of global variable declaration and expression
 #define I_GLOBAL_POST		29	//bottom wrapper of global variable declaration and expression
+#define I_CLASS				30	//class label
 
 typedef struct		//List of instructions
 {
