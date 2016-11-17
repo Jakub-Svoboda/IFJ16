@@ -44,6 +44,7 @@ int readInt() {             //Will convert string into integer
             num += *stringNum - '0';
         }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){   //if it is not digit, print error and exit
             fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            memfreeall();
             exit(7);
         }
         *stringNum++;
@@ -75,6 +76,7 @@ int length(String s){
 String substr(String s, int i, int n) {
     if(length(s) < i+n || i < 0 || n < 0) {
         fprintf(stderr, "Substring error, invalid values\n");
+        memfreeall();
         exit(10);
     }
     char *buff = (char*)memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ			//This also does not work with memalloc when i try it
