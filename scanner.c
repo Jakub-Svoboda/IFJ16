@@ -260,6 +260,10 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 							tempc = ' ';
 							while(((c=fgetc(f)) != '/') || (tempc != '*')) {	//read until the combination of */ is found
 								tempc = c;
+								if(c == EOF) {
+									t->type = token_EOF;
+									return t;
+								}
 							}
 							break;
 						}else {									//next char is not matching any comment combination
@@ -361,7 +365,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 }
 
  ///TESTING SECTION DON'T DELETE
- /*
+/*
 void identifyToken(Token *tempTok) {
 	if(tempTok->type == token_identifier) printf("id ");
 	if(tempTok->type == token_invalid) printf("invalid ");
