@@ -51,15 +51,20 @@ double readDouble() {
 }
 
 String readString() {
-    return "kek";
-}
+    int buffSize = BUFFER_SIZE;
+	char *buff = (char*) memalloc(buffSize * sizeof(char));
 
-char* printCreate(Token *t) {
-    char* printSequence;
-    int termI;
-    double termD;
+    buff[0] = 'a';
     return "dd";
 }
+
+/*char* printCreate(Token *t) {
+    char* printSequence;
+    int termI;
+    double termD;                           //not working , will do later
+    t = NULL;
+    return "dd";
+}*/
 
 void print() {
     ;
@@ -86,7 +91,9 @@ String substr(String s, int i, int n) {
 }
 
 int compare(String s1, String s2) {
-    ;
+    s1 = s2;        // not working
+    s2 = s1;        // just to get rid of warnings
+    return 0;       // delete later
 }
 
 int find(String s, String search) {

@@ -11,7 +11,7 @@
 int readInt();
 double readDouble();
 String readString();
-char* printCreate(Token *t);
+//char* printCreate(Token *t);
 void print();
 int length(String s);
 String substr(String s, int i, int n);
