@@ -1,10 +1,11 @@
 class Main{
-	static int a;
-	static int x=4+4;
 	static void run(){
-		int a=xx;
+		int a=4;
+		f(2,3.14,"heh");
 		
 	}
-	static int xx=4+4+4;
-	
+	static String f(int a,double b, String c){
+		String d=a+b+c;
+		return d;	
+	}
 }

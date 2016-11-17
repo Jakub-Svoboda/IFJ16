@@ -185,7 +185,8 @@ void htabInsert(thTable *htab, char* key, int localVarType) {
                 insertItem->key = key;
                 insertItem->next = NULL;
                 insertItem->varType=localVarType;
-                //insertItem->returnType = token;
+                insertItem->argumentNumber=0;		//kuba edit
+				//insertItem->returnType = token;
                 (*htab)[hashFun(key)] = insertItem;            //insert created item on the first position in hashtable row
             }else {
                                                         //hashtable has already created row
