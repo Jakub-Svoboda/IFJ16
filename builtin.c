@@ -1,14 +1,5 @@
 #include "builtin.h"
 
-//extern resourceStruct* resources;
-
-
-//////////////////////////////
-//  AS SIMPLE AS IT CAN BE  //
-//  SO PLEASE CHECK IT      //
-//////////////////////////////
-
-
 String readString() {
     int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
 	char *buff = (char*)memalloc(buffSize * sizeof(char));
@@ -26,15 +17,15 @@ String readString() {
     return buff;
 }
 
-int readInt() {             //Will convert string into integer
+int readInt() {                         //Will convert string into integer
     int num = 0, sign = 1;
     char* stringNum = readString();     //make use of readString();
 
     do{
-        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )    //first char may be sign, IDK if it's right
+        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )           //first char may be sign, IDK if it's right
         {
              if(*stringNum == '-') sign *= -1;
-        }else if(isdigit(*stringNum)) {                                 //if it's digit
+        }else if(isdigit(*stringNum)) {                                         //if it's digit
             num *= 10;
             num += *stringNum - '0';
         }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){   //if it is not digit, print error and exit
@@ -45,13 +36,13 @@ int readInt() {             //Will convert string into integer
         *stringNum++;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
-    return num*sign;                                                    //return number with right sign
+    return num*sign;                                                             //return number with right sign
 }
 
-double readDouble() {             //Will convert string into integer
+double readDouble() {                                                            //Will convert string into double
     double num = 0, mantissa = 0;
     int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;
-    char* stringNum = readString();     //make use of readString();
+    char* stringNum = readString();                                              //make use of readString();
 
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
@@ -97,16 +88,8 @@ double readDouble() {             //Will convert string into integer
         }
     }
 
-    return ((intNum + mantissa)*fullExp)*sign;                                                    //return number with right sign
+    return ((intNum + mantissa)*fullExp)*sign;                                  //return number with right sign
 }
-
-/*char* printCreate(Token *t) {
-    char* printSequence;
-    int termI;
-    double termD;                           //not working , will do later
-    t = NULL;
-    return "dd";
-}*/
 
 void print() {
     ;
@@ -126,7 +109,7 @@ String substr(String s, int i, int n) {
         memfreeall();
         exit(10);
     }
-    char *buff = (char*)memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
+    char *buff = (char*)memalloc(n * sizeof(char));
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
