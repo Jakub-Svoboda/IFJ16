@@ -259,7 +259,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					Item->arguments[argCount]=memalloc(sizeof(argStruct));																	//alloc memory for current argument
 					Item->arguments[argCount]->argumentType=tokenPtr->type;																	//store type of current argument
 				if ((result=syntaxCheck( ID, f, tokenPtr, lastToken, list))		!= 0) {fprintf(stderr,"\nID\n");goto EXIT;}
-					Item->arguments[argCount]->argumentName=tokenPtr->name;	
+					Item->arguments[argCount]->argumentName=memalloc(sizeof(char)*(strlen(tokenPtr->name)+1));
+					strcpy(Item->arguments[argCount]->argumentName,tokenPtr->name);	
 					argCount++;						//increment position in array
 					Item->argumentNumber++;
 				getModifiedToken(f,tokenPtr);
