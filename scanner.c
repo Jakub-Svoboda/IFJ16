@@ -89,7 +89,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	int buffSize = BUFFER_SIZE;
 	char *buff = (char*) memalloc(buffSize * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
 
-//	buffSize += 2;
+//	buffSize += BUFFER_SIZE;
 //    buff = memrealloc(buff, buffSize);
 
 	//printf("AYA");
@@ -117,7 +117,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize += 2;
+						buffSize += BUFFER_SIZE;
 					    buff = memrealloc(buff, buffSize);
 					}
 				}else {									//end of allowed chars
@@ -156,7 +156,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize += 2;
+						buffSize += BUFFER_SIZE;
 						buff = memrealloc(buff, buffSize);
 					}
 					if((c == '\"' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
@@ -187,14 +187,14 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize += 2;
+						buffSize += BUFFER_SIZE;
 						buff = memrealloc(buff, buffSize);
 					}
 				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
-						buffSize += 2;
+						buffSize += BUFFER_SIZE;
 						buff = memrealloc(buff, buffSize);
 					}
 				}else {									//no lex error in case of s=3.14159+a because it is + id?
