@@ -56,13 +56,17 @@ int firstRun(FILE * f){
 			}
 		}
 
-
 	}
 	thtabItem* ptr =htabSearch(resources->functionTable,"Main.run");
-	if(ptr->returnType!=token_void){
-		memfreeall();
-		exit(3);
-	}
+	char *key="Main.run";						//initialize variable for Main.run existence check
+			if(htabSearch(resources->functionTable, key)==NULL){	//if function run in class Main does not exist
+					fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
+					exit(3);					//TODO call garbage collector
+			}			
+		if(ptr->returnType!=token_void){
+			memfreeall();
+			exit(3);
+		}
 	//printHtab(resources->functionTable, 0);
 	//printHtab(globalVarTable, 1);
 	return 0;
