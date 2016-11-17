@@ -226,6 +226,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					itemPtr->isInit=1;
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_INT to nonexistant variable.\n");
+					memfreeall();
 					exit(3);
 				}
 			break;		
@@ -350,9 +351,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						itemPtr->intValue=itemPtr2->intValue+itemPtr3->doubleValue;
 						itemPtr->isInit=1;
 					}else{
-						fprintf(stderr, "I_ADD right operand not INT or DOUBLE \n");
+						fprintf(stderr, "I_ADD right operand not INT, double or string \n");
 						memfreeall();
-						exit(4);
+						exit(3);
 					}
 						
 						
@@ -404,7 +405,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						itemPtr->intValue=itemPtr2->intValue+itemPtr3->doubleValue;
 						itemPtr->isInit=1;
 					}else{
-						fprintf(stderr, "I_ADD right operand not INT or DOUBLE \n");
+						fprintf(stderr, "I_ADD right operand not INT,double or string \n");
 						memfreeall();
 						exit(3);
 					}	
@@ -1461,6 +1462,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1473,6 +1475,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
+						memfreeall();
 						exit(3);
 				}
 				
