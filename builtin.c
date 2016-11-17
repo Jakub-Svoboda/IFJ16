@@ -11,8 +11,9 @@
 int readInt() {
     int c, num, sign = 1;
 
-    while((c = getchar()) == ' ') {
-        ;                           //skip empty chars
+    if((c = getchar()) == ' ') {
+        fprintf(stderr,"Empty char in readInt() function is not allowed.\n");
+        exit(7);
     }
 
     if((c == '-') || (c == '+'))    //first char may be sign
@@ -20,7 +21,7 @@ int readInt() {
          if(c == '-') sign = -1;
          c = getchar();
     }
-    if(isdigit(c) == 0 || c == EOF) {
+    if(isdigit(c) == 0 || c == EOF || c == '\n') {
         //nothing on input, now what? Exit I guess
         fprintf(stderr,"Invalid input in readInt() function.\n");
         exit(99);
@@ -35,7 +36,7 @@ int readInt() {
             num += c - '0';
             c = getchar();
         }
-        if(c != '\n'){
+        if(c != '\n' || c != EOF){
             fprintf(stderr,"Invalid input in readInt() function.\n");
             exit(99);
         }
@@ -51,11 +52,20 @@ double readDouble() {
 }
 
 String readString() {
-    int buffSize = BUFFER_SIZE;
-	char *buff = (char*) memalloc(buffSize * sizeof(char));
+    int buffSize = BUFFER_SIZE, count = 0, c;
+	char *buff = (char*)memalloc(buffSize * sizeof(char));
 
-    buff[0] = 'a';
-    return "dd";
+    while((c = getchar()) != EOF && c != '\n') {
+        buff[count] = c;
+        count++;
+        if(count+2 == buffSize) {
+            buffSize += BUFFER_SIZE;
+            buff = memrealloc(buff, buffSize);
+        }
+    }
+
+    buff[++count] = '\0';
+    return buff;
 }
 
 /*char* printCreate(Token *t) {
