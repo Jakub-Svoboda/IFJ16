@@ -126,7 +126,7 @@ String substr(String s, int i, int n) {
         memfreeall();
         exit(10);
     }
-    char *buff = (char*)memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ			//This also does not work with memalloc when i try it
+    char *buff = (char*)memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
@@ -139,7 +139,15 @@ int compare(String s1, String s2) {
         s1++;
         s2++;
     }
-    return *s1 - *s2;
+    if((*s1 - *s2) < 0) {
+        return(-1);
+    }
+    else if((*s1 - *s2) > 0) {
+        return(1);
+    }
+    else {
+        return(0);
+    }
 }
 
 int find(String s, String search) {
@@ -161,7 +169,7 @@ int find(String s, String search) {
 
 String sort(String s) {
 	int s_len = length(s);
-    char *str = (char*)memalloc(sizeof(char)*s_len);          //Does not work whem memalloc is used, don't know why..
+    char *str = (char*)memalloc(sizeof(char)*s_len);
     for(int x = 0; x < s_len; x++) {
         str[x] = s[x];
     }
