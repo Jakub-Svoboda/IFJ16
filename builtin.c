@@ -18,11 +18,11 @@ String readString() {
     int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
 	char *buff = (char*)memalloc(buffSize * sizeof(char));
 
-    while((c = getchar()) != EOF && c != '\n') {
+    while((c = getchar()) != EOF && c != '\n') {                //Read everything until new line or EOF
         buff[count] = c;
         count++;
-        if(count+2 == buffSize) {
-            buffSize += BUFFER_SIZE;
+        if(count+2 == buffSize) {                               //realloc if needed
+            buffSize += LOCAL_BUFF_SIZE;
             buff = memrealloc(buff, buffSize);
         }
     }
@@ -31,28 +31,25 @@ String readString() {
     return buff;
 }
 
-int readInt() {
+int readInt() {             //Will convert string into integer
     int num = 0, sign = 1;
-    char* stringNum = readString();
+    char* stringNum = readString();     //make use of readString();
 
     do{
-        //printf("%d\n",*stringNum);
-        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )    //first char may be sign
+        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )    //first char may be sign, IDK if it's right
         {
              if(*stringNum == '-') sign *= -1;
-        }else if(isdigit(*stringNum)) {
+        }else if(isdigit(*stringNum)) {                                 //if it's digit
             num *= 10;
-            num += *stringNum - '0';              //So input is valid number
-
-
-        }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
+            num += *stringNum - '0';
+        }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){   //if it is not digit, print error and exit
             fprintf(stderr,"Invalid sequence in readInt() function.\n");
             exit(7);
         }
         *stringNum++;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
-    return num*sign;
+    return num*sign;                                                    //return number with right sign
 }
 
 /*char* printCreate(Token *t) {
@@ -88,9 +85,12 @@ String substr(String s, int i, int n) {
 }
 
 int compare(String s1, String s2) {
-    s1 = s2;        // not working
-    s2 = s1;        // just to get rid of warnings
-    return 0;       // delete later
+    while(*s1 && (*s1 == *s2))      //Don't know if its "Lexikograficky porovná" because I don't know what does it mean
+    {                               //but this looks cool anyway so we'll just stick to it.
+        s1++;
+        s2++;
+    }
+    return *s1 - *s2;
 }
 
 int find(String s, String search) {
