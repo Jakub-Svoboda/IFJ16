@@ -45,9 +45,11 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	thtabItem* itemPtr3 = NULL;		//pointer to 3rd address
 	int jumpBool=0;					//if !0 then jump is executed
 	char* buf;
+	char postBuffer[2047];
 	thtabItem *returnPtr;	//Table item with returned variable
 	returnPtr=NULL;
-	int argumentCounter = 0;		
+	int argumentCounter = 0;
+	int postCounter=1;
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -110,7 +112,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 
 	printHtabLocal(localVarTable);
-
+	printHtab(resources->globalVarTable,1);
 				return NULL;
 			break;
 			
@@ -1567,19 +1569,31 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	
 	//************************I_GLOBAL_POST******************************//
 			case I_GLOBAL_POST:
-				while(1){			//search through instructions until the same label is found
-					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, "Main.run")==0){
+				sprintf(postBuffer,"#PRE%d",postCounter);
+				postCounter++;
+				while(1){			//search through instructions until the same label is found				
+					if(list->active->Instruction.instType == 28 && strcmp(list->active->Instruction.addr1, postBuffer)==0){
 						break;
 					}	
-					if(list->active->nextItem == NULL){		//Main.run not was found
-						fprintf(stderr,"I_PROGRAM, cannot jump to Main.run due to missing label\n");
-						memfreeall();
-						exit(8);
+					if(list->active->Instruction.instType == 30) {
+						strcpy(currentClass, list->active->Instruction.addr1);
+					}
+					if(list->active->nextItem == NULL){		//no #PRE0 wrapper was found, starting in Main.run
+						strcpy(currentClass, "Main");
+						strcpy(currentFunc, "run");
+						
+						listFirst(list);
+						while(1){			//search through instructions until the same label is found				
+							if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, "Main.run")==0){
+								break;
+							}	
+							listNext(list);
+						}
+						
 						break;		
 					}
 					listNext(list);
-				}
-				
+				}	
 				break;		
 			
 	//************************I_CLASS:******************************//
