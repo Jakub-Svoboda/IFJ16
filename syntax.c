@@ -320,7 +320,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					break;
 				case token_identifier:								//id
 					lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));	
-					Token *evenLasterToken=malloc(sizeof(Token));
+					Token *evenLasterToken=memalloc(sizeof(Token));
 					evenLasterToken=memcpy(evenLasterToken,tokenPtr,sizeof(Token));
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
@@ -593,7 +593,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					break;
 				case token_identifier:								//id
 					lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));	
-					Token *evenLasterToken=malloc(sizeof(Token));
+					Token *evenLasterToken=memalloc(sizeof(Token));
 					evenLasterToken=memcpy(evenLasterToken,tokenPtr,sizeof(Token));
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
