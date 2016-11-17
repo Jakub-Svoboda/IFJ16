@@ -34,3 +34,6 @@ test4: project
 cleantest: project
 	./project ./tests/test0.java
 	rm *o project
+zip:    
+		
+		zip xschmi08.zip builtin.c builtin.h firstrun.c firstrun.h garbage.c garbage.h htab.c htab.h ial.c ial.h ilist.c ilist.h interpret.c interpret.h main.c precedence.c precedence.h scanner.c scanner.h syntax.c syntax.h Makefile
