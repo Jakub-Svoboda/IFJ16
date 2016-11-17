@@ -262,6 +262,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					itemPtr->isInit=1;
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_DOUBLE to nonexistant variable.\n");
+					memfreeall();
 					exit(3);
 				}
 			break;	
@@ -275,6 +276,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					itemPtr->isInit=1;
 				}else{
 					fprintf(stderr,"Sem_Error. I_MOV_STRING to nonexistant variable.\n");
+					memfreeall();
 					exit(3);
 				}
 			break;	
@@ -289,6 +291,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_ADD nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -300,6 +303,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_ADD nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -311,6 +315,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_ADD nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -511,6 +516,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_SUB nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -522,6 +528,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_SUB nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -533,6 +540,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_SUB nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -615,6 +623,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MUL nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -626,6 +635,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_MUL nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -637,6 +647,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MUL nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -721,6 +732,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_DIV nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -732,6 +744,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_DIV nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -743,6 +756,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_DIV nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -847,6 +861,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LT nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -858,6 +873,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_LT nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -869,6 +885,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LT nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -933,6 +950,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GT nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -944,6 +962,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_GT nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -955,6 +974,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GT nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1020,6 +1040,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LE nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -1031,6 +1052,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_LE nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -1042,6 +1064,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LE nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1107,6 +1130,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GE nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -1118,6 +1142,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_GE nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -1129,6 +1154,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GE nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1194,6 +1220,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_EQ nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -1205,6 +1232,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_EQ nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -1216,6 +1244,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_EQ nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1281,6 +1310,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_NE nonexistant target variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}			//second adress search
@@ -1292,6 +1322,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_NE nonexistant left operand variable.\n");
+					memfreeall();
 					exit(3);
 					}
 				}			//third adress search
@@ -1303,6 +1334,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_NE nonexistant right operand variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1369,6 +1401,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MOV to nonexistant target variable. %s\n", list->active->Instruction.addr1);
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1380,6 +1413,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MOV nonexistant source variable.\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1388,6 +1422,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (itemPtr2->varType != 23 && itemPtr2->varType != 28)){		
 						printHtabLocal(localVarTable);
 						fprintf(stderr,"I_MOV source and target type not matching.\n");
+						memfreeall();
 						exit(4);
 					}
 				}
@@ -1421,6 +1456,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						
 					default:
 						fprintf(stderr,"I_MOV source operand has unexpected type %d\n",itemPtr->varType);
+						memfreeall();
 						exit(3);	//TODO this is our fault, exit code is hard to define....
 				}
 			break;	
@@ -1436,6 +1472,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
+						memfreeall();
 						exit(3);
 					}
 				}	
@@ -1550,6 +1587,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+						memfreeall();
 						exit(3);
 					}
 				}
@@ -1558,6 +1596,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (returnPtr->varType != 23 && returnPtr->varType != 28)){		
 						printHtabLocal(localVarTable);
 						fprintf(stderr,"I_RETURN_MOV  source and target type not matching.\n");
+						memfreeall();
 						exit(4);
 					}
 				}
@@ -1591,6 +1630,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 						
 					default:
 						fprintf(stderr,"I_RETURN_MOV source operand has unexpected type %d\n",itemPtr->varType);
+						memfreeall();
 						exit(3);	//TODO this is our fault, exit code is hard to define....
 				}
 
