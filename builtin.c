@@ -9,11 +9,6 @@
 //////////////////////////////
 
 
-
-double readDouble() {
-    return 0.0;
-}
-
 String readString() {
     int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
 	char *buff = (char*)memalloc(buffSize * sizeof(char));
@@ -51,6 +46,57 @@ int readInt() {             //Will convert string into integer
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
     return num*sign;                                                    //return number with right sign
+}
+
+double readDouble() {             //Will convert string into integer
+    double num = 0, mantissa = 0;
+    int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;
+    char* stringNum = readString();     //make use of readString();
+
+    do{
+        if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {    //first char may be sign, IDK if it's right
+            printf("exponent sign read, ");
+            if(*stringNum == '-') eSign *= -1;
+        }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //first char may be sign, IDK if it's right
+            printf("num sign read, ");
+            if(*stringNum == '-') sign *= -1;
+        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {
+            printf("int read, ");                          //if it's digit
+            intNum *= 10;
+            intNum += *stringNum - '0';
+        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {                                 //if it's digit
+            mantissa += *stringNum - '0';
+            mantissa *= 0.1;
+            printf("mantissa read %f, ",mantissa);
+        }else if(isdigit(*stringNum) && hasE == 1) {                                 //if it's digit
+            printf("exponent read, ");
+            exponent *= 10;
+            exponent += *stringNum - '0';
+        }else if(*stringNum == 'e' || *stringNum == 'E') {
+            printf("e read, ");
+            hasE = 1;
+        }else if(*stringNum == '.'){   //if it is not digit, print error and exit
+            printf("dot read, ");
+            hasDot = 1;
+        }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
+            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            exit(7);
+        }
+        *stringNum++;
+    } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
+
+    double fullExp = 1;
+    if(hasE) {
+        for (int i = 0; i < exponent; i++) {
+            if(eSign == 1) {
+                fullExp *= 10;
+            }else {
+                fullExp /= 10;
+            }
+        }
+    }
+
+    return ((intNum + mantissa)*fullExp)*sign;                                                    //return number with right sign
 }
 
 /*char* printCreate(Token *t) {
