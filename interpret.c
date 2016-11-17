@@ -145,6 +145,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);		
 				}
+printHtabLocal(localVarTable);			//TODO delete me
 				returnPtr = itemPtr;
 				return returnPtr;
 			break;
@@ -225,11 +226,19 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					if(list->active->nextItem == NULL){		//no #PRE0 wrapper was found, starting in Main.run
 						strcpy(currentClass, "Main");
 						strcpy(currentFunc, "run");
+						listFirst(list);
+						while(1){			//search through instructions until the same label is found				
+							if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, "Main.run")==0){
+								break;
+							}	
+							listNext(list);
+						}
 						break;		
 					}
 					listNext(list);
 				}
-
+	
+				
 			break;
 			
 	//************************I_MOV_INT******************************//
@@ -1370,7 +1379,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
-						fprintf(stderr,"Sem_Error. I_MOV to nonexistant source variable.\n");
+						fprintf(stderr,"Sem_Error. I_MOV nonexistant source variable.\n");
 						exit(3);
 					}
 				}
@@ -1486,17 +1495,36 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}	
 				
 				if((itemPtr2=(htabSearch(resources->functionTable,list->active->Instruction.addr2))) == NULL){	//search function table
-						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtabLocal(localVarTable);							//functon is not in table 
 						printHtab(resources->globalVarTable,1);
-						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
+						fprintf(stderr,"Sem_Error. I_PUSH function not found\n");
 						memfreeall();
 						exit(3);
 				}
-				
-				while( argumentCounter < itemPtr2->argumentNumber){
-		printf("arg %d check\n",argumentCounter);	
-					argumentCounter++;
+						
+				if(itemPtr2->argumentNumber <= argumentCounter){					//check whether there is not an extra argument push
+					fprintf(stderr,"I_PUSH. Too many arguments. %d \n", itemPtr2->argumentNumber );	
+					memfreeall();
+					exit(3);		
 				}
+				
+				if(itemPtr2->arguments[argumentCounter] -> argumentType == (int)itemPtr->varType){			//retyping cos token->type is unsigned for some reason
+					argumentCounter++;															//if arguments types match, increment the counter
+				}else{
+					fprintf(stderr,"I_PUSH. Argument type not matching. %d \n", itemPtr2->argumentNumber );	
+					memfreeall();
+					exit(3);
+				}
+				//if everything ok, insert argument to next call local table		
+				htabInsert(nextCallTable, itemPtr2->arguments[argumentCounter -1]->argumentName, itemPtr->varType);
+				thtabItem* tempPtr = htabSearch(nextCallTable, itemPtr2->arguments[argumentCounter -1]->argumentName);		//search for newly added variable
+				if(tempPtr->varType == 23) tempPtr->doubleValue = itemPtr-> doubleValue;
+				if(tempPtr->varType == 28) tempPtr->intValue = itemPtr-> intValue;
+				if(tempPtr->varType == 30) {
+					tempPtr->stringValue = memalloc(sizeof(char)*(strlen(itemPtr->stringValue)+1));	
+					strcpy(itemPtr->stringValue,itemPtr->stringValue);	
+				}
+				tempPtr->isInit = 1;	//initialize new variable
 				
 
 			break;
