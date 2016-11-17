@@ -8,51 +8,14 @@
 //  SO PLEASE CHECK IT      //
 //////////////////////////////
 
-int readInt() {
-    int c, num, sign = 1;
 
-    if((c = getchar()) == ' ') {
-        fprintf(stderr,"Empty char in readInt() function is not allowed.\n");
-        exit(7);
-    }
-
-    if((c == '-') || (c == '+'))    //first char may be sign
-    {
-         if(c == '-') sign = -1;
-         c = getchar();
-    }
-    if(isdigit(c) == 0 || c == EOF || c == '\n') {
-        //nothing on input, now what? Exit I guess
-        fprintf(stderr,"Invalid input in readInt() function.\n");
-        exit(99);
-    }
-    if(isdigit(c)) {
-        num = c - '0';              //So input is valid number
-
-        c = getchar();
-        while(isdigit(c))
-        {
-            num *= 10;
-            num += c - '0';
-            c = getchar();
-        }
-        if(c != '\n' || c != EOF){
-            fprintf(stderr,"Invalid input in readInt() function.\n");
-            exit(99);
-        }
-        ungetc(c, stdin);           //input is not number anymore
-
-    }
-
-    return num*sign;
-}
 
 double readDouble() {
     return 0.0;
 }
 
 String readString() {
-    int buffSize = BUFFER_SIZE, count = 0, c;
+    int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
 	char *buff = (char*)memalloc(buffSize * sizeof(char));
 
     while((c = getchar()) != EOF && c != '\n') {
@@ -66,6 +29,30 @@ String readString() {
 
     buff[++count] = '\0';
     return buff;
+}
+
+int readInt() {
+    int num = 0, sign = 1;
+    char* stringNum = readString();
+
+    do{
+        //printf("%d\n",*stringNum);
+        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )    //first char may be sign
+        {
+             if(*stringNum == '-') sign *= -1;
+        }else if(isdigit(*stringNum)) {
+            num *= 10;
+            num += *stringNum - '0';              //So input is valid number
+
+
+        }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
+            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            exit(7);
+        }
+        *stringNum++;
+    } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
+
+    return num*sign;
 }
 
 /*char* printCreate(Token *t) {

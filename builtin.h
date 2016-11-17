@@ -6,7 +6,7 @@
 #include "garbage.h"
 
 #define String char*  //Is this rhe right solution?
-
+#define LOCAL_BUFF_SIZE 32
 
 int readInt();
 double readDouble();
