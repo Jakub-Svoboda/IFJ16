@@ -84,10 +84,13 @@ String substr(String s, int i, int n) {
     return buff;
 }
 
-int compare(String s1, String s2) {
-    s1 = s2;        // not working
-    s2 = s1;        // just to get rid of warnings
-    return 0;       // delete later
+int strcmp(String s1, String s2) {
+    while(*s1 && (*s1 == *s2))      //Don't know if its "Lexikograficky porovná" because I don't know what does it mean
+    {                               //but this looks cool anyway so we'll just stick to it.
+        s1++;
+        s2++;
+    }
+    return *s1 - *s2;
 }
 
 int find(String s, String search) {
