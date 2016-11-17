@@ -288,7 +288,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
-						fprintf(stderr,"Sem_Error. I_SUB nonexistant target variable.\n");
+						fprintf(stderr,"Sem_Error. I_ADD nonexistant target variable.\n");
 						exit(3);
 					}
 				}			//second adress search
@@ -299,7 +299,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
 					printHtabLocal(localVarTable);	//Variable is not in var table exist
 					printHtab(resources->globalVarTable,1);
-					fprintf(stderr,"Sem_Error. I_SUB nonexistant left operand variable.\n");
+					fprintf(stderr,"Sem_Error. I_ADD nonexistant left operand variable.\n");
 					exit(3);
 					}
 				}			//third adress search
@@ -310,13 +310,13 @@ printHtabLocal(localVarTable);			//TODO delete me
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
 						printHtabLocal(localVarTable);	//Variable is not in var table exist
 						printHtab(resources->globalVarTable,1);
-						fprintf(stderr,"Sem_Error. I_SUB nonexistant right operand variable.\n");
+						fprintf(stderr,"Sem_Error. I_ADD nonexistant right operand variable.\n");
 						exit(3);
 					}
 				}
 				
 				if(itemPtr->varType != 0 && itemPtr->varType != 23 && itemPtr->varType != 28 && itemPtr->varType != 30){
-					fprintf(stderr, "I_SUB target not INT or DOUBLE \n");
+					fprintf(stderr, "I_ADD target not INT or DOUBLE \n");
 					memfreeall();
 					exit(4);
 				}
@@ -1490,6 +1490,12 @@ printHtabLocal(localVarTable);			//TODO delete me
 					}
 				}
 				
+				if(itemPtr->isInit == 0){
+					fprintf(stderr,"I_PUSH. Argument not initialized. \n");	
+					memfreeall();
+					exit(8);
+				}
+				
 				if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
 					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 				}	
@@ -1522,7 +1528,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 				if(tempPtr->varType == 28) tempPtr->intValue = itemPtr-> intValue;
 				if(tempPtr->varType == 30) {
 					tempPtr->stringValue = memalloc(sizeof(char)*(strlen(itemPtr->stringValue)+1));	
-					strcpy(itemPtr->stringValue,itemPtr->stringValue);	
+					strcpy(tempPtr->stringValue,itemPtr->stringValue);	
 				}
 				tempPtr->isInit = 1;	//initialize new variable
 				
