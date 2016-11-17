@@ -346,11 +346,11 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						}else{									// id = functionid
 							lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));
 							getModifiedToken(f,tokenPtr);
+							resources->callPtr = lastToken;
 							//printType(tokenPtr);
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
 							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 							sprintf(buf, "%s",lastToken->name);
-							resources->callPtr = lastToken;
 							generateInstruction(I,I_FN_CALL, buf,"","", list);
 							sprintf(buf, "%s",evenLasterToken->name);
 							generateInstruction(I,I_RETURN_MOV, buf,"","", list);
@@ -620,8 +620,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 							lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));
 							getModifiedToken(f,tokenPtr);
 							//printType(tokenPtr);
+		resources->callPtr = lastToken;
 							if(tokenPtr -> type != token_bracketLeftRound){goto EXIT;} // id = functionid(
-							resources->callPtr = lastToken;
 							if ((result=syntaxCheck( FN_CALL, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFN_CALL\n");goto EXIT;}
 							sprintf(buf, "%s",lastToken->name);
 							generateInstruction(I,I_FN_CALL, buf,"","", list);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "syntax.h"
-#include "firstRun.h"
+#include "firstrun.h"
 #include "interpret.h"
 
 resourceStruct* resources;

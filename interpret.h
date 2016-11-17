@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "iList.h"
+#include "ilist.h"
 #include "htab.h"
 #include "garbage.h"
 

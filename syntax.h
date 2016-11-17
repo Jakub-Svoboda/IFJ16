@@ -14,7 +14,7 @@
 #include <string.h>
 
 #include "scanner.h"
-#include "iList.h"
+#include "ilist.h"
 #include "htab.h"
 #include "precedence.h"
 #include "builtin.h"
