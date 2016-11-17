@@ -32,7 +32,7 @@ typedef struct thtabItem{
 	int boolValue;
 	int isInit;
 	int argumentNumber;
-	argStruct * arguments[];
+	argStruct* arguments[127];
 	
 } thtabItem;
 
