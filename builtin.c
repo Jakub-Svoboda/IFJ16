@@ -84,7 +84,7 @@ String substr(String s, int i, int n) {
     return buff;
 }
 
-int strcmp(String s1, String s2) {
+int compare(String s1, String s2) {
     while(*s1 && (*s1 == *s2))      //Don't know if its "Lexikograficky porovná" because I don't know what does it mean
     {                               //but this looks cool anyway so we'll just stick to it.
         s1++;
