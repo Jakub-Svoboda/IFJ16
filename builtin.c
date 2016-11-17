@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "builtin.h"
-#include "ial.h"
-#include "garbage.h"
+
+//extern resourceStruct* resources;
+
 
 //////////////////////////////
 //  AS SIMPLE AS IT CAN BE  //
@@ -10,18 +9,20 @@
 //////////////////////////////
 
 int readInt() {
-    ;
+    return 0;
 }
 
 double readDouble() {
-    ;
+    return 0.0;
 }
 
 String readString() {
-    ;
+    return "kek";
 }
 
-
+char* printAddToken(char* rule) {
+    return "dd";
+}
 
 void print() {
     ;
@@ -40,7 +41,7 @@ String substr(String s, int i, int n) {
         fprintf(stderr, "Substring error, invalid values\n");
         exit(10);
     }
-    char *buff = (char*) malloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ			//This also does not work with memalloc when i try it
+    char *buff = (char*)memalloc(n * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ			//This also does not work with memalloc when i try it
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
@@ -70,7 +71,7 @@ int find(String s, String search) {
 
 String sort(String s) {
 	int s_len = length(s);
-    char *str = (char*)malloc(sizeof(char)*s_len);          //Does not work whem memalloc is used, don't know why..
+    char *str = (char*)memalloc(sizeof(char)*s_len);          //Does not work whem memalloc is used, don't know why..
     for(int x = 0; x < s_len; x++) {
         str[x] = s[x];
     }

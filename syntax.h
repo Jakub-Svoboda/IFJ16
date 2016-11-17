@@ -7,7 +7,7 @@
 *          Jan Grossmann        xgross09
 *          Matyas Sladek        xslade21
 *          Katerina Smajzrova   xsmajz00
-* Variant: b/1/II 
+* Variant: b/1/II
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,10 +17,11 @@
 #include "iList.h"
 #include "htab.h"
 #include "precedence.h"
+#include "builtin.h"
 
 
 #ifndef	SYNTAX_H
-#define SYNTAX_H 
+#define SYNTAX_H
 #include "garbage.h"
 
 #define argInt	28
@@ -36,14 +37,14 @@ thTable* enterScope();
 
 typedef enum state{
 	CLASS_BLOCK,
-	CLASS, 
+	CLASS,
 	CLASS_NAME,
 	LEFT_CURLY_BRACKET,
 	RIGHT_CURLY_BRACKET,
 	STATIC_DECL,
 	ID,
 	CLASS_BODY,
-	TYPE,	
+	TYPE,
 	ASSIGN,
 	RIGHT_CURLY_BRACKET_CURRENT,
 	FUNCTION_DECLARE,
@@ -63,7 +64,7 @@ typedef enum state{
 	ELSE,
 	BREAK,
 	FN_CALL_COMMA
-	
+
 }	State;
 
 
