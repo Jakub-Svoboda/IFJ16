@@ -31,7 +31,6 @@ int main(int argc, char *argv[]){
 		else{
 			exit(99);								//exits if file does not exist
 		}
-
 		int result;
 		FILE *f;
 		if ((f = fopen(argv[1], "r"))!= NULL){		//Checks for nonexistant file 

@@ -25,11 +25,11 @@ typedef struct thtabItem{
 	char* classKey;
 	Token_type returnType;
 	Token_type varType;
-//	int length;  needed?
 	struct thtabItem* next;
 	int intValue;
 	double doubleValue;
 	char* stringValue;
+	int boolValue;
 	int isInit;
 	argStruct * arguments[];
 } thtabItem;

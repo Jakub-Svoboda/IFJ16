@@ -129,14 +129,14 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 				thtabItem* tmpPtr = htabSearch(resources ->functionTable,concat(currentFunc,currentClass));		
 				if(itemPtr->varType != tmpPtr->returnType){			//check if returned variable has correct type
-					printHtabLocal(localVarTable);	//Variable is not in var table 
+					printHtabLocal(localVarTable);	
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable type does not match with definied return type.\n");
 					memfreeall();
 					exit(4);
 				}
 				if(itemPtr->isInit==0){
-					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtabLocal(localVarTable);	//Variable is not initialized
 					printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable is not initialized.\n");
 					memfreeall();
@@ -161,7 +161,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}	
 				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
-				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is BOOL
+				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is double
+				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;	//logical switch is BOOL
 				else {jumpBool=0;}
 				
 				if(jumpBool){	
@@ -196,7 +197,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						break;
 					}	
 					if(list->active->nextItem == NULL){		//if label was not found
-						fprintf(stderr,"\ncalled function not found\n\n\n"); 
+						fprintf(stderr,"I_FN_CALL. Called function not found.\n"); 
 						memfreeall();			//user has called a function that does not exist.
 						exit(3);		
 					}
@@ -812,31 +813,522 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			
 	//************************I_LT******************************//
 			case I_LT:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_LT nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_LT nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_LT nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_LT left operandnot INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);	//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_LT left operandnot INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);	//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
 
+				if(itemPtr2->varType == 28){								//INT <
+					if(itemPtr3->varType == 28){							//INT < INT		
+						if(itemPtr2->intValue < itemPtr3->intValue){		//if less
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//INT < DOUBLE
+						if(itemPtr2->intValue < itemPtr3->doubleValue){		//if less
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}else{														//DOUBLE <
+					if(itemPtr3->varType == 28){							//DOUBLE< INT
+						if(itemPtr2->doubleValue < itemPtr3->intValue){		//if less
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//DOUBLE < DOUBLE
+						if(itemPtr2->doubleValue < itemPtr3->doubleValue){		//if less
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}
+				itemPtr->varType = 18;										//result will be bool
+				itemPtr->isInit = 1;										//result becomes initialized
 			break;				
 
 	//************************I_GT******************************//
 			case I_GT:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_GT nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_GT nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_GT nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_GT left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_GT left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"I_GT. Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+
+				if(itemPtr2->varType == 28){								//INT >
+					if(itemPtr3->varType == 28){							//INT > INT		
+						if(itemPtr2->intValue > itemPtr3->intValue){		//if more
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//INT > DOUBLE
+						if(itemPtr2->intValue > itemPtr3->doubleValue){		//if more
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}else{														//DOUBLE >
+					if(itemPtr3->varType == 28){							//DOUBLE > INT
+						if(itemPtr2->doubleValue > itemPtr3->intValue){		//if more
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//DOUBLE > DOUBLE
+						if(itemPtr2->doubleValue > itemPtr3->doubleValue){		//if more
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}
+				itemPtr->varType = 18;										//result will be bool
+				itemPtr->isInit = 1;										//result becomes initialized
 
 			break;		
 			
 	//************************I_LE******************************//
 			case I_LE:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_LE nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_LE nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_LE nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_LE left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_LEleft operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"I_LE. Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+
+				if(itemPtr2->varType == 28){								//INT <=
+					if(itemPtr3->varType == 28){							//INT <= INT		
+						if(itemPtr2->intValue <= itemPtr3->intValue){		//if <=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//INT <= DOUBLE
+						if(itemPtr2->intValue <= itemPtr3->doubleValue){		//if <=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}else{														//DOUBLE <=
+					if(itemPtr3->varType == 28){							//DOUBLE <= INT
+						if(itemPtr2->doubleValue <= itemPtr3->intValue){		//if <=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//DOUBLE <= DOUBLE
+						if(itemPtr2->doubleValue <= itemPtr3->doubleValue){		//if <=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}
+				itemPtr->varType = 18;										//result will be bool
+				itemPtr->isInit = 1;										//result becomes initialized
 
 			break;	
 
 	//************************I_GE******************************//
 			case I_GE:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_GE nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_GE nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_GE nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_GE left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_GE left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"I_GE. Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+
+				if(itemPtr2->varType == 28){								//INT >=
+					if(itemPtr3->varType == 28){							//INT >= INT		
+						if(itemPtr2->intValue >= itemPtr3->intValue){		//if >=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//INT >= DOUBLE
+						if(itemPtr2->intValue >= itemPtr3->doubleValue){		//if >=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}else{														//DOUBLE >=
+					if(itemPtr3->varType == 28){							//DOUBLE >= INT
+						if(itemPtr2->doubleValue >= itemPtr3->intValue){		//if >=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//DOUBLE >= DOUBLE
+						if(itemPtr2->doubleValue >= itemPtr3->doubleValue){		//if >=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}
+				itemPtr->varType = 18;										//result will be bool
+				itemPtr->isInit = 1;										//result becomes initialized
 
 			break;				
 
 	//************************I_EQ******************************//
 			case I_EQ:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_EQ nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_EQ nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_EQ nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_EQ left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_EQ left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"I_EQ. Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+
+				if(itemPtr2->varType == 28){								//INT ==
+					if(itemPtr3->varType == 28){							//INT == INT		
+						if(itemPtr2->intValue == itemPtr3->intValue){		//if ==
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//INT == DOUBLE
+						if(itemPtr2->intValue == itemPtr3->doubleValue){		//if ==
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}else{														//DOUBLE ==
+					if(itemPtr3->varType == 28){							//DOUBLE == INT
+						if(itemPtr2->doubleValue == itemPtr3->intValue){		//if ==
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//DOUBLE == DOUBLE
+						if(itemPtr2->doubleValue == itemPtr3->doubleValue){		//if ==
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}
+				itemPtr->varType = 18;										//result will be bool
+				itemPtr->isInit = 1;										//result becomes initialized
 
 			break;	
 
 	//************************I_NE******************************//
 			case I_NE:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_NE nonexistant target variable.\n");
+						exit(3);
+					}
+				}			//second adress search
+				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+					}
+					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
+					printHtabLocal(localVarTable);	//Variable is not in var table exist
+					printHtab(resources->globalVarTable,1);
+					fprintf(stderr,"Sem_Error. I_NE nonexistant left operand variable.\n");
+					exit(3);
+					}
+				}			//third adress search
+				if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {//localVarTable search
+					if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+					}
+					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_NE nonexistant right operand variable.\n");
+						exit(3);
+					}
+				}
+				
+				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_NE left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double 
+					fprintf(stderr, "I_NE left operand not INT, DOUBLE or BOOLEAN\n");
+					memfreeall();
+					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+				}
+				
+				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
+					fprintf(stderr,"I_NE. Operand not initialized.\n");
+					memfreeall();
+					exit(8);
+				}
+
+				if(itemPtr2->varType == 28){								//INT !=
+					if(itemPtr3->varType == 28){							//INT != INT		
+						if(itemPtr2->intValue != itemPtr3->intValue){		//if !=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//INT != DOUBLE
+						if(itemPtr2->intValue != itemPtr3->doubleValue){		//if !=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}else{														//DOUBLE !=
+					if(itemPtr3->varType == 28){							//DOUBLE != INT
+						if(itemPtr2->doubleValue != itemPtr3->intValue){		//if !=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}else{													//DOUBLE != DOUBLE
+						if(itemPtr2->doubleValue != itemPtr3->doubleValue){		//if !=
+							itemPtr->boolValue = 1;							//result is TRUE
+						}else{
+							itemPtr->boolValue = 0;							//result is FALSE
+						}
+					}
+				}
+				itemPtr->varType = 18;										//result will be bool
+				itemPtr->isInit = 1;										//result becomes initialized
 
 			break;	
 
@@ -922,8 +1414,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 				}	
 				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
-				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is BOOL
-				else {jumpBool=0;}
+				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is double
+				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;	//logical switch is bool
+				else{jumpBool=0;}
 				
 				if(jumpBool){	
 					lastActive=list->active;	//save pointer to active instr
@@ -946,8 +1439,14 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;		
 
 	//************************I_RETURN_NOTHING******************************//
-			case I_RETURN_NOTHING:
-
+			case I_RETURN_NOTHING:;
+				thtabItem* returnNothingPtr = htabSearch(resources->functionTable,concat(currentFunc,currentClass));		
+				if(returnNothingPtr->returnType != 33){			//check if return type is void
+					fprintf(stderr,"Sem_Error. I_RETURN_NOTHING. Expression to return expected. Return type is: %d \n",returnNothingPtr->returnType);
+					memfreeall();
+					exit(4);
+				}
+				return NULL;
 			break;				
 
 	//************************I_PUSH******************************//

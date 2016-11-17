@@ -261,7 +261,7 @@ void printHtabLocal(thTable *htab){                 //Simple EZ PZ print, don't 
         printf("|ROW %d|",i);
         thtabItem* temp = (*htab)[i];
         while(temp != NULL) {
-            printf("->[%s type:%d i: %d d: %g s: %s]",temp->key,temp->varType,temp->intValue,temp->doubleValue,temp->stringValue);
+            printf("->[%s type:%d i: %d d: %g s: %s b: %d]",temp->key,temp->varType,temp->intValue,temp->doubleValue,temp->stringValue,temp->boolValue);
             temp = temp->next;
         }
         printf("\n");
