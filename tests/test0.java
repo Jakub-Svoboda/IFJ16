@@ -1,11 +1,8 @@
 class Main{
+	static int a=2;
+	static int b = a;
 	static void run(){
-		int a=1;
-		//f(a,a);
+		int a=3;
+		
 	}
-	static int f(int pushedNumber,int x){
-		int b;
-		return pushedNumber;
-	}
-	
 }
