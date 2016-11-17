@@ -8,24 +8,60 @@
 //  SO PLEASE CHECK IT      //
 //////////////////////////////
 
-int readInt() {
-    return 0;
-}
+
 
 double readDouble() {
     return 0.0;
 }
 
 String readString() {
-    return "kek";
+    int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
+	char *buff = (char*)memalloc(buffSize * sizeof(char));
+
+    while((c = getchar()) != EOF && c != '\n') {
+        buff[count] = c;
+        count++;
+        if(count+2 == buffSize) {
+            buffSize += BUFFER_SIZE;
+            buff = memrealloc(buff, buffSize);
+        }
+    }
+
+    buff[++count] = '\0';
+    return buff;
 }
 
-char* printCreate(Token *t) {
+int readInt() {
+    int num = 0, sign = 1;
+    char* stringNum = readString();
+
+    do{
+        //printf("%d\n",*stringNum);
+        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )    //first char may be sign
+        {
+             if(*stringNum == '-') sign *= -1;
+        }else if(isdigit(*stringNum)) {
+            num *= 10;
+            num += *stringNum - '0';              //So input is valid number
+
+
+        }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
+            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            exit(7);
+        }
+        *stringNum++;
+    } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
+
+    return num*sign;
+}
+
+/*char* printCreate(Token *t) {
     char* printSequence;
     int termI;
-    double termD;
+    double termD;                           //not working , will do later
+    t = NULL;
     return "dd";
-}
+}*/
 
 void print() {
     ;
@@ -52,7 +88,9 @@ String substr(String s, int i, int n) {
 }
 
 int compare(String s1, String s2) {
-    ;
+    s1 = s2;        // not working
+    s2 = s1;        // just to get rid of warnings
+    return 0;       // delete later
 }
 
 int find(String s, String search) {
