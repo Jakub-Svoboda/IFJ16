@@ -73,6 +73,7 @@ typedef struct{
 	thTable* globalVarTable;
 	Token* classPtr;
 	Token* funcPtr;
+	Token *callPtr;
 	tList* memList;
 }resourceStruct;
 

@@ -47,6 +47,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	char* buf;
 	thtabItem *returnPtr;	//Table item with returned variable
 	returnPtr=NULL;
+	int argumentCounter = 0;		
 	
 	while(1){
 		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
@@ -207,6 +208,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				htabDispose(nextCallTable);				//after return we dispose the variable table from called function
 				htabInit(nextCallTable);
 				list->active=lastActive;	//restore active position before fn call
+				argumentCounter=0;			//reset before next fn call
 			break;		
 	
 	//************************I_PROGRAM******************************//
@@ -1451,6 +1453,33 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 	//************************I_PUSH******************************//
 			case I_PUSH:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
+						exit(3);
+					}
+				}
+				
+				if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+					strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
+				}	
+				
+				if((itemPtr2=(htabSearch(resources->functionTable,list->active->Instruction.addr2))) == NULL){	//search function table
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
+						exit(3);
+				}
+				argumentCounter=0;
+	//			while( argumentCounter < itemPtr2->argumentNumber){
+	//	printf("arg %d check\n",argumentCounter);			
+	//			}
+				
 
 			break;
 			

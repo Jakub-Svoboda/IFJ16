@@ -31,7 +31,9 @@ typedef struct thtabItem{
 	char* stringValue;
 	int boolValue;
 	int isInit;
+	int argumentNumber;
 	argStruct * arguments[];
+	
 } thtabItem;
 
 
