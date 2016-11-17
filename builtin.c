@@ -20,7 +20,10 @@ String readString() {
     return "kek";
 }
 
-char* printAddToken(char* rule) {
+char* printCreate(Token *t) {
+    char* printSequence;
+    int termI;
+    double termD;
     return "dd";
 }
 
