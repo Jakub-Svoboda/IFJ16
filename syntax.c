@@ -255,7 +255,6 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			thtabItem *Item=htabSearch(resources->functionTable, concat(resources->funcPtr->name,resources->classPtr->name));				//find function in function table	
-			Item->argumentNumber=0;			//default number of arguments is 0
 			if(tokenPtr -> type == token_bracketRightRound){
 				if ((result=syntaxCheck( FN_BODY_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFBB\n");goto EXIT;}
 			}else{
@@ -699,6 +698,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	EXIT:
 		fprintf(stderr, "Syntax Error! \n");
 		//printType(tokenPtr);
+		memfreeall();
 		exit(2);
 		return result;
 
