@@ -96,7 +96,7 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	Token *t = tokenInit();	//TODO Kuba-edit
 							// add to garbage collector?
 //	char buff[1024];
-    int c, position = 0, tempc, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
+    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0;		//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
 	State_type state = state_default;					//choose between states
 	//t = malloc(sizeof(Token));
 	//tokenInit(t);
