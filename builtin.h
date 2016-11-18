@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "ial.h"
 #include "garbage.h"
+#include "htab.h"
 
 #define String char*  //Is this rhe right solution?
 #define LOCAL_BUFF_SIZE 32

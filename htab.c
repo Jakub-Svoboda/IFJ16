@@ -61,7 +61,7 @@ thtabItem* htabSearch(thTable *htab, char* key) {
         return NULL;
     }else {                          //simple debug...
         thtabItem* tempItem = (*htab)[hashFun(key)];           //assign first item of hashtable row into tempItem
-		while(tempItem != NULL) {                           //cycle through row
+		while(tempItem != NULL) {                             //cycle through row
 			if(strcmp(tempItem->key,key)==0)  {return tempItem;}       //return item that we were looking for
 			tempItem = tempItem->next;
         }
@@ -72,8 +72,6 @@ thtabItem* htabSearch(thTable *htab, char* key) {
 
 thtabItem* htabSearchClass(thTable *htab, char* key, char* classKey) {
     if (*htab == NULL || (*htab)[hashFun(key)] == NULL) {       //return NULL if hashtable or matching row is not initialized
-        //if ((*htab)[hashFun(key)] == NULL) printf("ssg\n");
-        //if ((*htab)[hashFun(key)] == NULL) printf("kekoefel\n");
         return NULL;
     }else {                            //simple debug...
         thtabItem* tempItem = (*htab)[hashFun(key)];           //assign first item of hashtable row into tempItem
