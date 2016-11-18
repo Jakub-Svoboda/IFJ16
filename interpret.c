@@ -1700,6 +1700,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 				}else{
 					readInt();
 				}	
+				itemPtr->isInit = 1;
 			break;
 	
 	//************************I_READ_STRING******************************//
@@ -1724,11 +1725,12 @@ printHtabLocal(localVarTable);			//TODO delete me
 						exit(4);
 					}
 					char * tmpRead = readString();
+					itemPtr->stringValue=memalloc(sizeof(char)*(strlen(tmpRead) +1));
 					strcpy(itemPtr->stringValue,tmpRead);
 				}else{
 					readString();
-				}	
-					
+				}			
+				itemPtr->isInit = 1;	
 			break;
 	
 	//************************I_READ_DOUBLE******************************//
@@ -1756,6 +1758,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 				}else{
 					readDouble();
 				}
+				itemPtr->isInit = 1;
 			break;
 			
 	//************************I_PRINT******************************//
