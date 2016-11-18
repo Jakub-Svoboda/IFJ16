@@ -14,11 +14,13 @@ String readString() {
         }
     }
 
-    buff[++count] = '\0';
+    buff[count] = '\0';
+    //printf("[%s]--",buff);
     return buff;
 }
 
 int readInt() {                         //Will convert string into integer
+
     int num = 0, sign = 1;
     char* stringNum = readString();     //make use of readString();
     char makeUseOf;
@@ -29,7 +31,7 @@ int readInt() {                         //Will convert string into integer
         }else if(isdigit(*stringNum)) {                                         //if it's digit
             num *= 10;
             num += *stringNum - '0';
-        }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){   //if it is not digit, print error and exit
+        }else if(*stringNum != '\0' && *stringNum != EOF && *stringNum != 0){   //if it is not digit, print error and exit
             fprintf(stderr,"Invalid sequence in readInt() function.\n");
             memfreeall();
             exit(7);
