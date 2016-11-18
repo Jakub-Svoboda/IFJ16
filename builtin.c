@@ -73,7 +73,7 @@ double readDouble() {                                                           
             //printf("dot read, ");
             hasDot = 1;
         }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
-            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            fprintf(stderr,"Invalid sequence in readDouble() function.\n");
             memfreeall();
             exit(7);
         }
@@ -161,7 +161,23 @@ void print(char* value, int opt, thTable *htab, char* class) {
     }
 }
 
-int length(String s){
+int length(String s, int stringOpt, thTable *htab, char* class){
+    if(stringOpt) {
+        thtabItem* tempItem;
+        tempItem = htabSearch(htab, s);         //find local var
+        if(tempItem == NULL) {
+            if(!strstr(s,".")){		//if called function is short identifier
+                tempItem = htabSearchClass(resources->globalVarTable, s, class);        //find global var
+            }
+        }
+        if(tempItem == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in substr function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        s = tempItem->stringValue;
+    }
+
     char *p = s;
     while(*p) {
         p++;
@@ -169,7 +185,56 @@ int length(String s){
     return p-s;
 }
 
-String substr(String s, int i, int n) {
+String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOpt, thTable *htab, char* class) {
+    int i=0, n=0;
+    i = atoi(iNum);
+    n = atoi(nNum);
+    if(stringOpt) {
+        thtabItem* tempItem;
+        tempItem = htabSearch(htab, s);         //find local var
+        if(tempItem == NULL) {
+            if(!strstr(s,".")){		//if called function is short identifier
+                tempItem = htabSearchClass(resources->globalVarTable, s, class);        //find global var
+            }
+        }
+        if(tempItem == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in substr function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        s = tempItem->stringValue;
+    }
+    if(iOpt) {
+        thtabItem* tempItem2;
+        tempItem2 = htabSearch(htab, iNum);         //find local var
+        if(tempItem2 == NULL) {
+            if(!strstr(iNum,".")){		//if called function is short identifier
+                tempItem2 = htabSearchClass(resources->globalVarTable, iNum, class);        //find global var
+            }
+        }
+        if(tempItem2 == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in substr function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        i = tempItem2->intValue;
+    }
+    if(nOpt) {
+        thtabItem* tempItem3;
+        tempItem3 = htabSearch(htab, nNum);         //find local var
+        if(tempItem3 == NULL) {
+            if(!strstr(nNum,".")){		//if called function is short identifier
+                tempItem3 = htabSearchClass(resources->globalVarTable, nNum, class);        //find global var
+            }
+        }
+        if(tempItem3 == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in substr function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        n = tempItem3->intValue;
+    }
+
     if(length(s) < i+n || i < 0 || n < 0) {
         fprintf(stderr, "Substring error, invalid values\n");
         memfreeall();
@@ -182,7 +247,38 @@ String substr(String s, int i, int n) {
     return buff;
 }
 
-int compare(String s1, String s2) {
+int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* class) {
+    if(s1Opt) {
+        thtabItem* tempItem;
+        tempItem = htabSearch(htab, s1);         //find local var
+        if(tempItem == NULL) {
+            if(!strstr(s1,".")){		//if called function is short identifier
+                tempItem = htabSearchClass(resources->globalVarTable, s1, class);        //find global var
+            }
+        }
+        if(tempItem == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in compare function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        s1 = tempItem->stringValue;
+    }
+    if(s2Opt) {         //it is variable
+        thtabItem* tempItem2;
+        tempItem2 = htabSearch(htab, s2);         //find local var
+        if(tempItem2 == NULL) {
+            if(!strstr(s2,".")){		//if called function is short identifier
+                tempItem2 = htabSearchClass(resources->globalVarTable, s2, class);        //find global var
+            }
+        }
+        if(tempItem2 == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in compare function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        s2 = tempItem2->stringValue;         //set s as value of variable
+    }
+
     while(*s1 && (*s1 == *s2))
     {
         s1++;
@@ -199,7 +295,37 @@ int compare(String s1, String s2) {
     }
 }
 
-int find(String s, String search) {
+int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {
+    if(stringOpt) {
+        thtabItem* tempItem;
+        tempItem = htabSearch(htab, s);         //find local var
+        if(tempItem == NULL) {
+            if(!strstr(s,".")){		//if called function is short identifier
+                tempItem = htabSearchClass(resources->globalVarTable, s, class);        //find global var
+            }
+        }
+        if(tempItem == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in find function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        s = tempItem->stringValue;
+    }
+    if(searchOpt) {
+        thtabItem* tempItem2;
+        tempItem2 = htabSearch(htab, search);         //find local var
+        if(tempItem2 == NULL) {
+            if(!strstr(search,".")){		//if called function is short identifier
+                tempItem2 = htabSearchClass(resources->globalVarTable, search, class);        //find global var
+            }
+        }
+        if(tempItem2 == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in find function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        search = tempItem2->stringValue;
+    }
 	int P_len = length(search);
     int T_len = length(s);
 
@@ -216,7 +342,23 @@ int find(String s, String search) {
     }
 }
 
-String sort(String s) {
+String sort(String s, int stringOpt, thTable *htab, char* class) {
+    if(stringOpt) {
+        thtabItem* tempItem;
+        tempItem = htabSearch(htab, s);         //find local var
+        if(tempItem == NULL) {
+            if(!strstr(s,".")){		//if called function is short identifier
+                tempItem = htabSearchClass(resources->globalVarTable, s, class);        //find global var
+            }
+        }
+        if(tempItem == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in substr function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }
+        s = tempItem->stringValue;
+    }
+
 	int s_len = length(s);
     char *str = (char*)memalloc(sizeof(char)*s_len);
     for(int x = 0; x < s_len; x++) {
