@@ -16,7 +16,8 @@ int firstRun(FILE * f){
 	Token * tokenPtr2 = NULL;
 	Token * tokenPtr3 = NULL;
 	Token * classPtr = NULL;
-
+	char * classString="@ifj16@";		//initialize string for class redefining check with builtin class name
+	char* tmpClassString=NULL;			//string for class redef check
 
 	while(1){
 		tokenPtr3=tokenPtr2;
@@ -29,6 +30,26 @@ int firstRun(FILE * f){
 		if(tokenPtr ->type == token_EOF){
 			break;
 		}
+
+		if(tokenPtr->type==token_identifier){										//if "class ID" found
+			if(tokenPtr1!=NULL && tokenPtr1->type==token_class){
+				tmpClassString=memalloc(sizeof(char)*(strlen(tokenPtr->name)+3));		//alloc temporary string for strlen of class ID + 2 delimiters + /0
+				sprintf(tmpClassString,"@%s@",tokenPtr->name);							//concatenate class ID with delimiters
+				if(strstr(classString, tmpClassString)){								//check if already defined
+																						//ERROR
+					fprintf(stderr, "semantic error - redefining class\n");
+					memfreeall();
+					exit(3);
+				}
+				else{																	//else concatenate with delimiters and add to class ID "list"
+					tmpClassString=memalloc(sizeof(char)*(strlen(classString)+1));
+					strcpy(tmpClassString,classString);
+					classString=memalloc(sizeof(char)*(strlen(classString)+1)+sizeof(char)*(strlen(tokenPtr->name)+1));
+					sprintf(classString, "%s%s@", tmpClassString,tokenPtr->name);
+				}
+			}
+		}
+
 		if(tokenPtr -> type == token_bracketLeftRound ){
 			if (tokenPtr1 -> type == token_identifier ){
 				if(tokenPtr2!=NULL && (tokenPtr2->type==token_int || tokenPtr2->type==token_double || tokenPtr2->type==token_String || tokenPtr2->type==token_void)){
