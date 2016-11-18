@@ -1,4 +1,5 @@
 #include "builtin.h"
+extern resourceStruct * resources;
 
 String readString() {
     int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
@@ -20,7 +21,7 @@ String readString() {
 int readInt() {                         //Will convert string into integer
     int num = 0, sign = 1;
     char* stringNum = readString();     //make use of readString();
-
+    char makeUseOf;
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )           //first char may be sign, IDK if it's right
         {
@@ -33,7 +34,8 @@ int readInt() {                         //Will convert string into integer
             memfreeall();
             exit(7);
         }
-        *stringNum++;
+        makeUseOf = *stringNum++;
+        makeUseOf += makeUseOf;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
     return num*sign;                                                             //return number with right sign
@@ -41,6 +43,7 @@ int readInt() {                         //Will convert string into integer
 
 double readDouble() {                                                            //Will convert string into double
     double num = 0, mantissa = 0;
+    char makeUseOf;
     int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;
     char* stringNum = readString();                                              //make use of readString();
 
@@ -74,7 +77,8 @@ double readDouble() {                                                           
             memfreeall();
             exit(7);
         }
-        *stringNum++;
+        makeUseOf = *stringNum++;
+        makeUseOf += makeUseOf;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
     double fullExp = 1;
@@ -91,8 +95,68 @@ double readDouble() {                                                           
     return ((intNum + mantissa)*fullExp)*sign;                                  //return number with right sign
 }
 
-void print() {
-    ;   //print is so fucked up so I better revoked changes, not sure if I pushed it already sorry,
+
+void print(char* value, int opt, thTable *htab, char* class) {
+    thtabItem* tempItem;
+    switch(opt){
+        case 0:                     //value is string
+            printf("%s", value);
+            break;
+        case 1:                     //value is variable
+            tempItem = htabSearch(htab, value);
+            if(tempItem == NULL) {
+                if(!strstr(value,".")){		//if called function is short identifier
+                    tempItem = htabSearchClass(resources->globalVarTable, value, class);
+                }
+            }
+            if(tempItem == NULL) {      //TempItem is still null
+                fprintf(stderr, "Error in print function, variable not found.\n");
+                memfreeall();
+                exit(4);
+            }else {
+                switch(tempItem->varType){
+                    case 29:
+                        printf("%d",tempItem->intValue);
+                        break;
+                    case 23:
+                        printf("%g",tempItem->doubleValue);
+                        break;
+                    case 30:
+                        printf("%s",tempItem->stringValue);
+                        break;
+                }
+            }
+            break;
+
+    /*    case 2:                     //value is double
+            tempItem = htabSearch(htab, value);
+            if(tempItem == NULL || tempItem->varType != 23) {
+                if(!strstr(value,".")){		//if called function is short identifier
+                    tempItem = htabSearchClass(resources->globalVarTable, value, class);
+                }
+            }
+            if(tempItem == NULL) {      //TempItem is still null
+                fprintf(stderr, "Error in print function, variable not found.\n");
+                memfreeall();
+                exit(4);
+            }
+            printf("%g",tempItem->doubleValue);
+            break;
+        case 3:                 //value is string
+            tempItem = htabSearch(htab, value);
+            if(tempItem == NULL || tempItem->varType != 30) {
+                if(!strstr(value,".")){		//if called function is short identifier
+                    tempItem = htabSearchClass(resources->globalVarTable, value, class);
+                }
+            }
+            if(tempItem == NULL) {      //TempItem is still null
+                fprintf(stderr, "Error in print function, variable not found.\n");
+                memfreeall();
+                exit(4);
+            }
+            printf("%s",tempItem->stringValue);
+            break;      */
+    }
 }
 
 int length(String s){
@@ -117,8 +181,8 @@ String substr(String s, int i, int n) {
 }
 
 int compare(String s1, String s2) {
-    while(*s1 && (*s1 == *s2))      //Don't know if its "Lexikograficky porovná" because I don't know what does it mean
-    {                               //but this looks cool anyway so we'll just stick to it.
+    while(*s1 && (*s1 == *s2))
+    {
         s1++;
         s2++;
     }
