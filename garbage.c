@@ -2,8 +2,23 @@
 extern resourceStruct *resources;
 
 void *memalloc(unsigned int size) {			//Function allocates memory given and stores poiter to that memory
-	tElemPtr hPtr = malloc(sizeof(struct tElem));			//Allocating memory for new list node
-	hPtr->memptr = malloc(size);
+
+	if(size == 0) {
+		return(NULL);
+	}
+	tElemPtr hPtr = malloc(sizeof(struct tElem));		//Allocating memory for new list node
+	if(hPtr == NULL) {
+		fprintf(stderr, "Memory allocation failed\n");
+		memfreeall();
+		exit(99);
+	}
+	hPtr->memptr = malloc(size);			//Allocating memory specified
+	if(hPtr->memptr == NULL) {
+		fprintf(stderr, "Memory allocation failed\n");
+		free(hPtr);
+		memfreeall();
+		exit(99);
+	}
 	hPtr->next = resources->memList->First;
 	resources->memList->First = hPtr;			//First is now new node
 	return(resources->memList->First->memptr);			//Return pointer to the newly allocated memory
@@ -24,7 +39,7 @@ void memfreeall() {			//Dispose pointer list and free all memory
 
 void *memrealloc(void *ptr, unsigned int size)
 {
-	tElemPtr hPtr = memalloc(sizeof(struct tElem));
+/*	tElemPtr hPtr = memalloc(sizeof(struct tElem));
 	hPtr = resources->memList->First;
 	while(1){
 		hPtr=hPtr->next;
@@ -32,7 +47,36 @@ void *memrealloc(void *ptr, unsigned int size)
 			break;
 	}
 	hPtr->memptr=realloc(hPtr->memptr,size);
-	return hPtr->memptr;	
+	return hPtr->memptr;*/
+
+	if(size == 0) {
+		return(NULL);
+	}
+	tElemPtr hPtr = resources->memList->First;			//Help pointer
+	tElemPtr tPtr = NULL;			//Help pointer
+
+	while(hPtr != NULL) {
+
+		if(hPtr->memptr == ptr) {			//If memory to be reallocated is found, realloc memory
+			tPtr = realloc(hPtr->memptr, size);
+
+			if(tPtr == NULL) {
+				fprintf(stderr, "Memory reallocation failed\n");
+				memfreeall();
+				exit(99);
+			}
+			else {			//If reallocation was successful, return pointer to that memory
+				hPtr->memptr = tPtr;
+				return(hPtr->memptr);
+			}
+		}
+		else {			//If memory to be allocated is not found in current node, move to the next node
+			hPtr = hPtr->next;
+		}
+	}
+	fprintf(stderr, "Nothing to realloc\n");			//If memory to be allocated is not found at all, print error and exit
+	memfreeall();
+	exit(99);
 }
 
 void memfree(void *ptr) {			//Function frees memory on specified pointer (must be allocated using memalloc, NOT malloc)
