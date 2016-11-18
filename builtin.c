@@ -92,7 +92,7 @@ double readDouble() {                                                           
 }
 
 void print() {
-    ;
+    ;   //print is so fucked up so I better revoked changes, not sure if I pushed it already sorry,
 }
 
 int length(String s){
