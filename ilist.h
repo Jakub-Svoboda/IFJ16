@@ -37,6 +37,15 @@
 #define I_GLOBAL_PRE		28	//upper wrapper of global variable declaration and expression
 #define I_GLOBAL_POST		29	//bottom wrapper of global variable declaration and expression
 #define I_CLASS				30	//class label
+#define I_READ_INT			31	//builtin functions
+#define I_READ_STRING		32	
+#define I_READ_DOUBLE		33
+#define I_PRINT				34
+#define	I_LENGTH			35
+#define I_SUBSTR			36
+#define I_COMPARE			37
+#define I_FIND				38
+#define I_SORT				39
 
 typedef struct		//List of instructions
 {

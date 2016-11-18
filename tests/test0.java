@@ -1,16 +1,20 @@
 class Main{
 	static void run(){
-		int a =2;
-		//f(1,1,1);
-		//a=f(2,a,a);
-		while(a<100){
-			a=f(2,a,a);
-		}
+		//String s ="a";
+		int a =  4;
+		ifj16.print(a4+"aaaaaaaaa\n"+2+1+0);
+		//f(s);
 	
+		//a=ifj16.readInt();
+	//	while(a>0){
+	//		a=a-1;
+	//		a=ifj16.readInt();
+	//	}
+		
 		
 	}
-	static int f(int a,int b, int c){
-		int d=a+b+c;
-		return d;	
+	static String f(String s){
+		
+		return s;	
 	}
 }

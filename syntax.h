@@ -34,6 +34,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 void getModifiedLookAhead(FILE *f,Token* tokenPtr);
 void generateInstruction(tInstr I, int instType, char addr1[2047], char addr2[2047], char addr3[2047],tListOfInstr* list);
 thTable* enterScope();
+int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list,char * var);
 
 typedef enum state{
 	CLASS_BLOCK,

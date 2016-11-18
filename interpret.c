@@ -1675,7 +1675,49 @@ printHtabLocal(localVarTable);			//TODO delete me
 				strcpy(currentClass, list->active->Instruction.addr1);
 			break;			
 			
+	//************************I_READ_INT******************************//
+			case I_READ_INT:
 			
+			break;
+	
+	//************************I_READ_STRING******************************//
+			case I_READ_STRING:
+			
+			break;
+	
+	//************************I_READ_DOUBLE******************************//
+			case I_READ_DOUBLE:
+			
+			break;
+			
+	//************************I_PRINT******************************//
+			case I_PRINT:
+			
+			break;	
+			
+	//************************I_LENGTH******************************//
+			case I_LENGTH:
+			
+			break;	
+			
+	//************************I_SUBSTR******************************//
+			case I_SUBSTR:
+			
+			break;		
+			
+	//************************I_COMPARE******************************//
+			case I_COMPARE:
+			
+			break;		
+			
+	//************************I_SORT******************************//
+			case I_SORT:
+			
+			break;		
+			
+			
+			
+	
 			default:
 				fprintf(stderr,"Interpreting an unknown instruction %d\n",list->active->Instruction.instType);
 			return NULL;
@@ -1720,6 +1762,15 @@ void printInstType(int instructionType){
 		case I_GLOBAL_PRE:		fprintf(stderr,"  I_GLOBAL_PRE:\t\t"); 	break;
 		case I_GLOBAL_POST:		fprintf(stderr,"  I_GLOBAL_POST:\t"); 	break;								
 		case I_CLASS:		fprintf(stderr,"  I_CLASS:\t"); 	break;
+		case I_READ_INT:		fprintf(stderr,"  I_READ_INT:\t"); 	break;
+		case I_READ_STRING:		fprintf(stderr,"  I_READ_STRING:\t"); 	break;
+		case I_READ_DOUBLE:		fprintf(stderr,"  I_READ_DOUBLE:\t"); 	break;
+		case I_PRINT:		fprintf(stderr,"  I_PRINT:\t"); 	break;
+		case I_LENGTH:		fprintf(stderr,"  I_LENGTH:\t"); 	break;
+		case I_SUBSTR:		fprintf(stderr,"  I_SUBSTR:\t"); 	break;
+		case I_COMPARE:		fprintf(stderr,"  I_COMPARE:\t"); 	break;
+		case I_FIND:		fprintf(stderr,"  I_FIND:\t"); 	break;
+		case I_SORT:		fprintf(stderr,"  I_SORT:\t"); 	break;
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }
