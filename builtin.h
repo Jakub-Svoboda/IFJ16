@@ -14,8 +14,8 @@ double readDouble();
 String readString();
 //char* printCreate(Token *t);
 void print();
-int length(String s);
-String substr(String s, int i, int n);
-int compare(String s1, String s2);
-int find(String s, String search);
-String sort(String s);
+int length(String s, int stringOpt);
+String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOpt, thTable *htab, char* class);
+int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* class);
+int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class);
+String sort(String s, int stringOpt, thTable *htab, char* class)
