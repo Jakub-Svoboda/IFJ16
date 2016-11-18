@@ -1677,12 +1677,53 @@ printHtabLocal(localVarTable);			//TODO delete me
 			
 	//************************I_READ_INT******************************//
 			case I_READ_INT:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"I_READ_INT. Expression based on nonexistant variable\n");
+						memfreeall();
+						exit(3);
+					}
+				}
+				
+				if(itemPtr->varType != 28){		//Types are not matching, error4	
+					printHtabLocal(localVarTable);
+					fprintf(stderr,"I_READ_INT  target type not int.\n");
+					memfreeall();
+					exit(4);
+				}
+				
+				itemPtr->intValue = readInt();
+				
 			
 			break;
 	
 	//************************I_READ_STRING******************************//
 			case I_READ_STRING:
-			
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						printHtabLocal(localVarTable);	//Variable is not in var table exist
+						printHtab(resources->globalVarTable,1);
+						fprintf(stderr,"I_READ_INT. Expression based on nonexistant variable\n");
+						memfreeall();
+						exit(3);
+					}
+				}
+				
+				if(itemPtr->varType != 28){		//Types are not matching, error4	
+					printHtabLocal(localVarTable);
+					fprintf(stderr,"I_READ_INT  target type not int.\n");
+					memfreeall();
+					exit(4);
+				}
+				itemPtr->intValue = readInt();
 			break;
 	
 	//************************I_READ_DOUBLE******************************//
