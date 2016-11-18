@@ -1700,16 +1700,56 @@ printHtabLocal(localVarTable);			//TODO delete me
 			
 			break;	
 			
-	//************************I_SUBSTR******************************//
-			case I_SUBSTR:
+	//************************I_SUBSTR1******************************//
+			case I_SUBSTR1:
 			
 			break;		
-			
-	//************************I_COMPARE******************************//
-			case I_COMPARE:
+
+	//************************I_SUBSTR2******************************//
+			case I_SUBSTR2:
 			
 			break;		
+
+	//************************I_SUBSTR3******************************//
+			case I_SUBSTR3:
 			
+			break;		
+
+	//************************I_SUBSTR4******************************//
+			case I_SUBSTR4:
+			
+			break;		
+
+	//************************I_COMPARE1******************************//
+			case I_COMPARE1:
+			
+			break;	
+
+	//************************I_COMPARE2******************************//
+			case I_COMPARE2:
+			
+			break;		
+	
+	//************************I_COMPARE3******************************//
+			case I_COMPARE3:
+			
+			break;		
+					
+	//************************I_FIND1*********************************//
+			case I_FIND1:
+
+			break;
+
+	//************************I_FIND2*********************************//
+			case I_FIND2:
+
+			break;
+	
+	//************************I_FIND3*********************************//
+			case I_FIND3:
+
+			break;
+							
 	//************************I_SORT******************************//
 			case I_SORT:
 			
@@ -1767,9 +1807,16 @@ void printInstType(int instructionType){
 		case I_READ_DOUBLE:		fprintf(stderr,"  I_READ_DOUBLE:\t"); 	break;
 		case I_PRINT:		fprintf(stderr,"  I_PRINT:\t"); 	break;
 		case I_LENGTH:		fprintf(stderr,"  I_LENGTH:\t"); 	break;
-		case I_SUBSTR:		fprintf(stderr,"  I_SUBSTR:\t"); 	break;
-		case I_COMPARE:		fprintf(stderr,"  I_COMPARE:\t"); 	break;
-		case I_FIND:		fprintf(stderr,"  I_FIND:\t"); 	break;
+		case I_SUBSTR1:		fprintf(stderr,"  I_SUBSTR1:\t"); 	break;
+		case I_SUBSTR2:		fprintf(stderr,"  I_SUBSTR2:\t"); 	break;
+		case I_SUBSTR3:		fprintf(stderr,"  I_SUBSTR3:\t"); 	break;
+		case I_SUBSTR4:		fprintf(stderr,"  I_SUBSTR4:\t"); 	break;
+		case I_COMPARE1:		fprintf(stderr,"  I_COMPARE1:\t"); 	break;
+		case I_COMPARE2:		fprintf(stderr,"  I_COMPARE2:\t"); 	break;
+		case I_COMPARE3:		fprintf(stderr,"  I_COMPARE3:\t"); 	break;
+		case I_FIND1:		fprintf(stderr,"  I_FIND1:\t"); 	break;
+		case I_FIND2:		fprintf(stderr,"  I_FIND2:\t"); 	break;
+		case I_FIND3:		fprintf(stderr,"  I_FIND3:\t"); 	break;
 		case I_SORT:		fprintf(stderr,"  I_SORT:\t"); 	break;
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}

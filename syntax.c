@@ -131,22 +131,137 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 		}
 		if(tokenPtr->type != token_bracketRightRound){memfreeall(); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be )
+		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be ;
 		return 1;
+
 	}else if (strcmp(tokenPtr->name,"ifj16.length") == 0){
-		
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_LENGTH, tokenPtr->name, "0", var,list);
+			getModifiedToken(f,tokenPtr);
+		}
+		else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_LENGTH, tokenPtr->name, "1", var,list);
+			getModifiedToken(f,tokenPtr);
+		}
+		else{
+			fprintf(stderr,"Syntax error. Unexpected argument ifj16.length\n");
+			memfreeall();
+			exit(2);
+		}
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); exit(2);}		//Read next token, which must be )
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be ;
 		return 1;
+
 	}else if (strcmp(tokenPtr->name,"ifj16.substr") == 0){	
-		
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_SUBSTR1, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_SUBSTR1, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument substr\n"); exit(2);}
+
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_comma){memfreeall();fprintf(stderr,", expected\n"); exit(2);} 	//Read next token, which must be ","
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_intNumber){
+			generateInstruction(I,I_SUBSTR2, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_SUBSTR2, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument substr\n"); exit(2);}
+
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_comma){memfreeall(); fprintf(stderr,", expected\n"); exit(2);} 	//Read next token, which must be ","
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_intNumber){
+			generateInstruction(I,I_SUBSTR3, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_SUBSTR3, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument substr\n"); exit(2);}
+
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); fprintf(stderr,") expected\n"); exit(2);}		//Read next token, which must be )
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_semicolon){memfreeall(); fprintf(stderr,"; expected\n"); exit(2);}		//Read next token, which must be ;
+		generateInstruction(I,I_SUBSTR4, var, "", "",list);
 		return 1;
+
 	}else if (strcmp(tokenPtr->name,"ifj16.compare") == 0){
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_COMPARE1, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_COMPARE1, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument compare\n"); exit(2);}
+
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_comma){memfreeall();fprintf(stderr,", expected\n"); exit(2);} 	//Read next token, which must be ","
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_COMPARE2, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_COMPARE2, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument compare\n"); exit(2);}
+
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); fprintf(stderr,") expected\n"); exit(2);}		//Read next token, which must be )
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_semicolon){memfreeall(); fprintf(stderr,"; expected\n"); exit(2);}		//Read next token, which must be ;
+		generateInstruction(I,I_COMPARE3, var, "", "",list);
 		
 		return 1;
 	}else if (strcmp(tokenPtr->name,"ifj16.find") == 0){
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_FIND1, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_FIND1, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument find\n"); exit(2);}
 
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_comma){memfreeall();fprintf(stderr,", expected\n"); exit(2);} 	//Read next token, which must be ","
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_FIND2, tokenPtr->name, "0", "",list);
+		}else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_FIND2, tokenPtr->name, "1", "",list);
+		}else{memfreeall(); fprintf(stderr, "Invalid argument find\n"); exit(2);}
+
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); fprintf(stderr,") expected\n"); exit(2);}		//Read next token, which must be )
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_semicolon){memfreeall(); fprintf(stderr,"; expected\n"); exit(2);}		//Read next token, which must be ;
+		generateInstruction(I,I_FIND3, var, "", "",list);
 		return 1;
 	}else if (strcmp(tokenPtr->name,"ifj16.sort") == 0){
-			
+			getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (				CO MAM TED DELAT????? :'((((
+			getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type==token_string){
+			generateInstruction(I,I_SORT, tokenPtr->name, "0", var,list);
+			getModifiedToken(f,tokenPtr);
+		}
+		else if(tokenPtr->type==token_identifier){
+			generateInstruction(I,I_SORT, tokenPtr->name, "1", var,list);
+			getModifiedToken(f,tokenPtr);
+		}
+		else{
+			fprintf(stderr,"Syntax error. Unexpected argument ifj16.sort\n");
+			memfreeall();
+			exit(2);
+		}
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); exit(2);}		//Read next token, which must be )
+		getModifiedToken(f,tokenPtr);
+		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be ;
 		return 1;	
 	}else{		
 		return 0;			//not a builtin function, returning 0
