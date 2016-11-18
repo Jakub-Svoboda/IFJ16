@@ -124,6 +124,8 @@ void print(char* value, int opt, thTable *htab, char* class) {
                     case 30:
                         printf("%s",tempItem->stringValue);
                         break;
+                    default:
+                        break;
                 }
             }
             break;
