@@ -42,10 +42,17 @@
 #define I_READ_DOUBLE		33
 #define I_PRINT				34
 #define	I_LENGTH			35
-#define I_SUBSTR			36
-#define I_COMPARE			37
-#define I_FIND				38
-#define I_SORT				39
+#define I_SUBSTR1			36
+#define I_SUBSTR2			37
+#define I_SUBSTR3			38
+#define I_SUBSTR4			39
+#define I_COMPARE1			40
+#define I_COMPARE2			41
+#define I_COMPARE3			42
+#define I_FIND1				43
+#define I_FIND2				44
+#define I_FIND3				45
+#define I_SORT				46
 
 typedef struct		//List of instructions
 {
