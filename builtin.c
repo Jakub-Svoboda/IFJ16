@@ -102,9 +102,9 @@ void print(char* value, int opt, thTable *htab, char* class) {
         case 0:                     //value is string
             printf("%s", value);
             break;
-        case 1:        //value is int        nenajdu v lokalni , prilepim tecku a hledam v globalni
+        case 1:                     //value is variable
             tempItem = htabSearch(htab, value);
-            if(tempItem == NULL || tempItem->varType != 28) {
+            if(tempItem == NULL) {
                 if(!strstr(value,".")){		//if called function is short identifier
                     tempItem = htabSearchClass(resources->globalVarTable, value, class);
                 }
@@ -113,10 +113,22 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 fprintf(stderr, "Error in print function, variable not found.\n");
                 memfreeall();
                 exit(4);
+            }else {
+                switch(tempItem->varType){
+                    case 29:
+                        printf("%d",tempItem->intValue);
+                        break;
+                    case 23:
+                        printf("%g",tempItem->doubleValue);
+                        break;
+                    case 30:
+                        printf("%s",tempItem->stringValue);
+                        break;
+                }
             }
-            printf("%d",tempItem->intValue);
             break;
-        case 2:                     //value is double
+
+    /*    case 2:                     //value is double
             tempItem = htabSearch(htab, value);
             if(tempItem == NULL || tempItem->varType != 23) {
                 if(!strstr(value,".")){		//if called function is short identifier
@@ -143,7 +155,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 exit(4);
             }
             printf("%s",tempItem->stringValue);
-            break;
+            break;      */
     }
 }
 

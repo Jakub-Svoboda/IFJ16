@@ -6,11 +6,11 @@ class Main{
 		while(a<100){
 			a=f(2,a,a);
 		}
-	
-		
+
+
 	}
 	static int f(int a,int b, int c){
 		int d=a+b+c;
-		return d;	
+		return d;
 	}
 }
