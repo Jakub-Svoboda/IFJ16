@@ -161,6 +161,14 @@ void print(char* value, int opt, thTable *htab, char* class) {
     }
 }
 
+int lengthOld(String s){
+    char *p = s;
+    while(*p) {
+        p++;
+    }
+    return p-s;
+}
+
 int length(String s, int stringOpt, thTable *htab, char* class){
     if(stringOpt) {
         thtabItem* tempItem;
@@ -235,7 +243,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         n = tempItem3->intValue;
     }
 
-    if(length(s) < i+n || i < 0 || n < 0) {
+    if(lengthOld(s) < i+n || i < 0 || n < 0) {
         fprintf(stderr, "Substring error, invalid values\n");
         memfreeall();
         exit(10);
@@ -326,8 +334,8 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
         }
         search = tempItem2->stringValue;
     }
-	int P_len = length(search);
-    int T_len = length(s);
+	int P_len = lengthOld(search);
+    int T_len = lengthOld(s);
 
     int CharJump[256];          //Max char
     int MatchJump[P_len];
@@ -359,7 +367,7 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {
         s = tempItem->stringValue;
     }
 
-	int s_len = length(s);
+	int s_len = lengthOld(s);
     char *str = (char*)memalloc(sizeof(char)*s_len);
     for(int x = 0; x < s_len; x++) {
         str[x] = s[x];
