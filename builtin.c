@@ -127,15 +127,14 @@ double readDouble() {                                                           
 //value is the actual string or var name, option may be 0-> it is actual string || 1-> it is just name of variable
 void print(char* value, int opt, thTable *htab, char* class) {
     thtabItem* tempItem;
-    if(opt == 1){                     //value is variable
-        tempItem = htabSearch(htab, value);    //find variable in local table
-        //printf("\n]]]]]]]]]]]]]]]]tempitem's vartype is %d \n", tempItem->varType);
+    if(opt == 1){                                                           //value is variable
+        tempItem = htabSearch(htab, value);                                 //find variable in local table
         if(tempItem == NULL) {
-            if(!strstr(value,".")){		       //if called function is short identifier
+            if(!strstr(value,".")){		                                    //if called function is short identifier
                 tempItem = htabSearchClass(resources->globalVarTable, value, class);    //find var in global table
             }
         }
-        if(tempItem == NULL) {      //TempItem is still null
+        if(tempItem == NULL) {                                              //TempItem is still null
             fprintf(stderr, "Error in print function, variable not found.\n");
             memfreeall();
             exit(4);
@@ -143,7 +142,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
-        }else {                     //variable was found so print it out the right way
+        }else {                                                             //variable was found so print it out the right way
 
             if(tempItem->varType == 28 ){
                 printf("%d",tempItem->intValue);
@@ -152,46 +151,35 @@ void print(char* value, int opt, thTable *htab, char* class) {
             }else if(tempItem->varType == 30 ) {
                 //printf("%s",tempItem->stringValue
                 char preC = '~';
-                char prepreC = '~';
                 char makeUseOf;
                 while(*(tempItem->stringValue)) {
-                    /*if(prepreC == '\\') {
-                        if(isdigit(preC)) {
-                            if(isdigit(*(tempItem->stringValue)++)) {
-                                if(isdigit(*(tempItem->stringValue))) {
-                                    char* num = "000";
-                                //    num[0] = 0;//preC;
-                            //        num[1] = 1;// *(tempItem->stringValue) -1;
-                        //            num[2] = 1;// *(tempItem->stringValue);
-                                    printf("aopfiasf %s aoidpasoid", num);
-                                }
-                            }
-                        }
-
-                    }else */if(preC == '\\') {
-                        if(isdigit(*(tempItem->stringValue))){
+                    if(preC == '\\') {                                      //If there is a chance of escape sequence
+                        if(isdigit(*(tempItem->stringValue))){              //first check for octal numbers
                             char num[] = "000";
                             num[0] = *(tempItem->stringValue);
-                            *(tempItem->stringValue)++;
-                            if(isdigit(*(tempItem->stringValue))){
+                            makeUseOf = *(tempItem->stringValue)++;
+                            makeUseOf = makeUseOf;
+                            if(isdigit(*(tempItem->stringValue))){          //still finding if octal number is correct
                                 num[1] = *(tempItem->stringValue);
-                                *(tempItem->stringValue)++;
+                                makeUseOf = *(tempItem->stringValue)++;
+                                makeUseOf = makeUseOf;
                                 if(isdigit(*(tempItem->stringValue))){
                                     num[2] = *(tempItem->stringValue);
-                                    char oct = octToDec(atoi(num));
-                                    printf("sdfsdfsd %c fdsfsdf",oct);
+                                    char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
+                                    printf("%c",oct);
                                 }
                             }
-                        }else if(*(tempItem->stringValue) == 'n') {
+                        }else if(*(tempItem->stringValue) == 'n') {         //there is \n , print new line
                             printf("\n");
-                        }else if(*(tempItem->stringValue) == 't'){
+                        }else if(*(tempItem->stringValue) == 't'){          //there is \t , print tab space
                             printf("\t");
-                        }else if(*(tempItem->stringValue) == '\"'){
+                        }else if(*(tempItem->stringValue) == '\"'){         //there is \" , print ""
                             printf("\"");
-                        }else if(*(tempItem->stringValue) == '\\'){
+                        }else if(*(tempItem->stringValue) == '\\'){         //there is \\ , print "\"
                             printf("\\");
                         }else {
-                            printf("%c",*(tempItem->stringValue));
+                            //printf("%c",*(tempItem->stringValue));
+                            //TODO: \something , should I EXIT?
                         }
                     }else if(*tempItem->stringValue == '\\'){
                         ;
@@ -211,7 +199,22 @@ void print(char* value, int opt, thTable *htab, char* class) {
         char makeUseOf;
         while(*value) {
             if(preC == '\\') {
-                if((*value) == 'n') {
+                if(isdigit((*value))){
+                    char num[] = "000";
+                    num[0] = (*value);
+                    makeUseOf = *(value)++;
+                    makeUseOf = makeUseOf;
+                    if(isdigit(*value)){
+                        num[1] = *value;
+                        makeUseOf = *value++;
+                        makeUseOf = makeUseOf;
+                        if(isdigit(*value)){
+                            num[2] = *value;
+                            char oct = octToDec(atoi(num));
+                            printf("%c",oct);
+                        }
+                    }
+                }else if((*value) == 'n') {
                     printf("\n");
                 }else if((*value) == 't'){
                     printf("\t");
