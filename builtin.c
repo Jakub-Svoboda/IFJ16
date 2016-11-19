@@ -142,7 +142,9 @@ void print(char* value, int opt, thTable *htab, char* class) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
-        }else {                                                             //variable was found so print it out the right way
+        }
+        //printf("[[[[]]]] %s %d \n", tempItem->stringValue, tempItem->varType);
+        if(tempItem != NULL){                                                             //variable was found so print it out the right way
 
             if(tempItem->varType == 28 ){
                 printf("%d",tempItem->intValue);
@@ -178,7 +180,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                         }else if(*(tempItem->stringValue) == '\\'){         //there is \\ , print "\"
                             printf("\\");
                         }else {
-                            //printf("%c",*(tempItem->stringValue));
+                            printf("%c",*(tempItem->stringValue));
                             //TODO: \something , should I EXIT?
                         }
                     }else if(*tempItem->stringValue == '\\'){
@@ -223,7 +225,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 }else if((*value) == '\\'){
                     printf("\\");
                 }else {
-                    printf("\\%c",*value);
+                    //printf("%c",*value);
                 }
             }else if((*value) == '\\'){
                 ;
