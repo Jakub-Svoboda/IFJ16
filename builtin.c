@@ -117,7 +117,6 @@ void print(char* value, int opt, thTable *htab, char* class) {
             exit(7);
         }else {                     //variable was found so print it out the right way
 
-            //printf("IIII in ELSE\n");
             if(tempItem->varType == 28 ){
                 printf("%d",tempItem->intValue);
             }else if(tempItem->varType == 23){
@@ -125,41 +124,57 @@ void print(char* value, int opt, thTable *htab, char* class) {
             }else if(tempItem->varType == 30 ) {
                 //printf("%s",tempItem->stringValue
                 char preC = '!';
+                char makeUseOf;
                 while(*(tempItem->stringValue)) {
                     if(preC == '\\') {
                         if(*(tempItem->stringValue) == 'n') {
-                            printf("je tu \n");
+                            printf("\n");
                         }else if(*(tempItem->stringValue) == 't'){
                             printf("\t");
+                        }else if(*(tempItem->stringValue) == '\"'){
+                            printf("\"");
+                        }else if(*(tempItem->stringValue) == '\\'){
+                            printf("\\");
                         }else {
-                            printf("\\%c",*(tempItem->stringValue));
+                            printf("%c",*(tempItem->stringValue));
                         }
+                    }else if(*tempItem->stringValue == '\\'){
+                        ;
                     }else {
                         printf("%c",*(tempItem->stringValue));
                     }
 
                     preC = *(tempItem->stringValue);
-                    *(tempItem->stringValue)++;
+                    makeUseOf = *(tempItem->stringValue)++;
+                    makeUseOf = makeUseOf;
                 }
             }
         }
     }else { //value is just string
         char preC = '!';
+        char makeUseOf;
         while(*value) {
             if(preC == '\\') {
                 if((*value) == 'n') {
                     printf("\n");
                 }else if((*value) == 't'){
                     printf("\t");
+                }else if((*value) == '\"'){
+                    printf("\"");
+                }else if((*value) == '\\'){
+                    printf("\\");
                 }else {
                     printf("\\%c",*value);
                 }
+            }else if((*value) == '\\'){
+                ;
             }else {
                 printf("%c",*value);
             }
 
             preC = *value;
-            *(value)++;
+            makeUseOf = *(value)++;
+            makeUseOf = makeUseOf;
         }
     }
 }
