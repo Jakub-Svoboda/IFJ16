@@ -550,9 +550,9 @@ char* runPrecedenceAnalysis(FILE* f,Token *tokenPtr,int readFirst, tListOfInstr 
 		}else{
 			precedencePtr = getModifiedTokenPrecedence(f,tokenPtr);
 		}
-		if(tokenPtr->type>token_identifier && tokenPtr->type != token_comma && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string)
+		if(tokenPtr->type>token_identifier && tokenPtr->type != token_comma && tokenPtr->type!=token_semicolon && tokenPtr->type!=token_intNumber && tokenPtr->type!=token_doubleNumber && tokenPtr->type!=token_string && tokenPtr->type!=token_bracketLeftRound && tokenPtr->type!=token_bracketRightRound)
 		{
-			fprintf(stderr,"syntax error, unexpected token\n");
+			fprintf(stderr,"syntax error, unexpected token %d\n",tokenPtr->type);
 			memfreeall();
 			exit(2);	//TODO free all stuff
 		}
