@@ -3,7 +3,7 @@
 
 
 #ifndef SCANNER_H
-#define SCANNER_H 
+#define SCANNER_H
 #define KEYWORD_OFFSET 18;  //Change if more types added before token_boolean
 #define BUFFER_SIZE 32;
 typedef enum{

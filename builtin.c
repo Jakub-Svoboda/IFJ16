@@ -252,10 +252,10 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
         if(tempItem == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(s,".")){		//if called function is short identifier
+                strcpy(s,concat(s,class));	//the concat it with class name
             }
-            if((tempItem=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -321,10 +321,10 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
         if(tempItem == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(s,".")){		//if called function is short identifier
+                strcpy(s,concat(s,class));	//the concat it with class name
             }
-            if((tempItem=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -340,10 +340,10 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         thtabItem* tempItem2;
         tempItem2 = htabSearch(htab, iNum);         //find local var
         if(tempItem2 == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(iNum,".")){		//if called function is short identifier
+                strcpy(iNum,concat(iNum,class));	//the concat it with class name
             }
-            if((tempItem2=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem2=(htabSearch(resources->globalVarTable,iNum))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -359,10 +359,10 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         thtabItem* tempItem3;
         tempItem3 = htabSearch(htab, nNum);         //find local var
         if(tempItem3 == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(nNum,".")){		//if called function is short identifier
+                strcpy(nNum,concat(nNum,class));	//the concat it with class name
             }
-            if((tempItem3=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem3=(htabSearch(resources->globalVarTable,nNum))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -393,10 +393,10 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s1);         //find local var
         if(tempItem == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(s1,".")){		//if called function is short identifier
+                strcpy(s1,concat(s1,class));	//the concat it with class name
             }
-            if((tempItem=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem=(htabSearch(resources->globalVarTable,s1))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -410,11 +410,12 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
     }
     if(s2Opt) {         //it is variable
         thtabItem* tempItem2;
+        tempItem2 = htabSearch(htab, s2);         //find local var
         if(tempItem2 == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(s2,".")){		//if called function is short identifier
+                strcpy(s2,concat(s2,class));	//the concat it with class name
             }
-            if((tempItem2=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem2=(htabSearch(resources->globalVarTable,s2))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -447,11 +448,12 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
 int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {
     if(stringOpt) {
         thtabItem* tempItem;
+        tempItem = htabSearch(htab, s);         //find local var
         if(tempItem == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(s,".")){		//if called function is short identifier
+                strcpy(s,concat(s,class));	//the concat it with class name
             }
-            if((tempItem=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -465,11 +467,12 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
     }
     if(searchOpt) {
         thtabItem* tempItem2;
+        tempItem2 = htabSearch(htab, search);         //find local var
         if(tempItem2 == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(search,".")){		//if called function is short identifier
+                strcpy(search,concat(search,class));	//the concat it with class name
             }
-            if((tempItem2=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem2=(htabSearch(resources->globalVarTable,search))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
@@ -501,11 +504,12 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
 String sort(String s, int stringOpt, thTable *htab, char* class) {
     if(stringOpt) {
         thtabItem* tempItem;
+        tempItem = htabSearch(htab, s);         //find local var
         if(tempItem == NULL) {
-            if(!strstr(value,".")){		//if called function is short identifier
-                strcpy(value,concat(value,class));	//the concat it with class name
+            if(!strstr(s,".")){		//if called function is short identifier
+                strcpy(s,concat(s,class));	//the concat it with class name
             }
-            if((tempItem=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
+            if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
                 fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
