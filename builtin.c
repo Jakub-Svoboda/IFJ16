@@ -264,11 +264,48 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         s = tempItem->stringValue;
     }
 
+    int offset = 0;
+    char preC = '!';
+    char makeUseOf;
+    while(*s) {
+        if(preC == '\\') {
+            if(isdigit((*s))){
+                char num[] = "000";
+                num[0] = (*s);
+                makeUseOf = *(s)++;
+                makeUseOf = makeUseOf;
+                if(isdigit(*s)){
+                    num[1] = *s;
+                    makeUseOf = *s++;
+                    makeUseOf = makeUseOf;
+                    if(isdigit(*s)){
+                        num[2] = *s;
+                        char oct = octToDec(atoi(num));
+                        offset++;
+                    }
+                }
+            }else if((*s) == 'n') {
+                offset++;
+            }else if((*s) == 't'){
+                offset++;
+            }else if((*s) == '\"'){
+                offset++;
+            }else if((*s) == '\\'){
+                offset++;
+            }else {
+                offset++;
+            }
+        }
+        preC = *s;
+        makeUseOf = *(s)++;
+        makeUseOf = makeUseOf;
+    }
+
     char *p = s;        //same simple implementation of strlen
     while(*p) {
         p++;
     }
-    return p-s;
+    return p-s-offset;
 }
 
 //string s is a string to substr, char* iNum can be integer in form or string or var name, rest is same as in print()
