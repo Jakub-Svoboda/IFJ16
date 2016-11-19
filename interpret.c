@@ -1777,7 +1777,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
 							strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 						}
-						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){	//if not in local, search global
+						if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){	//if not in local, search global
 							//printHtabLocal(localVarTable);	//Variable is not in var table exist
 							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_LENGTH. Argument variable not found.\n");
@@ -1785,7 +1785,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(3);
 						}
 					}
-					if(itemPtr->varType != 28){memfreeall(); fprintf(stderr,"I_LEGTH. Target variable has incorrect type.\n");exit(4);}
+					if(itemPtr3->varType != 28){memfreeall(); fprintf(stderr,"I_LENGTH. Target variable has incorrect type.\n");exit(4);}
 					itemPtr3->intValue = length(list->active->Instruction.addr1,lengthInt,localVarTable,currentClass);
 					itemPtr3->isInit = 1;
 				}else{
@@ -1951,7 +1951,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 				char * sortPtr = sort(list->active->Instruction.addr1,sortInt,localVarTable,currentClass);
 				if(itemPtr3!=NULL){
-					if(itemPtr->varType != 30){memfreeall(); fprintf(stderr,"I_SORT. Target variable has incorrect type.\n");exit(4);}
+					if(itemPtr3->varType != 30){memfreeall(); fprintf(stderr,"I_SORT. Target variable has incorrect type.\n");exit(4);}
 					itemPtr->stringValue=memalloc(sizeof(char)*(strlen(sortPtr) +1));
 					strcpy(itemPtr->stringValue,sortPtr);
 					itemPtr->isInit = 1;			
