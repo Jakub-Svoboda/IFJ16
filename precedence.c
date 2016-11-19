@@ -295,7 +295,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_intNumber:
@@ -308,15 +308,13 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 				tokenPtr = stackTop(stack);						//read top of the stack
 				stackPop(stack);											//pop the token we dont need
 				if (tokenPtr -> type  == token_leftHandle){		
-					strcpy(toBePushedE->name,buf);
-//	fprintf(stderr,"foo\n");					
+					strcpy(toBePushedE->name,buf);				
 					toBePushedE->type = token_expression;
-//	fprintf(stderr,"int to E: %s %d\n",toBePushedE->name,toBePushedE->type)				;
 					// rule 12 <i>
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_doubleNumber:
@@ -335,7 +333,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_string:
@@ -354,7 +352,7 @@ Token* whatRule(tStack* stack, tListOfInstr * list){
 					
 				}else{
 					fprintf(stderr,"Error: %d i >\n\n",tokenPtr ->type);
-					////printStack(stack);
+					//printStack(stack);
 				}
 				break;
 			case token_bracketRightRound:

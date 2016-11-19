@@ -5,5 +5,6 @@ class Main
 	{
 		int a = 5;
 		int b = a + Main.a;
+		ifj16.print(b+"\n");
 	}
 }
