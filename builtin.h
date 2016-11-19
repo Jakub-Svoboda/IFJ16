@@ -12,8 +12,8 @@
 int readInt();
 double readDouble();
 String readString();
-//char* printCreate(Token *t);
-void print();
+void print(char* value, int opt, thTable *htab, char* class);
+int lengthOld(String s);
 int length(String s, int stringOpt, thTable *htab, char* class);
 String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOpt, thTable *htab, char* class);
 int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* class);
