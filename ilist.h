@@ -1,3 +1,15 @@
+/*
+* Project: Implementace interpretu imperativniho jazyka IFJ16
+* File:    ilist.h
+* Date:    31.10.2016
+* Team:    Michael Schmid      xschmi08
+*          Jakub Svoboda        xsvobo0z
+*          Jan Grossmann        xgross09
+*          Matyas Sladek        xslade21
+*          Katerina Smajzrova   xsmajz00
+* Variant: b/1/II
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "garbage.h"
