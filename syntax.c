@@ -74,31 +74,31 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 	tInstr I;
 	if(strcmp(tokenPtr->name,"ifj16.readInt") == 0){
 		getModifiedToken(f,tokenPtr);	
-		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);} 	//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketRightRound) {memfreeall(); exit(2);};		//Read next token, which must be )
+		if(tokenPtr->type != token_bracketRightRound) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon) {memfreeall(); exit(2);};				//Read next token, which must be ;
+		if(tokenPtr->type != token_semicolon) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}				//Read next token, which must be ;
 		generateInstruction(I,I_READ_INT, var, "", "",list);				//Tokens were OK, generate the propriate instruction
 		return 1;
 		
 	}else if (strcmp(tokenPtr->name,"ifj16.readString") == 0){
 		getModifiedToken(f,tokenPtr);	
-		if(tokenPtr->type != token_bracketLeftRound) {memfreeall(); exit(2);};		//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketRightRound) {memfreeall(); exit(2);};		//Read next token, which must be )
+		if(tokenPtr->type != token_bracketRightRound) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon) {memfreeall(); exit(2);};				//Read next token, which must be ;
+		if(tokenPtr->type != token_semicolon) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}			//Read next token, which must be ;
 		generateInstruction(I,I_READ_STRING, var, "", "",list);				//Tokens were OK, generate the propriate instruction
 		return 1;
 		
 	}else if (strcmp(tokenPtr->name,"ifj16.readDouble") == 0){
 		getModifiedToken(f,tokenPtr);	
-		if(tokenPtr->type != token_bracketLeftRound) {memfreeall(); exit(2);};		//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketRightRound) {memfreeall(); exit(2);};		//Read next token, which must be )
+		if(tokenPtr->type != token_bracketRightRound) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon) {memfreeall(); exit(2);};				//Read next token, which must be ;
+		if(tokenPtr->type != token_semicolon) {memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}				//Read next token, which must be ;
 		generateInstruction(I,I_READ_DOUBLE, var, "", "",list);				//Tokens were OK, generate the propriate instruction
 		return 1;
 		
@@ -129,14 +129,14 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 				exit(2);
 			}	
 		}
-		if(tokenPtr->type != token_bracketRightRound){memfreeall(); exit(2);}		//Read next token, which must be )
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be ;
+		if(tokenPtr->type != token_semicolon){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be ;
 		return 1;
 
 	}else if (strcmp(tokenPtr->name,"ifj16.length") == 0){
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);} 	//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
 		if(tokenPtr->type==token_string){
 			generateInstruction(I,I_LENGTH, tokenPtr->name, "0", var,list);
@@ -151,14 +151,14 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 			memfreeall();
 			exit(2);
 		}
-		if(tokenPtr->type != token_bracketRightRound){memfreeall(); exit(2);}		//Read next token, which must be )
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be ;
+		if(tokenPtr->type != token_semicolon){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be ;
 		return 1;
 
 	}else if (strcmp(tokenPtr->name,"ifj16.substr") == 0){	
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);} 	//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
 		if(tokenPtr->type==token_string){
 			generateInstruction(I,I_SUBSTR1, tokenPtr->name, "0", "",list);
@@ -193,7 +193,7 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 
 	}else if (strcmp(tokenPtr->name,"ifj16.compare") == 0){
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);} 	//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
 		if(tokenPtr->type==token_string){
 			generateInstruction(I,I_COMPARE1, tokenPtr->name, "0", "",list);
@@ -219,7 +219,7 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 		return 1;
 	}else if (strcmp(tokenPtr->name,"ifj16.find") == 0){
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);} 	//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
 		if(tokenPtr->type==token_string){
 			generateInstruction(I,I_FIND1, tokenPtr->name, "0", "",list);
@@ -244,7 +244,7 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 		return 1;
 	}else if (strcmp(tokenPtr->name,"ifj16.sort") == 0){
 			getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (				CO MAM TED DELAT????? :'((((
+		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);} 	//Read next token, which must be (				CO MAM TED DELAT????? :'((((
 			getModifiedToken(f,tokenPtr);
 		if(tokenPtr->type==token_string){
 			generateInstruction(I,I_SORT, tokenPtr->name, "0", var,list);
@@ -259,9 +259,9 @@ int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//r
 			memfreeall();
 			exit(2);
 		}
-		if(tokenPtr->type != token_bracketRightRound){memfreeall(); exit(2);}		//Read next token, which must be )
+		if(tokenPtr->type != token_bracketRightRound){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be )
 		getModifiedToken(f,tokenPtr);
-		if(tokenPtr->type != token_semicolon){memfreeall(); exit(2);}		//Read next token, which must be ;
+		if(tokenPtr->type != token_semicolon){memfreeall(); fprintf(stderr, "syntax error\n"); exit(2);}		//Read next token, which must be ;
 		return 1;	
 	}else{		
 		return 0;			//not a builtin function, returning 0
