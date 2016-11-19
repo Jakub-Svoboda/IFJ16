@@ -7,13 +7,13 @@ class Main {
 		//ifj16.print("Enter a number to guess first but don't show it to anyone. I know it might be hard in this case.\n")
 		number = 7;
 
-		guess = readInt();
+		guess = ifj16.readInt();
 		while(counter < 10) {
 			if(guess == number) {
 				ifj16.print("You found out that the number is lucky 7.\n")
 			}else {
 				ifj16.print("Try again!\n");
-				guess = readInt();
+				guess = ifj16.readInt();
 			}
 			counter = counter2 + 1; //not sure if x = x+1 is implemented
 			counter2 = counter;
