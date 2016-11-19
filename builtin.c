@@ -3,35 +3,35 @@ extern resourceStruct * resources;
 
 String readString() {
     int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
-	char *buff = (char*)memalloc(buffSize * sizeof(char));
+	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
 
-    while((c = getchar()) != EOF && c != '\n') {                //Read everything until new line or EOF
-        buff[count] = c;
-        count++;
+    while((c = getchar()) != EOF && c != '\n') {                //Read everything char by char until new line or EOF
+        buff[count] = c;                                        //store char
+        count++;                                                //increase char counter
         if(count+2 == buffSize) {                               //realloc if needed
             buffSize += LOCAL_BUFF_SIZE;
             buff = memrealloc(buff, buffSize);
         }
     }
 
-    buff[count] = '\0';
-    //printf("[%s]--",buff);
+    buff[count] = '\0';                                         //handle end of string manually
+    //printf("[%s]--",buff);        //TODO delete
     return buff;
 }
 
-int readInt() {                         //Will convert string into integer
+int readInt() {                                             //Will convert string into integer
 
-    int num = 0, sign = 1;
-    char* stringNum = readString();     //make use of readString();
-    char makeUseOf;
+    int num = 0, sign = 1;                                  //sign is 1 by default, it means +
+    char* stringNum = readString();                         //make use of readString();
+    char makeUseOf;                                         //get rid of warnings
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )           //first char may be sign, IDK if it's right
         {
              if(*stringNum == '-') sign *= -1;
         }else if(isdigit(*stringNum)) {                                         //if it's digit
-            num *= 10;
+            num *= 10;                                                          //multiply num value by 10 and add read digit
             num += *stringNum - '0';
-        }else if(*stringNum != '\0' && *stringNum != EOF && *stringNum != 0){   //if it is not digit, print error and exit
+        }else if(*stringNum != '\0' && *stringNum != EOF && *stringNum != 0){   //if it is not digit, print error, call memfree and exit
             fprintf(stderr,"Invalid sequence in readInt() function.\n");
             memfreeall();
             exit(7);
@@ -40,18 +40,18 @@ int readInt() {                         //Will convert string into integer
         makeUseOf += makeUseOf;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
-    return num*sign;                                                             //return number with right sign
+    return num*sign;
 }
 
 double readDouble() {                                                            //Will convert string into double
     double num = 0, mantissa = 0;
-    char makeUseOf;
-    int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;
+    char makeUseOf;                                                              //aka get rid of warnings var
+    int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
     char* stringNum = readString();                                              //make use of readString();
 
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
-            //printf("exponent sign read, ");
+            //printf("exponent sign read, ");   //TODO: delete all printf's
             if(*stringNum == '-') eSign *= -1;
         }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
             //printf("num sign read, ");
@@ -83,38 +83,38 @@ double readDouble() {                                                           
         makeUseOf += makeUseOf;
     } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
 
-    double fullExp = 1;
+    double fullExp = 1;                             //if there's no exponent, just multiply the number by 1 (in return call)
     if(hasE) {                                      //simple pow-like function to calculate exponent
         for (int i = 0; i < exponent; i++) {
-            if(eSign == 1) {
+            if(eSign == 1) {                        //if whole exponent is greater than 0, multiply
                 fullExp *= 10;
-            }else {
+            }else {                                 //if whole exponent is negative, divide until exponent match fullExp number
                 fullExp /= 10;
             }
         }
     }
-    return ((intNum + mantissa)*fullExp)*sign;                                  //return number with right sign
+    return ((intNum + mantissa)*fullExp)*sign;      //return number with mantissa but multiply it with calculated exponent (if any) and don't forget the sign
 }
 
-
+//value is the actual string or var name, option may be 0-> it is actual string || 1-> it is just name of variable
 void print(char* value, int opt, thTable *htab, char* class) {
     thtabItem* tempItem;
-    switch(opt){
+    switch(opt){                    //this difficult switch may be replaced by if,
         case 0:                     //value is string
-            printf("%s", value);
+            printf("%s", value);    //print it
             break;
         case 1:                     //value is variable
-            tempItem = htabSearch(htab, value);
+            tempItem = htabSearch(htab, value);    //find variable in local table
             if(tempItem == NULL) {
-                if(!strstr(value,".")){		//if called function is short identifier
-                    tempItem = htabSearchClass(resources->globalVarTable, value, class);
+                if(!strstr(value,".")){		       //if called function is short identifier
+                    tempItem = htabSearchClass(resources->globalVarTable, value, class);    //find var in global table
                 }
             }
             if(tempItem == NULL) {      //TempItem is still null
                 fprintf(stderr, "Error in print function, variable not found.\n");
                 memfreeall();
                 exit(4);
-            }else {
+            }else {                     //variable was found so print it out the right way
                 switch(tempItem->varType){
                     case 29:
                         printf("%d",tempItem->intValue);
@@ -130,7 +130,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 }
             }
             break;
-
+//TODO: delete this part of switch
     /*    case 2:                     //value is double
             tempItem = htabSearch(htab, value);
             if(tempItem == NULL || tempItem->varType != 23) {
@@ -162,7 +162,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
     }
 }
 
-int lengthOld(String s){
+int lengthOld(String s){    //simple implementation of strlen
     char *p = s;
     while(*p) {
         p++;
@@ -170,8 +170,9 @@ int lengthOld(String s){
     return p-s;
 }
 
+//String s is key, int stringOpt works as in print function (0/1)
 int length(String s, int stringOpt, thTable *htab, char* class){
-    if(stringOpt) {
+    if(stringOpt) {                 //please look at print() commentary
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
         if(tempItem == NULL) {
@@ -187,16 +188,17 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         s = tempItem->stringValue;
     }
 
-    char *p = s;
+    char *p = s;        //same simple implementation of strlen
     while(*p) {
         p++;
     }
     return p-s;
 }
 
+//string s is a string to substr, char* iNum can be integer in form or string or var name, rest is same as in print()
 String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOpt, thTable *htab, char* class) {
     int i=0, n=0;
-    i = atoi(iNum);
+    i = atoi(iNum); //this may cause problems, maybe strtol is better
     n = atoi(nNum);
     if(stringOpt) {
         thtabItem* tempItem;
@@ -256,6 +258,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
     return buff;
 }
 
+//please for details check functions above
 int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* class) {
     if(s1Opt) {
         thtabItem* tempItem;
@@ -285,25 +288,26 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
             memfreeall();
             exit(4);
         }
-        s2 = tempItem2->stringValue;         //set s as value of variable
+        s2 = tempItem2->stringValue;         //set s2 as value of variable
     }
 
-    while(*s1 && (*s1 == *s2))
+    while(*s1 && (*s1 == *s2))              //while first string has chars, and char of 1st and 2nd string match, pass it
     {
         s1++;
         s2++;
     }
-    if((*s1 - *s2) < 0) {
+    if((*s1 - *s2) < 0) {                   //if ord. value of s2 char is bigger than ord. value of s1 char, return -1
         return(-1);
     }
-    else if((*s1 - *s2) > 0) {
+    else if((*s1 - *s2) > 0) {              //else if ord. value of s2 char is lesser than ord. value of s1 char, return 1
         return(1);
     }
-    else {
+    else {                                  //else strings do match so return 0 if they are equal/same
         return(0);
     }
 }
 
+//please for details check functions above
 int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {
     if(stringOpt) {
         thtabItem* tempItem;
@@ -351,6 +355,7 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
     }
 }
 
+//please for details check functions above
 String sort(String s, int stringOpt, thTable *htab, char* class) {
     if(stringOpt) {
         thtabItem* tempItem;
