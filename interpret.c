@@ -1770,7 +1770,27 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_LENGTH******************************//
-			case I_LENGTH:
+			case I_LENGTH:;
+				int lengthInt = atoi(list->active->Instruction.addr2);
+				if(strcmp(list->active->Instruction.addr3,"")){			//the variable is searched for only if there is assign before FN call
+					if((itemPtr3=(htabSearch(localVarTable,list->active->Instruction.addr3))) == NULL) {	//localVarTable search for var
+						if(!strstr(list->active->Instruction.addr3,dot)){		//if called function is short identifier
+							strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
+						}
+						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){	//if not in local, search global
+							//printHtabLocal(localVarTable);	//Variable is not in var table exist
+							//printHtab(resources->globalVarTable,1);
+							fprintf(stderr,"I_LENGTH. Argument variable not found.\n");
+							memfreeall();
+							exit(3);
+						}
+					}
+					itemPtr3->intValue = length(list->active->Instruction.addr1,lengthInt,localVarTable,currentClass);
+					itemPtr->isInit = 1;
+				}else{
+					length(list->active->Instruction.addr1,lengthInt,localVarTable,currentClass);
+				}
+				
 
 			break;
 
