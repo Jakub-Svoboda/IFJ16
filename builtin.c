@@ -123,12 +123,44 @@ void print(char* value, int opt, thTable *htab, char* class) {
             }else if(tempItem->varType == 23){
                 printf("%g",tempItem->doubleValue);
             }else if(tempItem->varType == 30 ) {
-                printf("%s",tempItem->stringValue);
+                //printf("%s",tempItem->stringValue
+                char preC = '!';
+                while(*(tempItem->stringValue)) {
+                    if(preC == '\\') {
+                        if(*(tempItem->stringValue) == 'n') {
+                            printf("je tu \n");
+                        }else if(*(tempItem->stringValue) == 't'){
+                            printf("\t");
+                        }else {
+                            printf("\\%c",*(tempItem->stringValue));
+                        }
+                    }else {
+                        printf("%c",*(tempItem->stringValue));
+                    }
+
+                    preC = *(tempItem->stringValue);
+                    *(tempItem->stringValue)++;
+                }
             }
         }
-    }else {
-        //value is string
-        printf("%s", value);    //print it
+    }else { //value is just string
+        char preC = '!';
+        while(*value) {
+            if(preC == '\\') {
+                if((*value) == 'n') {
+                    printf("\n");
+                }else if((*value) == 't'){
+                    printf("\t");
+                }else {
+                    printf("\\%c",*value);
+                }
+            }else {
+                printf("%c",*value);
+            }
+
+            preC = *value;
+            *(value)++;
+        }
     }
 }
 
