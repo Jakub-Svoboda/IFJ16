@@ -138,7 +138,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem->isInit == 0) {
+        }if (tempItem->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -262,7 +262,7 @@ int length(String s, int stringOpt, thTable *htab, char* class){
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem->isInit == 0) {
+        }if (tempItem->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -326,7 +326,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem->isInit == 0) {
+        }if (tempItem->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -345,7 +345,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem2->isInit == 0) {
+        }if (tempItem2->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -364,7 +364,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem3->isInit == 0) {
+        }if (tempItem3->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -398,7 +398,7 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem->isInit == 0) {
+        }if (tempItem->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -417,7 +417,7 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem2->isInit == 0) {
+        }if (tempItem2->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -455,7 +455,7 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem->isInit == 0) {
+        }if (tempItem->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -474,7 +474,7 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem2->isInit == 0) {
+        }if (tempItem2->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
@@ -511,7 +511,7 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {
                 memfreeall();
                 exit(3);
             }
-        }else if (tempItem->isInit == 0) {
+        }if (tempItem->isInit == 0) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(7);
