@@ -324,7 +324,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if ((result=syntaxCheck( CLASS, f, tokenPtr, lastToken, list))		!= 0) {goto EXIT;}
 					if ((result=syntaxCheck( CLASS_BLOCK, f, tokenPtr, lastToken, list))		!= 0) {goto EXIT;}
 			}else{
-				fprintf(stderr, "\nSyntax OK\n");
+			//	fprintf(stderr, "\nSyntax OK\n");
 			}
 			return 0;
 			break;
