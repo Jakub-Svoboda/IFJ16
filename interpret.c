@@ -1696,6 +1696,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						memfreeall();
 						exit(4);
 					}
+					if(itemPtr->varType != 28){memfreeall(); fprintf(stderr,"I_READ_INT. Target variable has incorrect type.\n");exit(4);}
 					itemPtr->intValue = readInt();
 					itemPtr->isInit = 1;
 				}else{
@@ -1785,6 +1786,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(3);
 						}
 					}
+					if(itemPtr->varType != 28){memfreeall(); fprintf(stderr,"I_LEGTH. Target variable has incorrect type.\n");exit(4);}
 					itemPtr3->intValue = length(list->active->Instruction.addr1,lengthInt,localVarTable,currentClass);
 					itemPtr3->isInit = 1;
 				}else{
@@ -1835,6 +1837,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(3);
 						}
 					}
+					if(itemPtr->varType != 30){memfreeall(); fprintf(stderr,"I_SUBSTR. Target variable has incorrect type.\n");exit(4);}
 					char *substrPtr=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
 					substrPtr=substr(substrChar1,substrInt1,substrChar2,substrInt2,substrChar3,substrInt3,localVarTable,currentClass);
 					strcpy(itemPtr->stringValue,substrPtr);
@@ -1878,6 +1881,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(3);
 						}
 					}
+					if(itemPtr->varType != 28){memfreeall(); fprintf(stderr,"I_COMPARE. Target variable has incorrect type.\n");exit(4);}
 					itemPtr->intValue = compare(compChar1,compInt1,compChar2,compInt2,localVarTable,currentClass);
 					itemPtr->isInit = 1;
 				}else{
@@ -1918,6 +1922,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(3);
 						}
 					}
+					if(itemPtr->varType != 28){memfreeall(); fprintf(stderr,"I_FIND. Target variable has incorrect type.\n");exit(4);}
 					itemPtr->intValue = find(findChar1,findInt1,findChar2,findInt2,localVarTable,currentClass);
 					itemPtr->isInit = 1;
 				}else{
@@ -1947,6 +1952,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 				char * sortPtr = sort(list->active->Instruction.addr1,sortInt,localVarTable,currentClass);
 				if(itemPtr3!=NULL){
+					if(itemPtr->varType != 30){memfreeall(); fprintf(stderr,"I_SORT. Target variable has incorrect type.\n");exit(4);}
 					itemPtr->stringValue=memalloc(sizeof(char)*(strlen(sortPtr) +1));
 					strcpy(itemPtr->stringValue,sortPtr);
 					itemPtr->isInit = 1;			
