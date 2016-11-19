@@ -13,7 +13,7 @@ class Main {
 		num3 = ifj16.find("klopetek", b);
 		num4 = ifj16.find("klopetek", klop);
 
-		ifj16.print(" a je " + a + " b je " + b + "\n");
+		ifj16.print(" a je " + a + " b je " + b + " klop je " + klop + "\n");
 		ifj16.print("(b,a) " + num0 + "(b, klop) " + num1 + "(a,a) " + num2 + "(\"klopetek\",b) " + num3 +"(\"klopetek\",klop) " + num4)
 
 	}
