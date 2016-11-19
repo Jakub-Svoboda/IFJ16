@@ -93,7 +93,6 @@ double readDouble() {                                                           
             }
         }
     }
-
     return ((intNum + mantissa)*fullExp)*sign;                                  //return number with right sign
 }
 
