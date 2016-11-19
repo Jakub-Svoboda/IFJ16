@@ -4,7 +4,7 @@ class Main {
 	static void run() {
 		int guess; int number; int counter; int counter2;
 		counter = 1; counter2 = 1;
-		ifj16.print("Enter a number to guess first but don't show it to anyone. I know it might be hard in this case.\n")
+		ifj16.print("Enter a number to guess first but don't show it to anyone. I know it might be hard in this case.\n");
 		number = readInt();
 
 		guess = readInt();
