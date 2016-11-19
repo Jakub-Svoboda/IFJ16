@@ -126,6 +126,7 @@ double readDouble() {                                                           
 
 //value is the actual string or var name, option may be 0-> it is actual string || 1-> it is just name of variable
 void print(char* value, int opt, thTable *htab, char* class) {
+
     thtabItem* tempItem;
     if(opt == 1){                                                           //value is variable
         tempItem = htabSearch(htab, value);                                 //find variable in local table
@@ -154,6 +155,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 //printf("%s",tempItem->stringValue
                 char preC = '~';
                 char makeUseOf;
+                char* backup = (tempItem->stringValue);
                 while(*(tempItem->stringValue)) {
                     if(preC == '\\') {                                      //If there is a chance of escape sequence
                         if(isdigit(*(tempItem->stringValue))){              //first check for octal numbers
@@ -194,11 +196,13 @@ void print(char* value, int opt, thTable *htab, char* class) {
                     makeUseOf = *(tempItem->stringValue)++;
                     makeUseOf = makeUseOf;
                 }
+                (tempItem->stringValue) = backup;
             }
         }
     }else { //value is just string
         char preC = '!';
         char makeUseOf;
+        char* backup = value;
         while(*value) {
             if(preC == '\\') {
                 if(isdigit((*value))){
@@ -237,6 +241,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
             makeUseOf = *(value)++;
             makeUseOf = makeUseOf;
         }
+        value = backup;
     }
 }
 
@@ -301,7 +306,7 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         makeUseOf = *(s)++;
         makeUseOf = makeUseOf;
     }
-
+    s = old;
     char *p = old;        //same simple implementation of strlen
     while(*p) {
         p++;
@@ -377,10 +382,11 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         memfreeall();
         exit(10);
     }
-    char *buff = (char*)memalloc(n * sizeof(char));
+    char *buff = (char*)memalloc((n+1) * sizeof(char));
     for(int x = 0; x < n; x++) {
         buff[x] = s[i+x];
     }
+    buff[n] = '\0';
     return buff;
 }
 

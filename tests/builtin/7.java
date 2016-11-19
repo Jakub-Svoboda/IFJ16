@@ -1,10 +1,10 @@
 class Main {
 	static void run() {
 		String a;
-		a = "středníček";
-		String substr1;
-		String substr2;
-		String substr3;
+		a = "strednicek";
+		String substr1 = "a";
+		String substr2 = " a";
+		String substr3 = "";
 
 		substr1 = ifj16.substr(a,0,4);	//should be "stře"
 		ifj16.print("substr: " + substr1 + ".\n");

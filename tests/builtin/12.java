@@ -16,7 +16,7 @@ class Main {
 		bdiff = ifj16.compare(bSort, bS);
 		cdiff = ifj16.compare(cSort, cS);
 
-		printf("aSort: " + aSort + "bSort: " + bSort + "cSort: " + cSort + "\n");
-		printf("adiff: " + adiff + "bdiff: " + bdiff + "cdiff: " + cdiff + "\n");
+		ifj16.print("aSort: " + aSort + "bSort: " + bSort + "cSort: " + cSort + "\n");
+		ifj16.print("adiff: " + adiff + "bdiff: " + bdiff + "cdiff: " + cdiff + "\n");
 	}
 }
