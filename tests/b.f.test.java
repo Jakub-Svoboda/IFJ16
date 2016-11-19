@@ -32,6 +32,8 @@ class Main{
 		a=post.mulByTwo(a);
 		ifj16.print(a+"\n");	//20
 		
+		post.rectangle(5,10);
+		
 	}
 	static String shakesbro = "\n\tNot from the stars do I my judgement pluck,\n\tAnd yet methinks I have astronomy,\n\tBut not to tell of good, or evil luck,\n\tOf plagues, of dearths, or seasons' quality.\n";
 	static double mulpi(double d){
@@ -55,6 +57,29 @@ class post{
 	static int recurse(int x){
 		
 		return x;
+	}
+	static int rectangle(int width, int height){
+		int i=0;
+		int j=0;
+		ifj16.print("\n");
+		while(i<width){
+			
+			while(j<height){
+				ifj16.print("M");
+				j=j+1;
+			}
+			j=0;
+			ifj16.print("\n");
+			i=i+1;
+		}
+		ifj16.print("\n");
+		if(counter > 5){
+			return 0;
+		}else{
+			return 1;
+		}
+		
+		
 	}
 	
 }
