@@ -12,7 +12,7 @@ class Main {
 			if(guess == number) {
 				ifj16.print("You found out that the number is lucky 7.\n")
 			}else {
-				print("Try again!\n");
+				ifj16.print("Try again!\n");
 				guess = readInt();
 			}
 			counter = counter2 + 1; //not sure if x = x+1 is implemented
