@@ -526,8 +526,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_identifier:								//id
 					lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));	
 					Token *evenLasterToken=memalloc(sizeof(Token));
-					evenLasterToken=memcpy(evenLasterToken,tokenPtr,sizeof(Token));
-		//fprintf(stderr,"checking builtin fncs\n");			
+					evenLasterToken=memcpy(evenLasterToken,tokenPtr,sizeof(Token));	
 					if(builtin(f,tokenPtr,list, "") == 1){								//check for builtin function call
 						if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 						return result;
@@ -541,6 +540,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						generateInstruction(I,I_FN_CALL, buf,"","", list);
 						if ((result=syntaxCheck( SEMICOLON, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n;\n");goto EXIT;}
 					}else if (tokenPtr -> type == token_assign){	//id=
+						sprintf(buf, "%s",lastToken->name);
 						getModifiedToken(f,tokenPtr);
 						if(builtin(f,tokenPtr,list,buf) == 1){								//check for builtin function call		
 							//printType(tokenPtr);				
