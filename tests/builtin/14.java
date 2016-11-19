@@ -3,11 +3,11 @@ class Main {
 		String a;
 		int i;
 		double d;
-		a = readString();
-		i = readInt();
-		d = readDouble();
-		printf(a + i + d + "\n");
-		printf(i + d + a + "\n");
-		printf(d + a + i + "\n");
+		a = ifj16.readString();
+		i = ifj16.readInt();
+		d = ifj16.readDouble();
+		ifj16.print(a + i + d + "\n");
+		ifj16.print(i + d + a + "\n");
+		ifj16.print(d + a + i + "\n");
 	}
 }

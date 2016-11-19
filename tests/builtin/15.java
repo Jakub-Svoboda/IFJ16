@@ -1,7 +1,16 @@
 class Main {
 	static void run() {
-		String a;int i;double d;a = readString();i = readInt();d = readDouble();printf(a+i+d+"\n");printf(i+d+a+ "\n");printf(d+a+i+ "\n");
+		String a;
+		int i;
+		double d;
+		ifj16.print("Type string: ");
+		a = ifj16.readString();
+		ifj16.print("Type int: ");
+		i = ifj16.readInt();
+		ifj16.print("Type double: ");
+		d = ifj16.readDouble();
+		ifj16.print(a + i + d + "\n");
+		ifj16.print(i + d + a + "\n");
+		ifj16.print(d + a + i + "\n");
 	}
 }
-
-//Should behave as 14.java
