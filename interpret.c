@@ -1676,7 +1676,7 @@ printHtabLocal(localVarTable);			//TODO delete me
 			break;			
 			
 	//************************I_READ_INT******************************//
-			case I_READ_INT:
+			case I_READ_INT:	
 				if(strcmp(list->active->Instruction.addr1,"")){			//the variable is searched for only if there is assign before FN call
 					if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
 						if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
@@ -1697,10 +1697,11 @@ printHtabLocal(localVarTable);			//TODO delete me
 						exit(4);
 					}
 					itemPtr->intValue = readInt();
+					itemPtr->isInit = 1;
 				}else{
 					readInt();
 				}	
-				itemPtr->isInit = 1;
+							
 			break;
 	
 	//************************I_READ_STRING******************************//
@@ -1727,10 +1728,11 @@ printHtabLocal(localVarTable);			//TODO delete me
 					char * tmpRead = readString();
 					itemPtr->stringValue=memalloc(sizeof(char)*(strlen(tmpRead) +1));
 					strcpy(itemPtr->stringValue,tmpRead);
+					itemPtr->isInit = 1;
 				}else{
 					readString();
 				}			
-				itemPtr->isInit = 1;	
+				
 			break;
 	
 	//************************I_READ_DOUBLE******************************//
@@ -1755,10 +1757,10 @@ printHtabLocal(localVarTable);			//TODO delete me
 						exit(4);
 					}
 					itemPtr->doubleValue = readDouble();
+					itemPtr->isInit = 1;
 				}else{
 					readDouble();
 				}
-				itemPtr->isInit = 1;
 			break;
 			
 	//************************I_PRINT******************************//
