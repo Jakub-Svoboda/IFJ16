@@ -263,7 +263,7 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         }
         s = tempItem->stringValue;
     }
-
+    char *old = s;
     int offset = 0;
     char preC = '!';
     char makeUseOf;
@@ -301,11 +301,11 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         makeUseOf = makeUseOf;
     }
 
-    char *p = s;        //same simple implementation of strlen
+    char *p = old;        //same simple implementation of strlen
     while(*p) {
         p++;
     }
-    return p-s-offset;
+    return (p-old)-offset;
 }
 
 //string s is a string to substr, char* iNum can be integer in form or string or var name, rest is same as in print()
