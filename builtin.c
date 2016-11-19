@@ -1,6 +1,34 @@
 #include "builtin.h"
 extern resourceStruct * resources;
 
+////////////////////////////////////////////////////////////
+///////////////////////Not in builtin///////////////////////
+////////////////////////////////////////////////////////////
+int ipow(int base, int exp)
+{
+    int num = 1;
+    while (exp != 0) {
+        if ((exp & 1) == 1)
+            num *= base;
+        exp >>= 1;
+        base *= base;
+    }
+    return num;
+}
+
+int octToDec(int oct)
+{
+    int dec = 0, i = 0;
+    while(oct != 0) {
+        dec += (oct%10) * ipow(8,i);
+        ++i;
+        oct/=10;
+    }
+    return dec;
+}
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
 String readString() {
     int buffSize = LOCAL_BUFF_SIZE, count = 0, c;
 	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
@@ -123,11 +151,38 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 printf("%g",tempItem->doubleValue);
             }else if(tempItem->varType == 30 ) {
                 //printf("%s",tempItem->stringValue
-                char preC = '!';
+                char preC = '~';
+                char prepreC = '~';
                 char makeUseOf;
                 while(*(tempItem->stringValue)) {
-                    if(preC == '\\') {
-                        if(*(tempItem->stringValue) == 'n') {
+                    /*if(prepreC == '\\') {
+                        if(isdigit(preC)) {
+                            if(isdigit(*(tempItem->stringValue)++)) {
+                                if(isdigit(*(tempItem->stringValue))) {
+                                    char* num = "000";
+                                //    num[0] = 0;//preC;
+                            //        num[1] = 1;// *(tempItem->stringValue) -1;
+                        //            num[2] = 1;// *(tempItem->stringValue);
+                                    printf("aopfiasf %s aoidpasoid", num);
+                                }
+                            }
+                        }
+
+                    }else */if(preC == '\\') {
+                        if(isdigit(*(tempItem->stringValue))){
+                            char num[] = "000";
+                            num[0] = *(tempItem->stringValue);
+                            *(tempItem->stringValue)++;
+                            if(isdigit(*(tempItem->stringValue))){
+                                num[1] = *(tempItem->stringValue);
+                                *(tempItem->stringValue)++;
+                                if(isdigit(*(tempItem->stringValue))){
+                                    num[2] = *(tempItem->stringValue);
+                                    char oct = octToDec(atoi(num));
+                                    printf("sdfsdfsd %c fdsfsdf",oct);
+                                }
+                            }
+                        }else if(*(tempItem->stringValue) == 'n') {
                             printf("\n");
                         }else if(*(tempItem->stringValue) == 't'){
                             printf("\t");
@@ -144,6 +199,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                         printf("%c",*(tempItem->stringValue));
                     }
 
+                    //prepreC = preC;
                     preC = *(tempItem->stringValue);
                     makeUseOf = *(tempItem->stringValue)++;
                     makeUseOf = makeUseOf;
