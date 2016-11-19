@@ -99,66 +99,36 @@ double readDouble() {                                                           
 //value is the actual string or var name, option may be 0-> it is actual string || 1-> it is just name of variable
 void print(char* value, int opt, thTable *htab, char* class) {
     thtabItem* tempItem;
-    switch(opt){                    //this difficult switch may be replaced by if,
-        case 0:                     //value is string
-            printf("%s", value);    //print it
-            break;
-        case 1:                     //value is variable
-            tempItem = htabSearch(htab, value);    //find variable in local table
-            if(tempItem == NULL) {
-                if(!strstr(value,".")){		       //if called function is short identifier
-                    tempItem = htabSearchClass(resources->globalVarTable, value, class);    //find var in global table
-                }
+    if(opt == 1){                     //value is variable
+        tempItem = htabSearch(htab, value);    //find variable in local table
+        //printf("\n]]]]]]]]]]]]]]]]tempitem's vartype is %d \n", tempItem->varType);
+        if(tempItem == NULL) {
+            if(!strstr(value,".")){		       //if called function is short identifier
+                tempItem = htabSearchClass(resources->globalVarTable, value, class);    //find var in global table
             }
-            if(tempItem == NULL) {      //TempItem is still null
-                fprintf(stderr, "Error in print function, variable not found.\n");
-                memfreeall();
-                exit(4);
-            }else {                     //variable was found so print it out the right way
-                switch(tempItem->varType){
-                    case 29:
-                        printf("%d",tempItem->intValue);
-                        break;
-                    case 23:
-                        printf("%g",tempItem->doubleValue);
-                        break;
-                    case 30:
-                        printf("%s",tempItem->stringValue);
-                        break;
-                    default:
-                        break;
-                }
+        }
+        if(tempItem == NULL) {      //TempItem is still null
+            fprintf(stderr, "Error in print function, variable not found.\n");
+            memfreeall();
+            exit(4);
+        }else if (tempItem->isInit == 0) {
+            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+            memfreeall();
+            exit(7);
+        }else {                     //variable was found so print it out the right way
+
+            //printf("IIII in ELSE\n");
+            if(tempItem->varType == 28 ){
+                printf("%d",tempItem->intValue);
+            }else if(tempItem->varType == 23){
+                printf("%g",tempItem->doubleValue);
+            }else if(tempItem->varType == 30 ) {
+                printf("%s",tempItem->stringValue);
             }
-            break;
-//TODO: delete this part of switch
-    /*    case 2:                     //value is double
-            tempItem = htabSearch(htab, value);
-            if(tempItem == NULL || tempItem->varType != 23) {
-                if(!strstr(value,".")){		//if called function is short identifier
-                    tempItem = htabSearchClass(resources->globalVarTable, value, class);
-                }
-            }
-            if(tempItem == NULL) {      //TempItem is still null
-                fprintf(stderr, "Error in print function, variable not found.\n");
-                memfreeall();
-                exit(4);
-            }
-            printf("%g",tempItem->doubleValue);
-            break;
-        case 3:                 //value is string
-            tempItem = htabSearch(htab, value);
-            if(tempItem == NULL || tempItem->varType != 30) {
-                if(!strstr(value,".")){		//if called function is short identifier
-                    tempItem = htabSearchClass(resources->globalVarTable, value, class);
-                }
-            }
-            if(tempItem == NULL) {      //TempItem is still null
-                fprintf(stderr, "Error in print function, variable not found.\n");
-                memfreeall();
-                exit(4);
-            }
-            printf("%s",tempItem->stringValue);
-            break;      */
+        }
+    }else {
+        //value is string
+        printf("%s", value);    //print it
     }
 }
 
