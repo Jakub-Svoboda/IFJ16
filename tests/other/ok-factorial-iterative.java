@@ -10,5 +10,6 @@ class Main
 			vysl = vysl * a;
 			a = a - 1;
 		}
+		ifj16.print(vysl+"\n");
 	}
 }

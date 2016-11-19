@@ -7,6 +7,7 @@ class Main
 		String str2;
 		str2 = str1 + ", ktery jeste trochu obohatime";
 		String str3 = Smth.func(str2);
+		ifj16.print(str3+"\n");
 	}
 }
 

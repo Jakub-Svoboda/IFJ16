@@ -7,6 +7,7 @@ class Main
 		int neg;
 		vysl = factorial(a);
 		neg = 0 - vysl;
+		ifj16.print(vysl+"\n");
 	}
 
 	static int factorial(int n)

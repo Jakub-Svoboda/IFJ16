@@ -9,6 +9,6 @@ class Main
 		if(a == b)
 		{
 			c = a;
-		}
+		}else{}
 	}
 }

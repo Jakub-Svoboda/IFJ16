@@ -72,7 +72,7 @@ int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 
 int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list, char *var){						//return 1 if the called function is builtin function, returns 0 if not
 	tInstr I;
-	if(strcmp(tokenPtr->name,"ifj16.readInt") == 0){	
+	if(strcmp(tokenPtr->name,"ifj16.readInt") == 0){
 		getModifiedToken(f,tokenPtr);	
 		if(tokenPtr->type != token_bracketLeftRound){memfreeall(); exit(2);} 	//Read next token, which must be (
 		getModifiedToken(f,tokenPtr);
@@ -708,8 +708,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					lastToken=tokenPtr;
 					resources->callPtr = memalloc(sizeof(Token));
 					resources->callPtr = memcpy(resources->callPtr,tokenPtr,sizeof(Token));
-					sprintf(buf3, "%s",lastToken->name);	
-				
+					sprintf(buf3, "%s",lastToken->name);						
 					if(builtin(f,tokenPtr,list,buf) == 1){								//check for builtin function call		
 						//printType(tokenPtr);
 						return result;
