@@ -28,7 +28,7 @@ unsigned long line_number(FILE *f) {
 		if(is_EOL != '\n') {
 			curr_pos++;
 		}
-		
+
 		else {
 			line_count++;
 		}
@@ -141,5 +141,6 @@ void error(error_type type) {
 	}
 
 	fprintf(stderr, "Error in line: '%lu'\n'%s'.\n", err_line, err_msg);
+	memfreeall();
 	exit(return_value);
 }
