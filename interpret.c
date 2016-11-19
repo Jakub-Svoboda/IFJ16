@@ -1764,8 +1764,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_PRINT******************************//
-			case I_PRINT:
-
+			case I_PRINT:;
+				int opt = atoi(list->active->Instruction.addr2);
+				print(list->active->Instruction.addr1,opt,localVarTable,currentClass);
 			break;
 
 	//************************I_LENGTH******************************//
