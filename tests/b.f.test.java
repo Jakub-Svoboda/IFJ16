@@ -3,7 +3,7 @@ class pre{
 	static void basnicka(){
 		ifj16.print(Main.shakesbro+"\n");
 		return;
-	}	
+	}
 }
 
 
@@ -23,7 +23,7 @@ class Main{
 		ifj16.print(d+"\n");		//12
 		return d;
 	}
-	
+
 }
 
 
@@ -31,5 +31,5 @@ class Main{
 
 class post{
 	static int counter = 5*5*5/5;
-	
+
 }
