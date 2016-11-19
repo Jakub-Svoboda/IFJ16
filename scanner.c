@@ -89,6 +89,8 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 	int buffSize = BUFFER_SIZE;
 	char *buff = (char*) memalloc(buffSize * sizeof(char));					//ZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZOZ
 
+	char* name2 = memalloc(sizeof(char)*2);
+	char* name3 = memalloc(sizeof(char)*3);
 //	buffSize += BUFFER_SIZE;
 //    buff = memrealloc(buff, buffSize);
 
@@ -236,21 +238,22 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					//ArOp
 					case '+':
 						t->type = token_add;
-						char* name = memalloc(sizeof(char)*2);
-						name = "+";
-						t->name = name;
+
+						name2 = "+";
+						t->name = name2;
 						return t;
+						break;
 					case '-':
 						t->type = token_subtract;
-						char* name = memalloc(sizeof(char)*2);
-						name = "-";
-						t->name = name;
+
+						name2 = "-";
+						t->name = name2;
 						return t;
 					case '*':
 						t->type = token_multiply;
-						char* name = memalloc(sizeof(char)*2);
-						name = "*";
-						t->name = name;
+
+						name2 = "*";
+						t->name = name2;
 						return t;
 					//Division or Comments
 					case '/':
@@ -279,9 +282,9 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						}else {									//next char is not matching any comment combination
 							ungetc(c,f);						//move 1 char back and return token type
 							t->type = token_divide;
-							char* name = memalloc(sizeof(char)*2);
-							name = "/";
-							t->name = name;
+
+							name2 = "/";
+							t->name = name2;
 							return t;
 						}
 					case '\'':									//TODO how to handle chars? does java require only "" for strings?
@@ -294,73 +297,73 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 					//Delimiters
 					case '.':
 						t->type = token_dot;
-						char* name = memalloc(sizeof(char)*2);
-						name = ".";
-						t->name = name;
+
+						name2 = ".";
+						t->name = name2;
 						return t;
 					case '(':
 						t->type = token_bracketLeftRound;
-						char* name = memalloc(sizeof(char)*2);
-						name = "(";
-						t->name = name;
+
+						name2 = "(";
+						t->name = name2;
 						return t;
 					case ')':
 						t->type = token_bracketRightRound;
-						char* name = memalloc(sizeof(char)*2);
-						name = ")";
-						t->name = name;
+
+						name2 = ")";
+						t->name = name2;
 						return t;
 					case ',':
 						t->type = token_comma;
-						char* name = memalloc(sizeof(char)*2);
-						name = ",";
-						t->name = name;
+
+						name2 = ",";
+						t->name = name2;
 						return t;
 					case '{':
 						t->type = token_bracketLeftCurly;
-						char* name = memalloc(sizeof(char)*2);
-						name = "{";
-						t->name = name;
+
+						name2 = "{";
+						t->name = name2;
 						return t;
 					case '}':
 						t->type = token_bracketRightCurly;
-						char* name = memalloc(sizeof(char)*2);
-						name = "}";
-						t->name = name;
+
+						name2 = "}";
+						t->name = name2;
 						return t;
 					case ';':
 						t->type = token_semicolon;
-						char* name = memalloc(sizeof(char)*2);
-						name = ";";
-						t->name = name;
+
+						name2 = ";";
+						t->name = name2;
 						return t;
 					case '[':
 						t->type = token_bracketLeftSquare;
-						char* name = memalloc(sizeof(char)*2);
-						name = "[";
-						t->name = name;
+
+						name2 = "[";
+						t->name = name2;
 						return t;
 					case ']':
 						t->type = token_bracketRightSquare;
-						char* name = memalloc(sizeof(char)*2);
-						name = "]";
-						t->name = name;
+
+						name2 = "]";
+						t->name = name2;
 						return t;
 					//assign =, equal ==
 					case '=':
 						c = fgetc(f);
 						if(c == '=') {
 							t->type = token_equal;
-							char* name = memalloc(sizeof(char)*3);
-							name = "==";
-							t->name = name;
+
+							name3 = "==";
+							t->name = name3;
 							return t;
 						}
 						ungetc(c,f);								//same thing again and again , if it's not matching, move 1 char back and return token
 						t->type = token_assign;
-						char* name = memalloc(sizeof(char)*2);
-						name = "=";
-						t->name = name;
+
+						name2 = "=";
+						t->name = name2;
 						return t;
 					//notEqual
 					case '!':
@@ -368,9 +371,8 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						c=fgetc(f);
 						if(c == '=') {
 							t->type = token_notEqual;
-							char* name = memalloc(sizeof(char)*3);
-							name = "!=";
-							t->name = name;
+							name3 = "!=";
+							t->name = name3;
 							return t;
 						}
 						t->type = token_invalid;	//invalid combination !xx
@@ -380,31 +382,31 @@ Token *getToken(FILE *f) { 	//TODO : Is there better way of passing FILE? 	//Cal
 						c = fgetc(f);
 						if(c == '=') {
 							t->type = token_lessEqual;
-							char* name = memalloc(sizeof(char)*3);
-							name = "<=";
-							t->name = name;
+
+							name3 = "<=";
+							t->name = name3;
 							return t;
 						}
 						ungetc(c,f);
 						t->type = token_less;
-						char* name = memalloc(sizeof(char)*2);
-						name = "<";
-						t->name = name;
+
+						name2 = "<";
+						t->name = name2;
 						return t;
 					case '>':
 						c = fgetc(f);
 						if(c == '=') {
 							t->type = token_greaterEqual;
-							char* name = memalloc(sizeof(char)*3);
-							name = ">=";
-							t->name = name;
+
+							name3 = ">=";
+							t->name = name3;
 							return t;
 						}
 						ungetc(c,f);
 						t->type = token_greater;
-						char* name = memalloc(sizeof(char)*2);
-						name = ">";
-						t->name = name;
+
+						name2 = ">";
+						t->name = name2;
 						return t;
 					case EOF:										//Damn we made it to EOF; ggwp
 						t->type = token_EOF;
