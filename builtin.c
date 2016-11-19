@@ -274,17 +274,12 @@ int length(String s, int stringOpt, thTable *htab, char* class){
     while(*s) {
         if(preC == '\\') {
             if(isdigit((*s))){
-                char num[] = "000";
-                num[0] = (*s);
                 makeUseOf = *(s)++;
                 makeUseOf = makeUseOf;
                 if(isdigit(*s)){
-                    num[1] = *s;
                     makeUseOf = *s++;
                     makeUseOf = makeUseOf;
                     if(isdigit(*s)){
-                        num[2] = *s;
-                        char oct = octToDec(atoi(num));
                         offset++;
                     }
                 }
