@@ -32,12 +32,10 @@
 void getModifiedToken(FILE *f,Token* tokenPtr);
 int runSyntaxAnalysis (FILE *f, tListOfInstr * list);
 int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfInstr * list);
-void getModifiedLookAhead(FILE *f,Token* tokenPtr);
 void generateInstruction(tInstr I, int instType, char addr1[2047], char addr2[2047], char addr3[2047],tListOfInstr* list);
-thTable* enterScope();
 int builtin(FILE *f, Token * tokenPtr, tListOfInstr * list,char * var);
 
-typedef enum state{
+typedef enum state{			//states for checkSyntax function
 	CLASS_BLOCK,
 	CLASS,
 	CLASS_NAME,
@@ -70,13 +68,13 @@ typedef enum state{
 }	State;
 
 
-typedef struct{
-	thTable* functionTable;
-	thTable* globalVarTable;
-	Token* classPtr;
-	Token* funcPtr;
-	Token *callPtr;
-	tList* memList;
+typedef struct{			//a structure that the global pointer is pointing to
+	thTable* functionTable;		//table for functions needs to be accessable globally
+	thTable* globalVarTable;	//table for global variables needs to be accessable globally
+	Token* classPtr;			//pointer to current class. Required for proper label generating.
+	Token* funcPtr;				//pointer to current function. Required for proper label generating.	
+	Token *callPtr;				//pointer to name of called function. Needs to be accessed from recursive call.
+	tList* memList;				//A garbage collector array. 
 }resourceStruct;
 
 
