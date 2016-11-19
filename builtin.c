@@ -55,7 +55,6 @@ String readString() {
     }
 
     buff[count] = '\0';                                         //handle end of string manually
-    //printf("[%s]--",buff);        //TODO delete
     return buff;
 }
 
@@ -157,15 +156,13 @@ void print(char* value, int opt, thTable *htab, char* class) {
             exit(7);
         }
         //printf("[[[[]]]] %s %d \n", tempItem->stringValue, tempItem->varType);
-        if(tempItem != NULL){                                                             //variable was found so print it out the right way
-
-            if(tempItem->varType == 28 ){
-                printf("%d",tempItem->intValue);
+        if(tempItem != NULL){
+            if(tempItem->varType == 28 ){                                   //choose the correct way to print variable
+                printf("%d",tempItem->intValue);                            //int
             }else if(tempItem->varType == 23){
-                printf("%g",tempItem->doubleValue);
-            }else if(tempItem->varType == 30 ) {
-                //printf("%s",tempItem->stringValue
-                char preC = '~';
+                printf("%g",tempItem->doubleValue);                         //double
+            }else if(tempItem->varType == 30 ) {                            //string
+                char preC = '~';                                            //previous char
                 char makeUseOf;
                 char* backup = (tempItem->stringValue);
                 while(*(tempItem->stringValue)) {
@@ -194,8 +191,9 @@ void print(char* value, int opt, thTable *htab, char* class) {
                         }else if(*(tempItem->stringValue) == '\\'){         //there is \\ , print "\"
                             printf("\\");
                         }else {
-                            printf("%c",*(tempItem->stringValue));
-                            //TODO: \something , should I EXIT?
+                            memfreeall();
+        					fprintf(stderr, "String is incorrect.\n");
+        					exit(1);
                         }
                     }else if(*tempItem->stringValue == '\\'){
                         ;
@@ -203,15 +201,16 @@ void print(char* value, int opt, thTable *htab, char* class) {
                         printf("%c",*(tempItem->stringValue));
                     }
 
-                    //prepreC = preC;
-                    preC = *(tempItem->stringValue);
+                    if(preC == '\\'){ preC = '~';}                          //this will handle errors with strings like \\t\\ etc
+                    else {preC = *(tempItem->stringValue);}
+
                     makeUseOf = *(tempItem->stringValue)++;
                     makeUseOf = makeUseOf;
                 }
-                (tempItem->stringValue) = backup;
+                (tempItem->stringValue) = backup;                           //I've been moving pointer so here is time to set it back
             }
         }
-    }else { //value is just string
+    }else { //value is just string, check commentary above
         char preC = '!';
         char makeUseOf;
         char* backup = value;
@@ -241,7 +240,9 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 }else if((*value) == '\\'){
                     printf("\\");
                 }else {
-                    //printf("%c",*value);
+                    memfreeall();
+                    fprintf(stderr, "String is incorrect.\n");
+                    exit(1);
                 }
             }else if((*value) == '\\'){
                 ;
@@ -249,7 +250,8 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 printf("%c",*value);
             }
 
-            preC = *value;
+            if(preC == '\\'){ preC = '~';}
+            else {preC = *value;}
             makeUseOf = *(value)++;
             makeUseOf = makeUseOf;
         }
