@@ -1964,9 +1964,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				char * sortPtr = sort(list->active->Instruction.addr1,sortInt,localVarTable,currentClass);
 				if(itemPtr3!=NULL){
 					if(itemPtr3->varType != 30){memfreeall(); fprintf(stderr,"I_SORT. Target variable has incorrect type.\n");exit(4);}
-					itemPtr->stringValue=memalloc(sizeof(char)*(strlen(sortPtr) +1));
-					strcpy(itemPtr->stringValue,sortPtr);
-					itemPtr->isInit = 1;			
+					itemPtr3->stringValue=memalloc(sizeof(char)*(strlen(sortPtr) +1));
+					strcpy(itemPtr3->stringValue,sortPtr);
+					itemPtr3->isInit = 1;			
 				}
 				
 			break;
