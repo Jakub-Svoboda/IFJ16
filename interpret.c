@@ -52,7 +52,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	int postCounter=1;
 
 	while(1){
-		fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
+		//fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
 		switch (list->active->Instruction.instType){
 
 
@@ -1795,25 +1795,53 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_SUBSTR1******************************//
-			case I_SUBSTR1:
-				
-
+			case I_SUBSTR1:;
+				int substrInt1 = atoi(list->active->Instruction.addr2);
+				char* substrChar1 = NULL;
+				substrChar1=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+				strcpy(substrChar1,list->active->Instruction.addr1);
 			break;
 
 	//************************I_SUBSTR2******************************//
-			case I_SUBSTR2:
-				
-				
+			case I_SUBSTR2:;
+				int substrInt2 = atoi(list->active->Instruction.addr2);
+				char* substrChar2 = NULL;
+				substrChar2=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+				strcpy(substrChar2,list->active->Instruction.addr1);
 
 			break;
 
 	//************************I_SUBSTR3******************************//
-			case I_SUBSTR3:
+			case I_SUBSTR3:;
+				int substrInt3 = atoi(list->active->Instruction.addr2);
+				char* substrChar3 = NULL;
+				substrChar3=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+				strcpy(substrChar3,list->active->Instruction.addr1);
 
 			break;
 
 	//************************I_SUBSTR4******************************//
 			case I_SUBSTR4:
+				if(strcmp(list->active->Instruction.addr1,"")){			//the variable is searched for only if there is assign before FN call
+					if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+						if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+						}
+						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+							//printHtabLocal(localVarTable);	//Variable is not in var table exist
+							//printHtab(resources->globalVarTable,1);
+							fprintf(stderr,"I_SUBSTR. Variable not found.\n");
+							memfreeall();
+							exit(3);
+						}
+					}
+					char *substrPtr=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+					substrPtr=substr(substrChar1,substrInt1,substrChar2,substrInt2,substrChar3,substrInt3,localVarTable,currentClass);
+					strcpy(itemPtr->stringValue,substrPtr);
+					itemPtr->isInit = 1;
+				}else{
+					substr(substrChar1,substrInt1,substrChar2,substrInt2,substrChar3,substrInt3,localVarTable,currentClass);
+				}
 
 			break;
 
@@ -1859,17 +1887,42 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_FIND1*********************************//
-			case I_FIND1:
-
+			case I_FIND1:;
+				int findInt1 = atoi(list->active->Instruction.addr2);
+				char* findChar1 = NULL;
+				findChar1=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+				strcpy(findChar1,list->active->Instruction.addr1);
 			break;
 
 	//************************I_FIND2*********************************//
-			case I_FIND2:
+			case I_FIND2:;
+				int findInt2 = atoi(list->active->Instruction.addr2);
+				char* findChar2 = NULL;
+				findChar2=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+				strcpy(findChar2,list->active->Instruction.addr1);
 
 			break;
 
 	//************************I_FIND3*********************************//
 			case I_FIND3:
+				if(strcmp(list->active->Instruction.addr1,"")){			//the variable is searched for only if there is assign before FN call
+					if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+						if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+						}
+						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+							//printHtabLocal(localVarTable);	//Variable is not in var table exist
+							//printHtab(resources->globalVarTable,1);
+							fprintf(stderr,"I_LENGTH. Argument variable not found.\n");
+							memfreeall();
+							exit(3);
+						}
+					}
+					itemPtr->intValue = find(findChar1,findInt1,findChar2,findInt2,localVarTable,currentClass);
+					itemPtr->isInit = 1;
+				}else{
+					find(findChar1,findInt1,findChar2,findInt2,localVarTable,currentClass);
+				}
 
 			break;
 
