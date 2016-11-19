@@ -7,22 +7,21 @@ char *strtok_r(char *, const char *, char **);	//required for strtok_r function
 extern resourceStruct * resources;
 
 int runInterpret(tListOfInstr *list){
-	fprintf(stderr,"\n");
 	listFirst(list);
 
-	while(list->active->nextItem !=NULL){
-		printInstType(list->active->Instruction.instType);
-		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
-		listNext(list);
-	}
-	printInstType(list->active->Instruction.instType);	//print the very last instr
-	fprintf(stderr,"\n");
+//	while(list->active->nextItem !=NULL){				//test output for instruction list
+//		printInstType(list->active->Instruction.instType);
+//		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
+//		listNext(list);
+//	}
+//	printInstType(list->active->Instruction.instType);	//print the very last instr
+//	fprintf(stderr,"\n");
 
 	listFirst(list);
 	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
 	htabInit(localVarTable);
 
-	fprintf(stderr,"\n");	//TODO comment me
+
 	interpretEval(list,localVarTable);
 
 
