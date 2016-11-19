@@ -74,7 +74,7 @@ typedef struct{			//a structure that the global pointer is pointing to
 	Token* classPtr;			//pointer to current class. Required for proper label generating.
 	Token* funcPtr;				//pointer to current function. Required for proper label generating.	
 	Token *callPtr;				//pointer to name of called function. Needs to be accessed from recursive call.
-	tList* memList;				//A garbage collector array. 
+	tList* memList;				//A garbage collector list of allocated memory. 
 }resourceStruct;
 
 

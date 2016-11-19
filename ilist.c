@@ -8,6 +8,9 @@
 *          Matyas Sladek        xslade21
 *          Katerina Smajzrova   xsmajz00
 * Variant: b/1/II
+*
+* This file is based on the example interpret provided to us. 
+* Usage and modificating is allowed according a IFJ project forum.	
 */
 
 #include "ilist.h"
@@ -19,6 +22,7 @@ void listInit(tListOfInstr *L){
   L->active = NULL;
 }
 
+//Inserts and instruction at the end of instruction list
 void listInsertLast(tListOfInstr *L, tInstr I){
 	tListItem *newItem;
 	newItem = memalloc(sizeof (tListItem));
