@@ -18,10 +18,11 @@
 char *strtok_r(char *, const char *, char **);	//required for strtok_r function
 extern resourceStruct * resources;
 
+/* This function is called from main. Generates memory for local variable table and initializes it. If there is no error in interpreting, the function exits with 0*/
 int runInterpret(tListOfInstr *list){
 	listFirst(list);
 
-//	while(list->active->nextItem !=NULL){				//test output for instruction list
+//	while(list->active->nextItem !=NULL){											//test output for instruction list
 //		printInstType(list->active->Instruction.instType);
 //		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
 //		listNext(list);
@@ -29,13 +30,11 @@ int runInterpret(tListOfInstr *list){
 //	printInstType(list->active->Instruction.instType);	//print the very last instr
 //	fprintf(stderr,"\n");
 
-	listFirst(list);
-	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);
+	listFirst(list);					//resets instruction pointer
+	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);	//allocates memory for variable table
 	htabInit(localVarTable);
 
-
-	interpretEval(list,localVarTable);
-
+	interpretEval(list,localVarTable);											//calls the recursive interpret function
 
 	memfreeall();
 	exit(0);
@@ -45,12 +44,12 @@ return 0;
 }
 
 thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
-	struct listItem *lastActive;
+	struct listItem *lastActive;	//pointer to reset position on instruction lost
 	thTable * nextCallTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
-	htabInit(nextCallTable);
-	char currentFunc[2047];
-	char currentClass[2047];
-	char* dot=".";
+	htabInit(nextCallTable);		//initialize new variable table for future function call
+	char currentFunc[2047];			//name of current function
+	char currentClass[2047];		//name of current class
+	char* dot=".";					//char to connect short identifiers
 	thtabItem* itemPtr = NULL;		//pointer to 1st address
 	thtabItem* itemPtr2 = NULL;		//pointer to 2nd address
 	thtabItem* itemPtr3 = NULL;		//pointer to 3rd address
@@ -59,19 +58,16 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	char postBuffer[2047];
 	thtabItem *returnPtr;	//Table item with returned variable
 	returnPtr=NULL;
-	int argumentCounter = 0;
+	int argumentCounter = 0;		//counter for argumens 
 	int postCounter=1;
 
-	while(1){
+	while(1){		//cycle repeats until the end of main function is reached
 		//fprintf(stderr,"interpreting instr: %d, %s, %s, %s\n",list->active->Instruction.instType,list->active->Instruction.addr1, list->active->Instruction.addr2,list->active->Instruction.addr3);
 		switch (list->active->Instruction.instType){
 
 
 	//************************I_STOP******************************//
-			case I_STOP:
-
-				fprintf(stderr,"\nInterpret over.\n\n");	//TODO comment me
-		//printHtabLocal(localVarTable);	//TODO delete me
+			case I_STOP:			//The last instruction. This should not be executed.
 				memfreeall();
 				exit(0);	
 
@@ -84,8 +80,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					char *buffer2;
 					strcpy(buffer, list->active->Instruction.addr1);
 					strtok_r(buffer, ".", &buffer2);
-					strcpy(currentClass,buffer);
-					strcpy(currentFunc,buffer2);
+					strcpy(currentClass,buffer);			//if a label is function label, mark current class name
+					strcpy(currentFunc,buffer2);			//if a label is function label, mark current function name
 				}
 
 			break;
@@ -121,75 +117,63 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
-
-	//printHtabLocal(localVarTable);
-	//printHtab(resources->globalVarTable,1);
 				return NULL;
 			break;
 
 	//************************I_RETURN******************************//
 			case I_RETURN:
-				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					if(!strstr(list->active->Instruction.addr1,dot)){		//if short identifier
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {						//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){													//if short identifier
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
-					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table
-						//printHtab(resources->globalVarTable,1);
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){		//if not in local, search global
 						fprintf(stderr,"Sem_Error. I_RETURN. Returning nonexistant variable.\n");
 						memfreeall();
 						exit(3);
 					}
 				}
 				thtabItem* tmpPtr = htabSearch(resources ->functionTable,concat(currentFunc,currentClass));
-				if(itemPtr->varType != tmpPtr->returnType){			//check if returned variable has correct type
-					//printHtabLocal(localVarTable);
-					//printHtab(resources->globalVarTable,1);
+				if(itemPtr->varType != tmpPtr->returnType){																//check if returned variable has correct type
 					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable type does not match with defined return type.\n");
 					memfreeall();
 					exit(4);
 				}
-				if(itemPtr->isInit==0){
-					//printHtabLocal(localVarTable);	//Variable is not initialized
-					//printHtab(resources->globalVarTable,1);
+				if(itemPtr->isInit==0){																					//check for unitilized variable
 					fprintf(stderr,"Sem_Error. I_RETURN. Returning variable is not initialized.\n");
 					memfreeall();
 					exit(8);
 				}
-//printHtabLocal(localVarTable);			//TODO delete me
 				returnPtr = itemPtr;
 				return returnPtr;
 			break;
 
 	//************************I_IF_GOTO******************************//
 			case I_IF_GOTO:
-				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
-					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {						//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){													//if called function is short identifier
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
-					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){		//if not in local, search global
 						fprintf(stderr,"Sem_Error. I_IF_GOTO expression based on nonexistant variable\n");
 						memfreeall();
 						exit(3);
 					}
 				}
-				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
-				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is double
-				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;	//logical switch is BOOL
+				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;											//logical switch is INT
+				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;									//logical switch is double
+				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;									//logical switch is BOOL
 				else {jumpBool=0;}
 
 				if(jumpBool){
-					lastActive=list->active;	//save pointer to active instr
-					listFirst(list);			//reset active to first for label search
-					while(1){			//search through instructions until the same label is found
+					lastActive=list->active;																			//save pointer to active instr
+					listFirst(list);																					//reset active to first for label search
+					while(1){																	//search through instructions until the same label is found
 						if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr2)==0){
 							break;
 						}
-						if(list->active->nextItem == NULL){		//if label was not found
+						if(list->active->nextItem == NULL){										//if label was not found
 							fprintf(stderr,"\ncalled function not found\n\n\n");
-							memfreeall();			//user has called a function that does not exist.
+							memfreeall();														//user has called a function that does not exist.
 							exit(3);
 						}
 						listNext(list);
@@ -205,40 +189,40 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
 					strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 				}
-				lastActive=list->active;	//save pointer to active instr
-				listFirst(list);			//reset active to first for label search
-				while(1){			//search through instructions until the same label is found
+				lastActive=list->active;								//save pointer to active instr
+				listFirst(list);										//reset active to first for label search
+				while(1){												//search through instructions until the same label is found
 					if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr1)==0){
 						break;
 					}
-					if(list->active->nextItem == NULL){		//if label was not found
+					if(list->active->nextItem == NULL){					//if label was not found
 						fprintf(stderr,"I_FN_CALL. Called function not found.\n");
-						memfreeall();			//user has called a function that does not exist.
+						memfreeall();									//user has called a function that does not exist.
 						exit(3);
 					}
 					listNext(list);
 				}
-				returnPtr=interpretEval(list,nextCallTable);		//recursive call this function
-				htabDispose(nextCallTable);				//after return we dispose the variable table from called function
+				returnPtr=interpretEval(list,nextCallTable);			//recursive call this function
+				htabDispose(nextCallTable);								//after return we dispose the variable table from called function
 				htabInit(nextCallTable);
-				list->active=lastActive;	//restore active position before fn call
-				argumentCounter=0;			//reset before next fn call
+				list->active=lastActive;								//restore active position before fn call
+				argumentCounter=0;										//reset before next fn call
 			break;
 
 	//************************I_PROGRAM******************************//
 			case I_PROGRAM:
-				while(1){			//search through instructions until the same label is found
+				while(1){												//search through instructions until the same label is found
 					if(list->active->Instruction.instType == 28 && strcmp(list->active->Instruction.addr1, "#PRE0")==0){
 						break;
 					}
 					if(list->active->Instruction.instType == 30) {
 						strcpy(currentClass, list->active->Instruction.addr1);
 					}
-					if(list->active->nextItem == NULL){		//no #PRE0 wrapper was found, starting in Main.run
+					if(list->active->nextItem == NULL){					//no #PRE0 wrapper was found, starting in Main.run
 						strcpy(currentClass, "Main");
 						strcpy(currentFunc, "run");
 						listFirst(list);
-						while(1){			//search through instructions until the same label is found
+						while(1){										//search through instructions until the same label is found
 							if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, "Main.run")==0){
 								break;
 							}
@@ -253,7 +237,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_MOV_INT******************************//
-			case I_MOV_INT:
+			case I_MOV_INT:															//moves integer from new temprary variable to expression for precedence analysis
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
 					itemPtr->varType = INT;
 					itemPtr->intValue = atoi(list->active->Instruction.addr2);
@@ -266,7 +250,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_MOV_DOUBLE******************************//
-			case I_MOV_DOUBLE:
+			case I_MOV_DOUBLE:														//moves double from new temprary variable to expression for precedence analysis
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
 					itemPtr->varType = DOUBLE;
 					itemPtr->doubleValue = atof(list->active->Instruction.addr2);
@@ -279,7 +263,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_MOV_STRING******************************//
-			case I_MOV_STRING:
+			case I_MOV_STRING:														//moves String from new temprary variable to expression for precedence analysis
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) != NULL){
 					itemPtr->varType = STRING;
 					itemPtr->stringValue=memalloc(sizeof(list->active->Instruction.addr2));
@@ -295,24 +279,20 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_ADD******************************//
 			case I_ADD:
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
-					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+					if(!strstr(list->active->Instruction.addr1,dot)){								//if called function is short identifier
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_ADD nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
 					}
-				}			//second adress search
+				}																					//second adress search
 				if((itemPtr2=(htabSearch(localVarTable,list->active->Instruction.addr2))) == NULL) {//localVarTable search
-					if(!strstr(list->active->Instruction.addr2,dot)){		//if called function is short identifier
+					if(!strstr(list->active->Instruction.addr2,dot)){									//if called function is short identifier
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_ADD nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -323,8 +303,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_ADD nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -344,8 +322,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 
 
-				if(itemPtr2->varType == 28){			// INT +
-					if(itemPtr3->varType == 28){		// INT + INT
+				if(itemPtr2->varType == 28){												// INT +
+					if(itemPtr3->varType == 28){											// INT + INT
 						if(itemPtr->varType == 23){ itemPtr->varType=23;}
 						else if(itemPtr->varType == 0 || itemPtr->varType == 28){ itemPtr->varType=28;}
 						else{
@@ -355,7 +333,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						itemPtr->intValue=itemPtr2->intValue+itemPtr3->intValue;
 						itemPtr->isInit=1;
-					}else if(itemPtr3->varType == 23){	// INT + D
+					}else if(itemPtr3->varType == 23){										// INT + D
 						if(itemPtr->varType == 23){ itemPtr->varType=23;}
 						else if(itemPtr->varType == 0 || itemPtr->varType == 28){ itemPtr->varType=23;}
 						else{
@@ -365,7 +343,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						itemPtr->intValue=itemPtr->intValue+itemPtr3->doubleValue;
 						itemPtr->isInit=1;
-					}else if(itemPtr3->varType == 30){	// INT + STR
+					}else if(itemPtr3->varType == 30){										// INT + STR
 						if(itemPtr->varType == 23){
 							fprintf(stderr,"I_ADD target not valid type.\n");
 							memfreeall();
@@ -397,8 +375,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 
 
-				}else if(itemPtr2->varType == 23){		// DOUBLE +
-					if(itemPtr3->varType == 28){		// DOUBLE + INT
+				}else if(itemPtr2->varType == 23){												// DOUBLE +
+					if(itemPtr3->varType == 28){												// DOUBLE + INT
 						if(itemPtr->varType == 23){ itemPtr->varType=23;}
 						else if(itemPtr->varType == 0 || itemPtr->varType == 28){ itemPtr->varType=23;}
 						else{
@@ -408,7 +386,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						itemPtr->doubleValue=itemPtr2->doubleValue+itemPtr3->intValue;
 						itemPtr->isInit=1;
-					}else if(itemPtr3->varType == 23){	// DOUBLE + DOUBLE
+					}else if(itemPtr3->varType == 23){												// DOUBLE + DOUBLE
 						if(itemPtr->varType == 23){ itemPtr->varType=23;}
 						else if(itemPtr->varType == 0 || itemPtr->varType == 28){ itemPtr->varType=23;}
 						else{
@@ -419,7 +397,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						itemPtr->doubleValue=itemPtr2->doubleValue+itemPtr3->doubleValue;
 						itemPtr->isInit=1;
 
-					}else if(itemPtr3->varType == 30){	// DOUBLE + STR
+					}else if(itemPtr3->varType == 30){												// DOUBLE + STR
 						if(itemPtr->varType == 23){
 							fprintf(stderr,"I_ADD target not valid type.\n");
 							memfreeall();
@@ -450,8 +428,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					}
 
 
-				}else if(itemPtr2->varType == 30){					// STRING +
-					if(itemPtr3->varType == 28){					// STRING + INT
+				}else if(itemPtr2->varType == 30){										// STRING +
+					if(itemPtr3->varType == 28){										// STRING + INT
 						if(itemPtr->varType == 23 || itemPtr->varType == 28){
 							fprintf(stderr,"I_ADD target not valid type.\n");
 							memfreeall();
@@ -467,7 +445,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						sprintf(itemPtr->stringValue,"%s%d",itemPtr2->stringValue, itemPtr3->intValue);
 						itemPtr->isInit=1;
 						itemPtr->varType=30;
-					}else if(itemPtr3->varType == 23){				// STRING + DOUBLE
+					}else if(itemPtr3->varType == 23){									// STRING + DOUBLE
 						if(itemPtr->varType == 23 || itemPtr->varType == 28){
 							fprintf(stderr,"I_ADD target not valid type.\n");
 							memfreeall();
@@ -483,7 +461,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						sprintf(itemPtr->stringValue,"%s%g",itemPtr2->stringValue, itemPtr3->doubleValue);
 						itemPtr->isInit=1;
 						itemPtr->varType=30;
-					}else if(itemPtr3->varType == 30){				// STRING + STRING
+					}else if(itemPtr3->varType == 30){									// STRING + STRING
 						if(itemPtr->varType == 23 || itemPtr->varType == 28){
 							fprintf(stderr,"I_ADD target not valid type.\n");
 							memfreeall();
@@ -524,8 +502,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_SUB nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -536,8 +512,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_SUB nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -548,8 +522,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_SUB nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -631,8 +603,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MUL nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -643,8 +613,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_MUL nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -655,8 +623,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MUL nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -740,8 +706,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_DIV nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -752,8 +716,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_DIV nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -764,8 +726,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_DIV nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -869,8 +829,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LT nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -881,8 +839,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_LT nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -893,8 +849,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LT nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -904,12 +858,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_LT left operandnot INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);	//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);	//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_LT left operandnot INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);	//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);	//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -958,8 +912,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GT nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -970,8 +922,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_GT nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -982,8 +932,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GT nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -993,12 +941,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_GT left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_GT left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -1048,8 +996,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LE nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -1060,8 +1006,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_LE nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -1072,8 +1016,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_LE nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -1083,12 +1025,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_LE left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_LEleft operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -1138,8 +1080,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GE nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -1150,8 +1090,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_GE nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -1162,8 +1100,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_GE nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -1173,12 +1109,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_GE left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_GE left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -1228,8 +1164,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_EQ nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -1240,8 +1174,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_EQ nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -1252,8 +1184,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_EQ nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -1263,12 +1193,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_EQ left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_EQ left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -1318,8 +1248,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_NE nonexistant target variable.\n");
 						memfreeall();
 						exit(3);
@@ -1330,8 +1258,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-					//printHtabLocal(localVarTable);	//Variable is not in var table exist
-					//printHtab(resources->globalVarTable,1);
 					fprintf(stderr,"Sem_Error. I_NE nonexistant left operand variable.\n");
 					memfreeall();
 					exit(3);
@@ -1342,8 +1268,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 					}
 					if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_NE nonexistant right operand variable.\n");
 						memfreeall();
 						exit(3);
@@ -1353,12 +1277,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->varType != 28 && itemPtr2->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_NE left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 				if(itemPtr3->varType != 28 && itemPtr3->varType != 23 ){	//operand must be int, double
 					fprintf(stderr, "I_NE left operand not INT, DOUBLE or BOOLEAN\n");
 					memfreeall();
-					exit(4);		//TODO check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
+					exit(4);		//check error code https://wis.fit.vutbr.cz/FIT/st/phorum-msg-show.php?id=45670
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
@@ -1409,8 +1333,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MOV to nonexistant target variable. %s\n", list->active->Instruction.addr1);
 						memfreeall();
 						exit(3);
@@ -1421,8 +1343,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr2,concat(list->active->Instruction.addr2,currentClass));	//the concat it with class name
 					}
 					if((itemPtr2=(htabSearch(resources->globalVarTable,list->active->Instruction.addr2))) == NULL){//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_MOV nonexistant source variable.\n");
 						memfreeall();
 						exit(3);
@@ -1431,7 +1351,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 				if(itemPtr->varType != itemPtr2->varType){		//Types are not matching, error4
 					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (itemPtr2->varType != 23 && itemPtr2->varType != 28)){
-						//printHtabLocal(localVarTable);
 						fprintf(stderr,"I_MOV source and target type not matching.\n");
 						memfreeall();
 						exit(4);
@@ -1468,7 +1387,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					default:
 						fprintf(stderr,"I_MOV source operand has unexpected type %d\n",itemPtr->varType);
 						memfreeall();
-						exit(3);	//TODO this is our fault, exit code is hard to define....
+						exit(99);	//this is our fault, exit code is hard to define....
 				}
 			break;
 
@@ -1480,8 +1399,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
 						memfreeall();
 						exit(3);
@@ -1530,8 +1447,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_PUSH variable not found\n");
 						memfreeall();
 						exit(3);
@@ -1549,8 +1464,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 
 				if((itemPtr2=(htabSearch(resources->functionTable,list->active->Instruction.addr2))) == NULL){	//search function table
-						//printHtabLocal(localVarTable);							//functon is not in table
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. I_PUSH function not found\n");
 						memfreeall();
 						exit(3);
@@ -1595,8 +1508,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						//printHtabLocal(localVarTable);	//Variable is not in var table exist
-						//printHtab(resources->globalVarTable,1);
 						fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
 						memfreeall();
 						exit(3);
@@ -1642,7 +1553,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					default:
 						fprintf(stderr,"I_RETURN_MOV source operand has unexpected type %d\n",itemPtr->varType);
 						memfreeall();
-						exit(3);	//TODO this is our fault, exit code is hard to define....
+						exit(99);	//this is our fault, exit code is hard to define....
 				}
 
 			break;
@@ -1694,8 +1605,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_READ_INT. Expression based on nonexistant variable\n");
 							memfreeall();
 							exit(3);
@@ -1724,15 +1633,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_READ_STRING . Expression based on nonexistant variable\n");
 							memfreeall();
 							exit(3);
 						}
 					}
 					if(itemPtr->varType != 30){		//Types are not matching, error4
-						//printHtabLocal(localVarTable);
 						fprintf(stderr,"I_READ_STRING  target type not string.\n");
 						memfreeall();
 						exit(4);
@@ -1755,15 +1661,12 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_READ_DOUBLE. Expression based on nonexistant variable\n");
 							memfreeall();
 							exit(3);
 						}
 					}
 					if(itemPtr->varType != 23){		//Types are not matching, error4
-						//printHtabLocal(localVarTable);
 						fprintf(stderr,"I_READ_DOUBLE  target type not double.\n");
 						memfreeall();
 						exit(4);
@@ -1790,8 +1693,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 						}
 						if((itemPtr3=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_LENGTH. Argument variable not found.\n");
 							memfreeall();
 							exit(3);
@@ -1841,8 +1742,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_SUBSTR. Variable not found.\n");
 							memfreeall();
 							exit(3);
@@ -1885,8 +1784,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_LENGTH. Argument variable not found.\n");
 							memfreeall();
 							exit(3);
@@ -1926,8 +1823,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_LENGTH. Argument variable not found.\n");
 							memfreeall();
 							exit(3);
@@ -1951,8 +1846,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							strcpy(list->active->Instruction.addr3,concat(list->active->Instruction.addr3,currentClass));	//the concat it with class name
 						}
 						if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr3))) == NULL){	//if not in local, search global
-							//printHtabLocal(localVarTable);	//Variable is not in var table exist
-							//printHtab(resources->globalVarTable,1);
 							fprintf(stderr,"I_SORT. Argument variable not found.\n");
 							memfreeall();
 							exit(3);
@@ -1964,9 +1857,9 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				char * sortPtr = sort(list->active->Instruction.addr1,sortInt,localVarTable,currentClass);
 				if(itemPtr3!=NULL){
 					if(itemPtr3->varType != 30){memfreeall(); fprintf(stderr,"I_SORT. Target variable has incorrect type.\n");exit(4);}
-					itemPtr->stringValue=memalloc(sizeof(char)*(strlen(sortPtr) +1));
-					strcpy(itemPtr->stringValue,sortPtr);
-					itemPtr->isInit = 1;			
+					itemPtr3->stringValue=memalloc(sizeof(char)*(strlen(sortPtr) +1));
+					strcpy(itemPtr3->stringValue,sortPtr);
+					itemPtr3->isInit = 1;			
 				}
 				
 			break;
