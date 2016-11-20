@@ -22,10 +22,10 @@
 #define false 0
 
 
-char *keywords[] = {"boolean", "break", "class", "continue", "do", "double",
-	"else", "false", "for", "if", "int", "return", "String", "static", "true","void","while"};
 
 int isKeyword(char *string) {							//return index value of choosen keyword in array
+	char *keywords[] = {"boolean", "break", "class", "continue", "do", "double",
+		"else", "false", "for", "if", "int", "return", "String", "static", "true","void","while"};
     int i;
     for (i = 0; i < 17; i++) {
         if (!strcmp(keywords[i], string))
@@ -36,10 +36,7 @@ int isKeyword(char *string) {							//return index value of choosen keyword in a
 
 Token *tokenInit() {									//allocate space
 	Token *t = (Token *)memalloc(sizeof(Token));
-	if(t == NULL) {
-		printf("tokenInit malloc error\n");				//propably BS
-		t->type = token_invalid;						//not sure if this is ok since there is only NULL in t, so it can't have ->type
-	}
+	
 	t->type=-1;
 	t->name = NULL;
 	return t;

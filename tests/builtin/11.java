@@ -11,6 +11,6 @@ class Main {
 		bSort = ifj16.sort(b);
 		cSort = ifj16.sort(c);
 
-		ifj16.print("aSort: " + aSort + "bSort: " + bSort + "cSort: " + cSort + "\n");
+		ifj16.print("aSort: " + aSort + " bSort: " + bSort + " cSort: " + cSort + "\n");
 	}
 }
