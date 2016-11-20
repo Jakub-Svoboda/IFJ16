@@ -1748,9 +1748,10 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 					}
 					if(itemPtr->varType != 30){memfreeall(); fprintf(stderr,"I_SUBSTR. Target variable has incorrect type.\n");exit(4);}
-					char *substrPtr=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+					char *substrPtr=memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));	
 					substrPtr=substr(substrChar1,substrInt1,substrChar2,substrInt2,substrChar3,substrInt3,localVarTable,currentClass);
-					strcpy(itemPtr->stringValue,substrPtr);
+					itemPtr->stringValue = memalloc(sizeof(char)*(strlen(list->active->Instruction.addr1) +1));
+					strcpy(itemPtr->stringValue,substrPtr);	
 					itemPtr->isInit = 1;
 				}else{
 					substr(substrChar1,substrInt1,substrChar2,substrInt2,substrChar3,substrInt3,localVarTable,currentClass);
