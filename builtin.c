@@ -550,22 +550,3 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {
 
     return(str);
 }
-
-//testing purposes
-/*
-int main() {
-	String k = "qhojojahoz";
-	String l = "z";
-
-    int res = find(k, l);
-    printf("%d\n", res);
-
-    String sorted = sort(k);
-    printf("Serazeny retezec: {%s}\n", sorted);
-
-
-    String s = "Kekel";
-    printf("Zadarilo se a substr je: {%s}\n", substr(s, 0, 4));
-    return 1;
-}
-*/
