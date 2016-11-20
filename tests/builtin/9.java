@@ -1,5 +1,6 @@
 class Main {
 	static void run() {
+		ifj16.print("Builtin 9.java\n");
 		String a; String b;
 		a = "středníček";
 		b = "klopetek";
@@ -13,7 +14,7 @@ class Main {
 		num4 = ifj16.compare("klopetek", "klopetek");
 
 		ifj16.print(" a je " + a + " b je " + b + "\n");
-		ifj16.print("(b,a) " + num0 + "(a,b) " + num1 + "(a,a) " + num2 + "(\"klopetek\",b) " + num3 +"(\"klopetek\",\"klopetek\") " + num4);
+		ifj16.print("compare(b,a) " + num0 + "| (a,b) " + num1 + "| (a,a) " + num2 + "| (\"klopetek\",b) " + num3 +"| (\"klopetek\",\"klopetek\") " + num4 + "\n");
 
 	}
 }

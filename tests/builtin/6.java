@@ -1,5 +1,6 @@
 class Main {
 	static void run() {
+		ifj16.print("Builtin 6.java\n");
 		String a;
 		a = "středníček";
         String b;
