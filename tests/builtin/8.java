@@ -1,7 +1,7 @@
 class Main {
 	static void run() {
 		String a;
-		a = "středníček";
+		a = "strednicek";
 		String substr1;
 		String substr2;
 		String substr3;
