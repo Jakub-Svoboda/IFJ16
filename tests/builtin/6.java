@@ -2,7 +2,7 @@ class Main {
 	static void run() {
 		ifj16.print("Builtin 6.java\n");
 		String a;
-		a = "středníček";
+		a = "strednicek";
         String b;
 		b = "kleptoman";
 		int aLength; int bLength;

@@ -5,7 +5,7 @@ class Main {
 		String a;
 		a = ifj16.readString();
         String b;
-		//b = "Vstup string je";
+		b = "Vstup string je ";
         ifj16.print(a+"\n");
         ifj16.print("Vstup string je " + a+"\n");
         ifj16.print(b + a+"\n");

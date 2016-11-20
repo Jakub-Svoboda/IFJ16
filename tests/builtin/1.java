@@ -6,10 +6,10 @@ class Main {
 		ifj16.print("Zadej double:\n");
 		double b = ifj16.readDouble();
 		ifj16.print("Zadej string:\n");
-		string c = ifj16.readString();
+		String c = ifj16.readString();
 
         ifj16.print("Vstup byl " + a + " " + b + " " + c + "\n");
-		ifj16.print("Znovu " + a + " " + b + " " + c + "\n");
+		ifj16.print("Znovu byl " + a + " " + b + " " + c + "\n");
         //ifj16.print("Vstup int je: " + a);
         //ifj16.print(b + a);
 	}

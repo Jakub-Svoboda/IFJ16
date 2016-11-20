@@ -9,6 +9,6 @@ class Main {
 		ifj16.print("Prepis String b na:\n");
 		b = ifj16.readString();
         ifj16.print(b+"\n");
-        ifj16.print(b + a+"\n");
+        ifj16.print(b +" "+ a+"\n");
 	}
 }
