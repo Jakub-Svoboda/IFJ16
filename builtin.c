@@ -84,7 +84,9 @@ int readInt() {                                             //Will convert strin
 
 double readDouble() {                                                            //Will convert string into double
     double num = 0, mantissa = 0;
-    char makeUseOf;                                                              //aka get rid of warnings var
+    char makeUseOf;
+    long long longNum = 0;
+    int mantCount = 1;                                                            //aka get rid of warnings var
     int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
     char* stringNum = readString();                                              //make use of readString();
 
@@ -97,11 +99,12 @@ double readDouble() {                                                           
             if(*stringNum == '-') sign *= -1;
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
             //printf("int read, ");
-            intNum *= 10;
-            intNum += *stringNum - '0';
+            longNum *= 10;
+            longNum += *stringNum - '0';
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {              //read part of number past .
             mantissa += *stringNum - '0';
-            mantissa *= 0.1;
+            mantissa /= 10;
+            if(*stringNum == '0') mantCount *= 10;
             //printf("mantissa read %f, ",mantissa);
         }else if(isdigit(*stringNum) && hasE == 1) {                             //read part of number past e
             //printf("exponent read, ");
@@ -132,7 +135,7 @@ double readDouble() {                                                           
             }
         }
     }
-    return ((intNum + mantissa)*fullExp)*sign;      //return number with mantissa but multiply it with calculated exponent (if any) and don't forget the sign
+    return ((longNum + (mantissa / mantCount))*fullExp)*sign;      //return number with mantissa but multiply it with calculated exponent (if any) and don't forget the sign
 }
 
 //value is the actual string or var name, option may be 0-> it is actual string || 1-> it is just name of variable
