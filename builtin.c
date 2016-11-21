@@ -86,35 +86,29 @@ double readDouble() {                                                           
     double num = 0, mantissa = 0;
     char makeUseOf;
     long long longNum = 0;
-    int mantCount = 1;                                                            //aka get rid of warnings var
-    int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
+    int mantCount = 10;                                                            //aka get rid of warnings var
+    int exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
     char* stringNum = readString();                                              //make use of readString();
 
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
-            //printf("exponent sign read, ");   //TODO: delete all printf's
             if(*stringNum == '-') eSign *= -1;
         }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
-            //printf("num sign read, ");
             if(*stringNum == '-') sign *= -1;
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
-            //printf("int read, ");
             longNum *= 10;
             longNum += *stringNum - '0';
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {              //read part of number past .
             mantissa += *stringNum - '0';
-            mantissa /= 10;
-            if(*stringNum == '0') mantCount *= 10;
-            //printf("mantissa read %f, ",mantissa);
+            mantissa *= 10;
+            mantCount *= 10;
+            //if(*stringNum == '0' &&  mantissa ==  0.0) mantCount *= 10;
         }else if(isdigit(*stringNum) && hasE == 1) {                             //read part of number past e
-            //printf("exponent read, ");
             exponent *= 10;
             exponent += *stringNum - '0';
         }else if(*stringNum == 'e' || *stringNum == 'E') {                       //check if number has exponent
-            //printf("e read, ");
             hasE = 1;
         }else if(*stringNum == '.'){                                             //check if number has mantissa
-            //printf("dot read, ");
             hasDot = 1;
         }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
             fprintf(stderr,"Invalid sequence in readDouble() function.\n");
@@ -158,7 +152,6 @@ void print(char* value, int opt, thTable *htab, char* class) {
             memfreeall();
             exit(7);
         }
-        //printf("[[[[]]]] %s %d \n", tempItem->stringValue, tempItem->varType);
         if(tempItem != NULL){
             if(tempItem->varType == 28 ){                                   //choose the correct way to print variable
                 printf("%d",tempItem->intValue);                            //int
@@ -272,11 +265,11 @@ int lengthOld(String s){    //simple implementation of strlen
 
 //String s is key, int stringOpt works as in print function (0/1)
 int length(String s, int stringOpt, thTable *htab, char* class){
-    if(stringOpt) {                 //please look at print() commentary
+    if(stringOpt) {                         //please look at print() commentary
         thtabItem* tempItem;
-        tempItem = htabSearch(htab, s);         //find local var
+        tempItem = htabSearch(htab, s);     //find local var
         if(tempItem == NULL) {
-            if(!strstr(s,".")){		//if called function is short identifier
+            if(!strstr(s,".")){		        //if called function is short identifier
                 strcpy(s,concat(s,class));	//the concat it with class name
             }
             if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
@@ -359,7 +352,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         thtabItem* tempItem2;
         tempItem2 = htabSearch(htab, iNum);         //find local var
         if(tempItem2 == NULL) {
-            if(!strstr(iNum,".")){		//if called function is short identifier
+            if(!strstr(iNum,".")){		            //if called function is short identifier
                 strcpy(iNum,concat(iNum,class));	//the concat it with class name
             }
             if((tempItem2=(htabSearch(resources->globalVarTable,iNum))) == NULL){	//if not in local, search global
