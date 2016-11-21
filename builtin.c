@@ -534,10 +534,16 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {          //Fu
         }
         s = tempItem->stringValue;
     }
-    char *str = (char*)memalloc(sizeof(char) * strlen(s));          //Allocating memory for help string
-    str = s;            //Help string = string to be sorted
+
+    int s_len = strlen(s);          //Length of string to sort
+    char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
+    for(int x = 0; x < s_len; x++) {            //Initializing help string
+        str[x] = s[x];
+    }
+    str[s_len] = '\0';
+
     int left = 0;           //Index of beginning of string
-    int right = strlen(str) - 1;            //Index of end of string
+    int right = s_len - 1;            //Index of end of string
     quick_sort(str, left, right);           //Sorting string using quick_sort function
 
     return(str);

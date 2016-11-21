@@ -7,7 +7,9 @@ class Main {
 		a = ifj16.readString();
 
 		aSort = ifj16.sort(a);
-		ifj16.print("Unsorted a: " + a + "\n");
-		ifj16.print("Sorted a: " + aSort + "\n");
+		ifj16.print("\n-----------------------------------------------------------------------------\n");
+		ifj16.print(":" + a + ":     unsorted string\n");
+		ifj16.print(":" + aSort + ":     sorted string\n");
+		ifj16.print("-----------------------------------------------------------------------------\n");
 	}
 }
