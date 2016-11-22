@@ -155,8 +155,10 @@ void print(char* value, int opt, thTable *htab, char* class) {
         if(tempItem != NULL){
             if(tempItem->varType == 28 ){                                   //choose the correct way to print variable
                 printf("%d",tempItem->intValue);                            //int
+                fflush(stdout);
             }else if(tempItem->varType == 23){
                 printf("%g",tempItem->doubleValue);                         //double
+                fflush(stdout);
             }else if(tempItem->varType == 30 ) {                            //string
                 char preC = '~';                                            //previous char
                 char makeUseOf;
@@ -176,16 +178,21 @@ void print(char* value, int opt, thTable *htab, char* class) {
                                     num[2] = *(tempItem->stringValue);
                                     char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
                                     printf("%c",oct);
+                                    fflush(stdout);
                                 }
                             }
                         }else if(*(tempItem->stringValue) == 'n') {         //there is \n , print new line
                             printf("\n");
+                            fflush(stdout);
                         }else if(*(tempItem->stringValue) == 't'){          //there is \t , print tab space
                             printf("\t");
+                            fflush(stdout);
                         }else if(*(tempItem->stringValue) == '\"'){         //there is \" , print ""
                             printf("\"");
+                            fflush(stdout);
                         }else if(*(tempItem->stringValue) == '\\'){         //there is \\ , print "\"
                             printf("\\");
+                            fflush(stdout);
                         }else {
                             memfreeall();
         					fprintf(stderr, "String is incorrect.\n");
@@ -195,6 +202,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                         ;
                     }else {
                         printf("%c",*(tempItem->stringValue));
+                        fflush(stdout);
                     }
 
                     if(preC == '\\'){ preC = '~';}                          //this will handle errors with strings like \\t\\ etc
@@ -225,16 +233,21 @@ void print(char* value, int opt, thTable *htab, char* class) {
                             num[2] = *value;
                             char oct = octToDec(atoi(num));
                             printf("%c",oct);
+                            fflush(stdout);
                         }
                     }
                 }else if((*value) == 'n') {
                     printf("\n");
+                    fflush(stdout);
                 }else if((*value) == 't'){
                     printf("\t");
+                    fflush(stdout);
                 }else if((*value) == '\"'){
                     printf("\"");
+                    fflush(stdout);
                 }else if((*value) == '\\'){
                     printf("\\");
+                    fflush(stdout);
                 }else {
                     memfreeall();
                     fprintf(stderr, "String is incorrect.\n");
@@ -244,6 +257,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 ;
             }else {
                 printf("%c",*value);
+                fflush(stdout);
             }
 
             if(preC == '\\'){ preC = '~';}
