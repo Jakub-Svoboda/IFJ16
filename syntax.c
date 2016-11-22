@@ -717,6 +717,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						return result;
 					}		
 					////printType(tokenPtr);
+					fflush(stdout);													// Needed to stop fprintf unexpected behaviour.		
 					if(tokenPtr-> type == token_identifier){						//	type ID=func
 						if(isItFunction(f,tokenPtr) == 1){
 							getModifiedToken(f,tokenPtr);
