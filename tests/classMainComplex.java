@@ -29,32 +29,32 @@ class Main {
 		ifj16.print("Druhy tisk " +pivo + "\n");
 
 		ifj16.print(oddelovac);
-
-		ifj16.print("6 - Compare vstup \"pivo\" se stringem:\n");
-		String pivoStr = "pivo";
-		int cmpPivo1 = ifj16.compare(pivoStr, pivo);
-		int cmpPivo2 = ifj16.compare("pivo", pivo);
-		int cmpPivo3 = 9	;
-		//cmpPivo3 = ifj16.compare("Pivo", pivo); //TODO: This may cause SEGFAULT. but why?
-		ifj16.print("ifj16.compare(\"pivo\", pivo) " + cmpPivo1+ " <- ma byt 0.\n");
-		ifj16.print("ifj16.compare(pivoStr, pivo) " +cmpPivo2 + " <- ma byt 0.\n");
-		ifj16.print("ifj16.compare(\"Pivo\", pivo) " +cmpPivo3 + " <- nema byt 0.\n");
-
-		ifj16.print(oddelovac);
-
-		ifj16.print("7 - Zadej topivojemoje:\n");
-		//String kek;							//TODO: This causes SEGFAULT in combination with ^^. but why?
-		//toPivoJeMoje =  ifj16.readString();
-		//ifj16.print("Tisk " + toPivoJeMoje+ "\n");
-
+//8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+		ifj16.print("6 - Compare vstup \"pivo\" se stringem:\n");							//
+		String pivoStr = "pivo";															//
+		int cmpPivo1 = ifj16.compare(pivoStr, pivo);										//
+		int cmpPivo2 = ifj16.compare("pivo", pivo);											//
+		int cmpPivo3;																		//
+		cmpPivo3 = 2 - 3;// ifj16.compare("Pivo", "pivo");									//
+		ifj16.print("ifj16.compare(\"pivo\", pivo) " + cmpPivo1+ " <- ma byt 0.\n");		//
+		//ifj16.print("ifj16.compare(pivoStr, pivo) " + cmpPivo2 + " <- ma byt 0.\n");		//
+		ifj16.print("ifj16.compare(\"Pivo\", pivo) " +cmpPivo3 + " <- nema byt 0.\n");		//
+																							//
+		ifj16.print(oddelovac);																//
+																							//
+		ifj16.print("7 - Zadej topivojemoje:\n");											//
+		String toPivoJeMoje = "kek";							//TODO: This causes SEGFAULT. but why?
+		//toPivoJeMoje =  ifj16.readString();												//
+		//ifj16.print("Tisk " + toPivoJeMoje+ "\n");										//
+//8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
 		/*
 		ifj16.print(oddelovac);
 
 		ifj16.print("8 - Compare vstup \"pivo\" s \"topivojemoje\":\n");
-		//int cmpToPivoJeMoje1 = ifj16.compare(toPivoJeMoje, pivo);
+		int cmpToPivoJeMoje1 = ifj16.compare(toPivoJeMoje, pivo);
 		int cmpToPivoJeMoje2 = ifj16.compare("topivojemoje", pivo);
 		ifj16.print("ifj16.compare(\"topivojemoje\", pivo) " + cmpToPivoJeMoje2+ " <- nema byt 0.\n");
-	// /	ifj16.print("ifj16.compare(toPivoJeMoje, pivo) " +cmpToPivoJeMoje1 + " <- nema byt 0.\n");
+		ifj16.print("ifj16.compare(toPivoJeMoje, pivo) " +cmpToPivoJeMoje1 + " <- nema byt 0.\n");
 		*/
 	}
 }
