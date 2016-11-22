@@ -441,18 +441,26 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
         s2 = tempItem2->stringValue;         //set s2 as value of variable
     }
 
+    char* olds1 = s1;
+    char* olds2 = s2;
     while(*s1 && (*s1 == *s2))              //while first string has chars, and char of 1st and 2nd string match, pass it
     {
         s1++;
         s2++;
     }
     if((*s1 - *s2) < 0) {                   //if ord. value of s2 char is bigger than ord. value of s1 char, return -1
+        s1 = olds1;
+        s2 = olds2;
         return(-1);
     }
     else if((*s1 - *s2) > 0) {              //else if ord. value of s2 char is lesser than ord. value of s1 char, return 1
+        s1 = olds1;
+        s2 = olds2;
         return(1);
     }
     else {                                  //else strings do match so return 0 if they are equal/same
+        s1 = olds1;
+        s2 = olds2;
         return(0);
     }
 }
