@@ -458,7 +458,7 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
 }
 
 //please for details check functions above
-int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {
+int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {           //Function finds substring in string, returns position of substring in string if found, or -1 if not found
     if(stringOpt) {
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
@@ -497,15 +497,15 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
         }
         search = tempItem2->stringValue;
     }
-	int P_len = lengthOld(search);
-    int T_len = lengthOld(s);
+	int P_len = strlen(search);            //Length of substring
+    int T_len = strlen(s);          //Length of string
 
-    int CharJump[256];          //Max char
-    int MatchJump[P_len];
+    int CharJump[256];          //Array of integers of size "MAX CHAR" in which the highest possible jump values of first BMA heuristics will be stored
+    int MatchJump[P_len];           //Array of integers of size "length of substring given to be found" in which the highest possible jump values of second BMA heuristics will be stored
 
-    int res = bma(search, s, CharJump, MatchJump);
+    int res = bma(search, s, CharJump, MatchJump);          //Finds position of substring in string using BMA function
 
-    if(res < T_len) {
+    if(res < T_len) {           //If substring is found, return its position, else return -1
         return(res);
     }
     else {
@@ -514,7 +514,7 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
 }
 
 //please for details check functions above
-String sort(String s, int stringOpt, thTable *htab, char* class) {
+String sort(String s, int stringOpt, thTable *htab, char* class) {          //Function sorts string given
     if(stringOpt) {
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
@@ -535,14 +535,16 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {
         s = tempItem->stringValue;
     }
 
-	int s_len = lengthOld(s);
-    char *str = (char*)memalloc(sizeof(char)*s_len);
-    for(int x = 0; x < s_len; x++) {
+    int s_len = strlen(s);          //Length of string to sort
+    char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
+    for(int x = 0; x < s_len; x++) {            //Initializing help string
         str[x] = s[x];
     }
-    int left = 0;
-    int right = strlen(str) - 1;
-    quick_sort(str, left, right);
+    str[s_len] = '\0';
+
+    int left = 0;           //Index of beginning of string
+    int right = s_len - 1;            //Index of end of string
+    quick_sort(str, left, right);           //Sorting string using quick_sort function
 
     return(str);
 }
