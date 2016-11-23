@@ -18,6 +18,8 @@
 #include "scanner.h"
 //#include "htab.c"
 
+
+
 #define true 1
 #define false 0
 
@@ -36,7 +38,7 @@ int isKeyword(char *string) {							//return index value of choosen keyword in a
 
 Token *tokenInit() {									//allocate space
 	Token *t = (Token *)memalloc(sizeof(Token));
-	
+
 	t->type=-1;
 	t->name = NULL;
 	return t;

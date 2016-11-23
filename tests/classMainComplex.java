@@ -24,6 +24,8 @@ class Main {
 
 		ifj16.print(oddelovac);
 		*/
+		int len = ifj16.length("x\161z");
+		ifj16.print(len);
 		ifj16.print("5 - Zadej \"pivo\":\n");
 		String pivo = ifj16.readString();
 		ifj16.print("Prvni tisk " + pivo+ "\n");
@@ -71,8 +73,10 @@ class Main {
 		String pivoOct = ifj16.readString();
 		int compPivoOct = ifj16.compare(pivoOct, pivo);
 		int findPivoOct = ifj16.find(pivo, pivoOct);
+		int findPivoOct2 = ifj16.find(pivo, "\160\151\166\157");
 		ifj16.print("ifj16.compare(pivoOct, pivo) " +compPivoOct + " <- ma byt nejspise 0.\n");
 		ifj16.print("ifj16.find(pivo, pivoOct) " +findPivoOct + " <- ma byt nejspise 0.\n");
+		ifj16.print("ifj16.find(pivo, \"\\160\\151\\166\\157\") " +findPivoOct2 + " <- ma byt nejspise 0.\n");
 
 	}
 }

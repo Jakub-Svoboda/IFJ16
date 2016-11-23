@@ -28,6 +28,14 @@ int ipow(int base, int exp)
     return num;
 }
 
+int lengthOld(String s){    //simple implementation of strlen
+    char *p = s;
+    while(*p) {
+        p++;
+    }
+    return p-s;
+}
+
 int octToDec(int oct)
 {
     int dec = 0, i = 0;
@@ -331,14 +339,6 @@ void print(char* value, int opt, thTable *htab, char* class) {
     }
 }
 
-int lengthOld(String s){    //simple implementation of strlen
-    char *p = s;
-    while(*p) {
-        p++;
-    }
-    return p-s;
-}
-
 //String s is key, int stringOpt works as in print function (0/1)
 int length(String s, int stringOpt, thTable *htab, char* class){
     if(stringOpt) {                         //please look at print() commentary
@@ -360,6 +360,7 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         }
         s = tempItem->stringValue;
     }
+    s = replaceOctals(s);
     char *old = s;
     int offset = 0;
     char preC = '!';
@@ -463,6 +464,8 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         n = tempItem3->intValue;
     }
 
+    s = replaceOctals(s);
+
     if(lengthOld(s) < i+n || i < 0 || n < 0) {
         fprintf(stderr, "Substring error, invalid values\n");
         memfreeall();
@@ -517,6 +520,8 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
         s2 = tempItem2->stringValue;         //set s2 as value of variable
     }
 
+    s1 = replaceOctals(s1);
+    s2 = replaceOctals(s2);
     char* olds1 = s1;
     char* olds2 = s2;
     while(*olds1 && (*olds1 == *olds2))              //while first string has chars, and char of 1st and 2nd string match, pass it
@@ -578,6 +583,9 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
         }
         search = tempItem2->stringValue;
     }
+
+    s = replaceOctals(s);
+    search = replaceOctals(search);
 	int P_len = strlen(search);            //Length of substring
     int T_len = strlen(s);          //Length of string
 
@@ -615,7 +623,7 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {          //Fu
         }
         s = tempItem->stringValue;
     }
-
+    s = replaceOctals(s);
     int s_len = strlen(s);          //Length of string to sort
     char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
     for(int x = 0; x < s_len; x++) {            //Initializing help string
