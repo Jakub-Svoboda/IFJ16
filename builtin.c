@@ -38,6 +38,67 @@ int octToDec(int oct)
     }
     return dec;
 }
+
+char* replaceOctals(char *original) {
+    int buffSize = lengthOld(original);
+	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
+
+    int pos = 0;
+    char preC = '~';                                            //previous char
+    char makeUseOf;
+    char* backup = original;
+    while(*original) {
+        if(preC == '\\') {                                      //If there is a chance of escape sequence
+            if(isdigit(*original)){              //first check for octal numbers
+                char num[] = "000";
+                num[0] = *original;
+                makeUseOf = *(original)++;
+                makeUseOf = makeUseOf;
+                if(isdigit(*original)){          //still finding if octal number is correct
+                    num[1] = *original;
+                    makeUseOf = *(original)++;
+                    makeUseOf = makeUseOf;
+                    if(isdigit(*original)){
+                        num[2] = *original;
+                        char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
+                        //printf("%c",oct);
+                        buff[pos] = oct;
+                        pos++;
+                        fflush(stdout);
+                    }else {
+                        //TODO: error maybe?
+                        buff[pos] = *(original);
+                        pos++;
+                    }
+                }else {
+                    //TODO: error maybe?
+                    buff[pos] = *original;
+                    pos++;
+                }
+
+            }else {
+                buff[pos] = '\\';
+                pos++;
+                buff[pos] = *(original);
+                pos++;
+            }
+        }else {
+            if(*original != '\\') {
+                buff[pos] = *(original);
+                pos++;
+
+            }
+        }
+        if(preC == '\\'){ preC = '~';}                          //this will handle errors with strings like \\t\\ etc
+        else {preC = *(original);}
+
+        makeUseOf = *(original)++;
+        makeUseOf = makeUseOf;
+    }
+    buff[pos] = '\0';
+    original = backup;
+    return buff;
+}
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
@@ -55,6 +116,7 @@ String readString() {
     }
 
     buff[count] = '\0';                                         //handle end of string manually
+    buff = replaceOctals(buff);
     return buff;
 }
 

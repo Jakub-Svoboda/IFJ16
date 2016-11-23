@@ -1,6 +1,7 @@
 class Main {
 	static void run() {
 		String oddelovac = "\n-------------------\n\n";
+		/*
 		int i5;
 		ifj16.print("Builtin classMainComplex.java\n");
 		ifj16.print("1 - Zadej 5:\n");
@@ -22,7 +23,7 @@ class Main {
 		ifj16.print("Druhy tisk " +i5i10 + "\n");
 
 		ifj16.print(oddelovac);
-
+		*/
 		ifj16.print("5 - Zadej \"pivo\":\n");
 		String pivo = ifj16.readString();
 		ifj16.print("Prvni tisk " + pivo+ "\n");
@@ -46,12 +47,32 @@ class Main {
 		ifj16.print("Tisk " + toPivoJeMoje+ "\n");										//
 		ifj16.print(oddelovac);
 
- 		ifj16.print("8 - Compare vstup \"pivo\" s \"topivojemoje\":\n");
-		/*
+		ifj16.print("8 - Compare vstup \"pivo\" s \"topivojemoje\":\n");
+
 		int cmpToPivoJeMoje1 = ifj16.compare(toPivoJeMoje, pivo);
 		int cmpToPivoJeMoje2 = ifj16.compare("topivojemoje", pivo);
 		ifj16.print("ifj16.compare(\"topivojemoje\", pivo) " + cmpToPivoJeMoje2+ " <- nema byt 0.\n");
 		ifj16.print("ifj16.compare(toPivoJeMoje, pivo) " +cmpToPivoJeMoje1 + " <- nema byt 0.\n");
-		*/
+
+		ifj16.print(oddelovac);
+		ifj16.print("9 - Find vstup \"pivo\" s \"topivojemoje\":\n");
+
+		int findPivo1 = ifj16.find(toPivoJeMoje, pivo);
+		int findPivo2 = ifj16.find(toPivoJeMoje, "pivo");
+		int findPivoX = ifj16.find(pivo, toPivoJeMoje);
+		int findPivoXX = ifj16.find("Pivo je pivo", pivo);
+		ifj16.print("ifj16.find(toPivoJeMoje, pivo) " + findPivo1+ " <- ma byt 3.\n");
+		ifj16.print("ifj16.find(toPivoJeMoje, \"pivo\") " +findPivo2 + " <- ma byt 3.\n");
+		ifj16.print("ifj16.find(pivo, toPivoJeMoje) " +findPivoX + " <- ma byt -1.\n");
+		ifj16.print("ifj16.find(\"Pivo je pivo\", pivo) " +findPivoXX + " <- ma byt 8.\n");
+
+		ifj16.print(oddelovac);
+		ifj16.print("10 - zadej octal \"pivo\" (\\160\\151\\166\\157):\n");
+		String pivoOct = ifj16.readString();
+		int compPivoOct = ifj16.compare(pivoOct, pivo);
+		int findPivoOct = ifj16.find(pivo, pivoOct);
+		ifj16.print("ifj16.compare(pivoOct, pivo) " +compPivoOct + " <- ma byt nejspise 0.\n");
+		ifj16.print("ifj16.find(pivo, pivoOct) " +findPivoOct + " <- ma byt nejspise 0.\n");
+
 	}
 }
