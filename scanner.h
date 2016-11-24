@@ -10,8 +10,9 @@
 * Variant: b/1/II
 */
 
-#include <stdio.h>			//TODO check if this is ok or BS
+#include <stdio.h>
 #include "garbage.h"
+//#include "builtin.h"
 
 
 #ifndef SCANNER_H
@@ -34,8 +35,8 @@ typedef enum{
 	token_bracketLeftRound,		//10
     token_bracketRightRound,	//11
 	token_identifier,		//12
-	token_dollar,			//13	Kuba added this
-	token_expression,		//14	Kubba added this, not sure if needed?
+	token_dollar,			//13
+	token_expression,		//14
 
     token_invalid,			//15
     token_assign,			//16
@@ -74,13 +75,13 @@ typedef enum{
     token_intNumber,		//45
     token_doubleNumber,		//46
 
-	token_leftHandle,		//47	Kuba added this
-	token_rightHandle		//48	Kuba added this
+	token_leftHandle,		//47
+	token_rightHandle		//48
 } Token_type;
 
 
 
-typedef struct {				//Kuba-edit
+typedef struct {
     Token_type type;
     char* name;
 } Token;
@@ -94,5 +95,5 @@ typedef enum {
 
 Token *getToken(FILE *f);
 Token *tokenInit();
-Token *lookAhead(FILE *f, int steps);  // Choose 0/1 steps ahead , check usage
+Token *lookAhead(FILE *f, int steps);  // Choose 0/1 steps ahead
 #endif

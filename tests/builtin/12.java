@@ -1,5 +1,6 @@
 class Main {
 	static void run() {
+		ifj16.print("Builtin 12.java\n");
 		String a; String b; String c;
 		String aS; String bS; String cS;
 		String aSort; String bSort; String cSort;
@@ -16,6 +17,7 @@ class Main {
 		bdiff = ifj16.compare(bSort, bS);
 		cdiff = ifj16.compare(cSort, cS);
 
+		ifj16.print("a: " + a + " b: " + b + " c: " + c + "\n");
 		ifj16.print("aSort: " + aSort + " bSort: " + bSort + " cSort: " + cSort + "\n");
 		ifj16.print("adiff: " + adiff + " bdiff: " + bdiff + " cdiff: " + cdiff + "\n");
 	}

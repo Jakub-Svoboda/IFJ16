@@ -28,6 +28,14 @@ int ipow(int base, int exp)
     return num;
 }
 
+int lengthOld(String s){    //simple implementation of strlen
+    char *p = s;
+    while(*p) {
+        p++;
+    }
+    return p-s;
+}
+
 int octToDec(int oct)
 {
     int dec = 0, i = 0;
@@ -37,6 +45,67 @@ int octToDec(int oct)
         oct/=10;
     }
     return dec;
+}
+
+char* replaceOctals(char *original) {
+    int buffSize = lengthOld(original);
+	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
+
+    int pos = 0;
+    char preC = '~';                                            //previous char
+    char makeUseOf;
+    char* backup = original;
+    while(*original) {
+        if(preC == '\\') {                                      //If there is a chance of escape sequence
+            if(isdigit(*original)){              //first check for octal numbers
+                char num[] = "000";
+                num[0] = *original;
+                makeUseOf = *(original)++;
+                makeUseOf = makeUseOf;
+                if(isdigit(*original)){          //still finding if octal number is correct
+                    num[1] = *original;
+                    makeUseOf = *(original)++;
+                    makeUseOf = makeUseOf;
+                    if(isdigit(*original)){
+                        num[2] = *original;
+                        char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
+                        //printf("%c",oct);
+                        buff[pos] = oct;
+                        pos++;
+                        fflush(stdout);
+                    }else {
+                        //TODO: error maybe?
+                        buff[pos] = *(original);
+                        pos++;
+                    }
+                }else {
+                    //TODO: error maybe?
+                    buff[pos] = *original;
+                    pos++;
+                }
+
+            }else {
+                buff[pos] = '\\';
+                pos++;
+                buff[pos] = *(original);
+                pos++;
+            }
+        }else {
+            if(*original != '\\') {
+                buff[pos] = *(original);
+                pos++;
+
+            }
+        }
+        if(preC == '\\'){ preC = '~';}                          //this will handle errors with strings like \\t\\ etc
+        else {preC = *(original);}
+
+        makeUseOf = *(original)++;
+        makeUseOf = makeUseOf;
+    }
+    buff[pos] = '\0';
+    original = backup;
+    return buff;
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -55,6 +124,7 @@ String readString() {
     }
 
     buff[count] = '\0';                                         //handle end of string manually
+    buff = replaceOctals(buff);
     return buff;
 }
 
@@ -84,34 +154,31 @@ int readInt() {                                             //Will convert strin
 
 double readDouble() {                                                            //Will convert string into double
     double num = 0, mantissa = 0;
-    char makeUseOf;                                                              //aka get rid of warnings var
-    int intNum = 0, exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
+    char makeUseOf;
+    long long longNum = 0;
+    int mantCount = 10;                                                            //aka get rid of warnings var
+    int exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
     char* stringNum = readString();                                              //make use of readString();
 
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
-            //printf("exponent sign read, ");   //TODO: delete all printf's
             if(*stringNum == '-') eSign *= -1;
         }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
-            //printf("num sign read, ");
             if(*stringNum == '-') sign *= -1;
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
-            //printf("int read, ");
-            intNum *= 10;
-            intNum += *stringNum - '0';
+            longNum *= 10;
+            longNum += *stringNum - '0';
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {              //read part of number past .
             mantissa += *stringNum - '0';
-            mantissa *= 0.1;
-            //printf("mantissa read %f, ",mantissa);
+            mantissa *= 10;
+            mantCount *= 10;
+            //if(*stringNum == '0' &&  mantissa ==  0.0) mantCount *= 10;
         }else if(isdigit(*stringNum) && hasE == 1) {                             //read part of number past e
-            //printf("exponent read, ");
             exponent *= 10;
             exponent += *stringNum - '0';
         }else if(*stringNum == 'e' || *stringNum == 'E') {                       //check if number has exponent
-            //printf("e read, ");
             hasE = 1;
         }else if(*stringNum == '.'){                                             //check if number has mantissa
-            //printf("dot read, ");
             hasDot = 1;
         }else if(*stringNum != '\0' || *stringNum != EOF || *stringNum != 0){
             fprintf(stderr,"Invalid sequence in readDouble() function.\n");
@@ -132,7 +199,7 @@ double readDouble() {                                                           
             }
         }
     }
-    return ((intNum + mantissa)*fullExp)*sign;      //return number with mantissa but multiply it with calculated exponent (if any) and don't forget the sign
+    return ((longNum + (mantissa / mantCount))*fullExp)*sign;      //return number with mantissa but multiply it with calculated exponent (if any) and don't forget the sign
 }
 
 //value is the actual string or var name, option may be 0-> it is actual string || 1-> it is just name of variable
@@ -155,12 +222,13 @@ void print(char* value, int opt, thTable *htab, char* class) {
             memfreeall();
             exit(7);
         }
-        //printf("[[[[]]]] %s %d \n", tempItem->stringValue, tempItem->varType);
         if(tempItem != NULL){
             if(tempItem->varType == 28 ){                                   //choose the correct way to print variable
                 printf("%d",tempItem->intValue);                            //int
+                fflush(stdout);
             }else if(tempItem->varType == 23){
                 printf("%g",tempItem->doubleValue);                         //double
+                fflush(stdout);
             }else if(tempItem->varType == 30 ) {                            //string
                 char preC = '~';                                            //previous char
                 char makeUseOf;
@@ -180,16 +248,21 @@ void print(char* value, int opt, thTable *htab, char* class) {
                                     num[2] = *(tempItem->stringValue);
                                     char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
                                     printf("%c",oct);
+                                    fflush(stdout);
                                 }
                             }
                         }else if(*(tempItem->stringValue) == 'n') {         //there is \n , print new line
                             printf("\n");
+                            fflush(stdout);
                         }else if(*(tempItem->stringValue) == 't'){          //there is \t , print tab space
                             printf("\t");
+                            fflush(stdout);
                         }else if(*(tempItem->stringValue) == '\"'){         //there is \" , print ""
                             printf("\"");
+                            fflush(stdout);
                         }else if(*(tempItem->stringValue) == '\\'){         //there is \\ , print "\"
                             printf("\\");
+                            fflush(stdout);
                         }else {
                             memfreeall();
         					fprintf(stderr, "String is incorrect.\n");
@@ -199,6 +272,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                         ;
                     }else {
                         printf("%c",*(tempItem->stringValue));
+                        fflush(stdout);
                     }
 
                     if(preC == '\\'){ preC = '~';}                          //this will handle errors with strings like \\t\\ etc
@@ -229,16 +303,21 @@ void print(char* value, int opt, thTable *htab, char* class) {
                             num[2] = *value;
                             char oct = octToDec(atoi(num));
                             printf("%c",oct);
+                            fflush(stdout);
                         }
                     }
                 }else if((*value) == 'n') {
                     printf("\n");
+                    fflush(stdout);
                 }else if((*value) == 't'){
                     printf("\t");
+                    fflush(stdout);
                 }else if((*value) == '\"'){
                     printf("\"");
+                    fflush(stdout);
                 }else if((*value) == '\\'){
                     printf("\\");
+                    fflush(stdout);
                 }else {
                     memfreeall();
                     fprintf(stderr, "String is incorrect.\n");
@@ -248,6 +327,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 ;
             }else {
                 printf("%c",*value);
+                fflush(stdout);
             }
 
             if(preC == '\\'){ preC = '~';}
@@ -259,21 +339,13 @@ void print(char* value, int opt, thTable *htab, char* class) {
     }
 }
 
-int lengthOld(String s){    //simple implementation of strlen
-    char *p = s;
-    while(*p) {
-        p++;
-    }
-    return p-s;
-}
-
 //String s is key, int stringOpt works as in print function (0/1)
 int length(String s, int stringOpt, thTable *htab, char* class){
-    if(stringOpt) {                 //please look at print() commentary
+    if(stringOpt) {                         //please look at print() commentary
         thtabItem* tempItem;
-        tempItem = htabSearch(htab, s);         //find local var
+        tempItem = htabSearch(htab, s);     //find local var
         if(tempItem == NULL) {
-            if(!strstr(s,".")){		//if called function is short identifier
+            if(!strstr(s,".")){		        //if called function is short identifier
                 strcpy(s,concat(s,class));	//the concat it with class name
             }
             if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
@@ -288,6 +360,7 @@ int length(String s, int stringOpt, thTable *htab, char* class){
         }
         s = tempItem->stringValue;
     }
+    s = replaceOctals(s);
     char *old = s;
     int offset = 0;
     char preC = '!';
@@ -356,7 +429,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         thtabItem* tempItem2;
         tempItem2 = htabSearch(htab, iNum);         //find local var
         if(tempItem2 == NULL) {
-            if(!strstr(iNum,".")){		//if called function is short identifier
+            if(!strstr(iNum,".")){		            //if called function is short identifier
                 strcpy(iNum,concat(iNum,class));	//the concat it with class name
             }
             if((tempItem2=(htabSearch(resources->globalVarTable,iNum))) == NULL){	//if not in local, search global
@@ -390,6 +463,8 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
         }
         n = tempItem3->intValue;
     }
+
+    s = replaceOctals(s);
 
     if(lengthOld(s) < i+n || i < 0 || n < 0) {
         fprintf(stderr, "Substring error, invalid values\n");
@@ -445,24 +520,31 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
         s2 = tempItem2->stringValue;         //set s2 as value of variable
     }
 
-    while(*s1 && (*s1 == *s2))              //while first string has chars, and char of 1st and 2nd string match, pass it
+    s1 = replaceOctals(s1);
+    s2 = replaceOctals(s2);
+    char* olds1 = s1;
+    char* olds2 = s2;
+    while(*olds1 && (*olds1 == *olds2))              //while first string has chars, and char of 1st and 2nd string match, pass it
     {
-        s1++;
-        s2++;
+        olds1++;
+        olds2++;
     }
-    if((*s1 - *s2) < 0) {                   //if ord. value of s2 char is bigger than ord. value of s1 char, return -1
+    if((*olds1 - *olds2) < 0) {                   //if ord. value of s2 char is bigger than ord. value of s1 char, return -1
+
         return(-1);
     }
-    else if((*s1 - *s2) > 0) {              //else if ord. value of s2 char is lesser than ord. value of s1 char, return 1
+    else if((*olds1 - *olds2) > 0) {              //else if ord. value of s2 char is lesser than ord. value of s1 char, return 1
+
         return(1);
     }
     else {                                  //else strings do match so return 0 if they are equal/same
+
         return(0);
     }
 }
 
 //please for details check functions above
-int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {
+int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, char* class) {           //Function finds substring in string, returns position of substring in string if found, or -1 if not found
     if(stringOpt) {
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
@@ -501,15 +583,18 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
         }
         search = tempItem2->stringValue;
     }
-	int P_len = lengthOld(search);
-    int T_len = lengthOld(s);
 
-    int CharJump[256];          //Max char
-    int MatchJump[P_len];
+    s = replaceOctals(s);
+    search = replaceOctals(search);
+	int P_len = strlen(search);            //Length of substring
+    int T_len = strlen(s);          //Length of string
 
-    int res = bma(search, s, CharJump, MatchJump);
+    int CharJump[256];          //Array of integers of size "MAX CHAR" in which the highest possible jump values of first BMA heuristics will be stored
+    int MatchJump[P_len];           //Array of integers of size "length of substring given to be found" in which the highest possible jump values of second BMA heuristics will be stored
 
-    if(res < T_len) {
+    int res = bma(search, s, CharJump, MatchJump);          //Finds position of substring in string using BMA function
+
+    if(res < T_len) {           //If substring is found, return its position, else return -1
         return(res);
     }
     else {
@@ -518,7 +603,7 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
 }
 
 //please for details check functions above
-String sort(String s, int stringOpt, thTable *htab, char* class) {
+String sort(String s, int stringOpt, thTable *htab, char* class) {          //Function sorts string given
     if(stringOpt) {
         thtabItem* tempItem;
         tempItem = htabSearch(htab, s);         //find local var
@@ -538,15 +623,17 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {
         }
         s = tempItem->stringValue;
     }
-
-	int s_len = lengthOld(s);
-    char *str = (char*)memalloc(sizeof(char)*s_len);
-    for(int x = 0; x < s_len; x++) {
+    s = replaceOctals(s);
+    int s_len = strlen(s);          //Length of string to sort
+    char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
+    for(int x = 0; x < s_len; x++) {            //Initializing help string
         str[x] = s[x];
     }
-    int left = 0;
-    int right = strlen(str) - 1;
-    quick_sort(str, left, right);
+    str[s_len] = '\0';
+
+    int left = 0;           //Index of beginning of string
+    int right = s_len - 1;            //Index of end of string
+    quick_sort(str, left, right);           //Sorting string using quick_sort function
 
     return(str);
 }

@@ -16,7 +16,7 @@
 #include <ctype.h>
 #include "ial.h"
 #include "garbage.h"
-#include "ial.h"
+//#include "ial.h"
 
 #define String char*  //Is this rhe right solution?
 #define LOCAL_BUFF_SIZE 32

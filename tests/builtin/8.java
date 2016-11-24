@@ -1,5 +1,6 @@
 class Main {
 	static void run() {
+		ifj16.print("Builtin 8.java\n");
 		String a;
 		a = "strednicek";
 		String substr1;

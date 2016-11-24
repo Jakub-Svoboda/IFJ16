@@ -1,5 +1,6 @@
 class Main {
 	static void run() {
+		ifj16.print("Builtin 10.java\n");
 		String a; String b; String klop;
 		a = "středníček";
 		b = "klopetek";
@@ -14,7 +15,7 @@ class Main {
 		num4 = ifj16.find("klopetek", klop);
 
 		ifj16.print(" a je " + a + " b je " + b + " klop je " + klop + "\n");
-		ifj16.print("(b,a) " + num0 + "(b, klop) " + num1 + "(a,a) " + num2 + "(\"klopetek\",b) " + num3 +"(\"klopetek\",klop) " + num4);
+		ifj16.print("find(b,a) " + num0 + "| (b, klop) " + num1 + "| (a,a) " + num2 + "| (\"klopetek\",b) " + num3 +"| (\"klopetek\",klop) " + num4 + "\n");
 
 	}
 }
