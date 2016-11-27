@@ -53,6 +53,7 @@ int firstRun(FILE * f){
 																						//ERROR
 					fprintf(stderr, "semantic error - redefining class\n");
 					memfreeall();
+					fclose(f);
 					exit(3);
 				}
 				else{																	//else concatenate with delimiters and add to class ID "list"
@@ -82,6 +83,7 @@ int firstRun(FILE * f){
 						if(strstr(tokenPtr1->name,dot)){									//checking if fully qualified identifier in declaration is used
 							fprintf(stderr,"Fully qualified identifier in declaration\n");
 							memfreeall();
+							fclose(f);
 							exit(2);				//TODO check if right exit value
 						}
 						else{
@@ -94,6 +96,7 @@ int firstRun(FILE * f){
 				{
 					fprintf(stderr, "Syntax error, variable type void\n");
 					memfreeall();
+					fclose(f);
 					exit(2);
 				}
 			}
@@ -105,11 +108,13 @@ int firstRun(FILE * f){
 		if(htabSearch(resources->functionTable, key)==NULL){						//if function run in class Main does not exist
 			fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
 			memfreeall();
+			fclose(f);
 			exit(3);
 		}			
 		if(ptr->returnType!=token_void){			//check if Main.run returns void
 			fprintf(stderr, "Main.run \n");
 			memfreeall();
+			fclose(f);
 			exit(3);
 		}
 	return 0;
