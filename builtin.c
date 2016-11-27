@@ -49,7 +49,7 @@ int octToDec(int oct)
 
 char* replaceOctals(char *original) {
     int buffSize = lengthOld(original);
-	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
+	char *buff = (char*)memalloc(buffSize * sizeof(char)+1);      //allocate memory for string
 
     int pos = 0;
     char preC = '~';                                            //previous char
