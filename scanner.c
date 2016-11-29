@@ -209,7 +209,10 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}
 				break;
 			case state_readingNumber:
-				if(c == '.' && hasE == false && isDouble == false){	//if there is a dot, set number as double
+				if(buff[position-1] == '.' && (c == 'e' || c=='E')){
+					end = true;
+					isDouble = false;
+				}else if(c == '.' && hasE == false && isDouble == false){	//if there is a dot, set number as double
 					isDouble = true;
 				}else if((c == 'e' || c == 'E') && hasE == false) {	//when any character is <- , it is not average number, it is DOUBLE
 					hasE = true;
@@ -217,6 +220,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}else if(c == 'e' || c=='E' || c=='.'){				//if there is E or dot when number has already set isdouble as false
 					end = true;
 				}
+
 				if(isdigit(c)){										//if char is a digit, store it into buffer
 					buff[position] = c;
 					position++;
@@ -234,7 +238,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}else {												//current char is not digit or it is double-allowed char when isDouble is false and
 					ungetc(c,f);									//undo readings
 					state = state_default;							//end reading state
-					if(tempc == '+' || tempc == '-') {
+					if(tempc == '+' || tempc == '-' || tempc == '.') {
 						ungetc(tempc, f);							//undo readings
 						position--;
 					}
