@@ -204,7 +204,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					t->type = token_string;
 					t->name = buff;
 					position = 0;
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -262,7 +262,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					position = 0;								//reset
 					isDouble = false;							//reset
 					hasE = false;
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
