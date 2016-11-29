@@ -114,7 +114,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -453,9 +453,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 		}
 	}
 }
-
-///TESTING SECTION DON'T DELETE
 /*
+///TESTING SECTION DON'T DELETE
+
 void identifyToken(Token *tempTok) {
    if(tempTok->type == token_identifier) printf("id ");
    if(tempTok->type == token_invalid) printf("invalid ");
