@@ -18,9 +18,9 @@
 #include "scanner.h"
 //#include "htab.c"
 
-#define memalloc malloc
-#define memrealloc realloc
-#define memfreeall() ;
+//#define memalloc malloc
+//#define memrealloc realloc
+//#define memfreeall() ;
 
 #define true 1
 #define false 0
@@ -94,17 +94,34 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 			case state_readingIdentifier:
 				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_' || c == '$'){			//id's may contain numbers and characters or 1 dot
 					if(c == '.') isComplex = 1;
-					buff[position] = c;
-					position++;
-					if(position+2 == buffSize) {
-						buffSize += BUFFER_SIZE;
-					    buff = memrealloc(buff, buffSize);
+					if(buff[position-1] == '.') {
+						if(isalpha(c) || c == '$' || c == '_') {
+
+						}else {
+							state = state_default;						//set state to default so we'll know we are not reading id anymore
+							ungetc(c,f);
+							ungetc('.',f);
+							position--;
+							end = true;
+						}
+					}
+					if(!end){
+						buff[position] = c;
+						position++;
+						if(position+2 == buffSize) {
+							buffSize += BUFFER_SIZE;
+							buff = memrealloc(buff, buffSize);
+						}
 					}
 				}else {											//end of allowed chars
 					state = state_default;						//set state to default so we'll know we are not reading id anymore
 					ungetc(c,f);								//go back 1 char
 				}
 				if(state == state_default) {					//reading has ended
+					if(buff[position-1] == '.') {
+						ungetc('.',f);
+						position--;
+					}
 					buff[position] = '\0';						//add ending character at the end
 					if((kwIndex = isKeyword(buff)) != -1) {		//if buffered word is in keyword array return kw token
 						t->type = kwIndex + KEYWORD_OFFSET;		//value calculated by returned kwIndex and KEYWORD_OFFSET set in scanner.h
@@ -114,7 +131,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
-					//printf(" [%s]",buff);	//TODO:remove
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -204,7 +221,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					t->type = token_string;
 					t->name = buff;
 					position = 0;
-					//printf(" [%s]",buff);	//TODO:remove
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -262,7 +279,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					position = 0;								//reset
 					isDouble = false;							//reset
 					hasE = false;
-					//printf(" [%s]",buff);	//TODO:remove
+					end = false;
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
@@ -453,9 +471,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 		}
 	}
 }
-/*
-///TESTING SECTION DON'T DELETE
 
+///TESTING SECTION DON'T DELETE
+/*
 void identifyToken(Token *tempTok) {
    if(tempTok->type == token_identifier) printf("id ");
    if(tempTok->type == token_invalid) printf("invalid ");
