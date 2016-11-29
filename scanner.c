@@ -212,6 +212,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				if(buff[position-1] == '.' && (c == 'e' || c=='E')){
 					end = true;
 					isDouble = false;
+				}else if(c == '.' && (buff[position-1] == 'e' || buff[position-1]=='E')){
+					end = true;
+					isDouble = false;
 				}else if(c == '.' && hasE == false && isDouble == false){	//if there is a dot, set number as double
 					isDouble = true;
 				}else if((c == 'e' || c == 'E') && hasE == false) {	//when any character is <- , it is not average number, it is DOUBLE
@@ -240,6 +243,10 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					state = state_default;							//end reading state
 					if(tempc == '+' || tempc == '-' || tempc == '.') {
 						ungetc(tempc, f);							//undo readings
+						position--;
+					}
+					if(buff[position-1] == 'e' || buff[position-1] == 'E') {
+						ungetc(buff[position-1], f);							//undo readings
 						position--;
 					}
 				}
