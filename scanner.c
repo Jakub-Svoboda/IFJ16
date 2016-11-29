@@ -80,7 +80,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 	Token *t = tokenInit();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
-    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0;
+    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0;
 	State_type state = state_default;					//choose between states
 
 	if(t->type == token_invalid){						//initialization faiulure
@@ -119,12 +119,74 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}
 				break;
 			case state_readingString:							//reading string now doesn't store ""
-				if(c == EOF) {
+				if(c == EOF || c == '\n') {
 					memfreeall();
 					fprintf(stderr, "String is incorrect.\n");
 					exit(1);
 				}else {
-					if(c == '\"' && (buff[position-1] != '\\' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
+					if(c == '\\'){
+						c = fgetc(f);
+						if(isdigit(c)){
+							char oct[] = "zz";
+							oct[0] = c;
+							c = fgetc(f);
+							if(isdigit(c)){
+								oct[1] = c;
+								c = fgetc(f);
+								if(isdigit(c)){
+									buff[position] = '\\';
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									buff[position] = oct[0];
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									buff[position] = oct[1];
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									buff[position] = c;
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+								}else {
+									memfreeall();
+									fprintf(stderr, "String is incorrect.\n");
+									exit(1);
+								}
+							}else {
+								memfreeall();
+								fprintf(stderr, "String is incorrect.\n");
+								exit(1);
+							}
+						}else if(c != '\"' && c != 'n' && c != 't' && c != '\\') {
+							memfreeall();
+							fprintf(stderr, "String is incorrect.\n");
+							exit(1);
+						}else {
+							buff[position] = '\\';
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							buff[position] = c;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+						}
+					}else if(c == '\"' && (buff[position-1] != '\\' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
 						state = state_default;								//if found, end reading
 					}else if((c == '\"' && buff[position-2] == '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
 						state = state_default;								//if found, end reading
@@ -151,10 +213,10 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					isDouble = true;
 				}else if((c == 'e' || c == 'E') && hasE == false) {	//when any character is <- , it is not average number, it is DOUBLE
 					hasE = true;
+					isDouble = true;
 				}else if(c == 'e' || c=='E' || c=='.'){				//if there is E or dot when number has already set isdouble as false
-					isDouble = false;
+					end = true;
 				}
-
 				if(isdigit(c)){										//if char is a digit, store it into buffer
 					buff[position] = c;
 					position++;
@@ -162,7 +224,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						buffSize += BUFFER_SIZE;
 						buff = memrealloc(buff, buffSize);
 					}
-				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
+				}else if(!end && isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;								//if number is evaluated as double store double-allowed chars
 					position++;
 					if(position+2 == buffSize) {
