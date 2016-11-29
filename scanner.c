@@ -18,9 +18,9 @@
 #include "scanner.h"
 //#include "htab.c"
 
-#define memalloc malloc
-#define memrealloc realloc
-#define memfreeall() ;
+//#define memalloc malloc
+//#define memrealloc realloc
+//#define memfreeall() ;
 
 #define true 1
 #define false 0
@@ -80,7 +80,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 	Token *t = tokenInit();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
-    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0;
+    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0;
 	State_type state = state_default;					//choose between states
 
 	if(t->type == token_invalid){						//initialization faiulure
@@ -94,17 +94,34 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 			case state_readingIdentifier:
 				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_' || c == '$'){			//id's may contain numbers and characters or 1 dot
 					if(c == '.') isComplex = 1;
-					buff[position] = c;
-					position++;
-					if(position+2 == buffSize) {
-						buffSize += BUFFER_SIZE;
-					    buff = memrealloc(buff, buffSize);
+					if(buff[position-1] == '.') {
+						if(isalpha(c) || c == '$' || c == '_') {
+
+						}else {
+							state = state_default;						//set state to default so we'll know we are not reading id anymore
+							ungetc(c,f);
+							ungetc('.',f);
+							position--;
+							end = true;
+						}
+					}
+					if(!end){
+						buff[position] = c;
+						position++;
+						if(position+2 == buffSize) {
+							buffSize += BUFFER_SIZE;
+							buff = memrealloc(buff, buffSize);
+						}
 					}
 				}else {											//end of allowed chars
 					state = state_default;						//set state to default so we'll know we are not reading id anymore
 					ungetc(c,f);								//go back 1 char
 				}
 				if(state == state_default) {					//reading has ended
+					if(buff[position-1] == '.') {
+						ungetc('.',f);
+						position--;
+					}
 					buff[position] = '\0';						//add ending character at the end
 					if((kwIndex = isKeyword(buff)) != -1) {		//if buffered word is in keyword array return kw token
 						t->type = kwIndex + KEYWORD_OFFSET;		//value calculated by returned kwIndex and KEYWORD_OFFSET set in scanner.h
@@ -119,12 +136,74 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}
 				break;
 			case state_readingString:							//reading string now doesn't store ""
-				if(c == EOF) {
+				if(c == EOF || c == '\n') {
 					memfreeall();
 					fprintf(stderr, "String is incorrect.\n");
 					exit(1);
 				}else {
-					if(c == '\"' && (buff[position-1] != '\\' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
+					if(c == '\\'){
+						c = fgetc(f);
+						if(isdigit(c)){
+							char oct[] = "zz";
+							oct[0] = c;
+							c = fgetc(f);
+							if(isdigit(c)){
+								oct[1] = c;
+								c = fgetc(f);
+								if(isdigit(c)){
+									buff[position] = '\\';
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									buff[position] = oct[0];
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									buff[position] = oct[1];
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									buff[position] = c;
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+								}else {
+									memfreeall();
+									fprintf(stderr, "String is incorrect.\n");
+									exit(1);
+								}
+							}else {
+								memfreeall();
+								fprintf(stderr, "String is incorrect.\n");
+								exit(1);
+							}
+						}else if(c != '\"' && c != 'n' && c != 't' && c != '\\') {
+							memfreeall();
+							fprintf(stderr, "String is incorrect.\n");
+							exit(1);
+						}else {
+							buff[position] = '\\';
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							buff[position] = c;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+						}
+					}else if(c == '\"' && (buff[position-1] != '\\' && buff[position-2] != '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
 						state = state_default;								//if found, end reading
 					}else if((c == '\"' && buff[position-2] == '\\')) {		//looking for " but only if previous char is not '\', so '\"' is not matching
 						state = state_default;								//if found, end reading
@@ -147,12 +226,19 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}
 				break;
 			case state_readingNumber:
-				if(c == '.' && hasE == false && isDouble == false){	//if there is a dot, set number as double
+				if(buff[position-1] == '.' && (c == 'e' || c=='E')){
+					end = true;
+					isDouble = false;
+				}else if(c == '.' && (buff[position-1] == 'e' || buff[position-1]=='E')){
+					end = true;
+					isDouble = false;
+				}else if(c == '.' && hasE == false && isDouble == false){	//if there is a dot, set number as double
 					isDouble = true;
 				}else if((c == 'e' || c == 'E') && hasE == false) {	//when any character is <- , it is not average number, it is DOUBLE
 					hasE = true;
+					isDouble = true;
 				}else if(c == 'e' || c=='E' || c=='.'){				//if there is E or dot when number has already set isdouble as false
-					isDouble = false;
+					end = true;
 				}
 
 				if(isdigit(c)){										//if char is a digit, store it into buffer
@@ -162,7 +248,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						buffSize += BUFFER_SIZE;
 						buff = memrealloc(buff, buffSize);
 					}
-				}else if(isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
+				}else if(!end && isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
 					buff[position] = c;								//if number is evaluated as double store double-allowed chars
 					position++;
 					if(position+2 == buffSize) {
@@ -172,8 +258,12 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}else {												//current char is not digit or it is double-allowed char when isDouble is false and
 					ungetc(c,f);									//undo readings
 					state = state_default;							//end reading state
-					if(tempc == '+' || tempc == '-') {
+					if(tempc == '+' || tempc == '-' || tempc == '.') {
 						ungetc(tempc, f);							//undo readings
+						position--;
+					}
+					if(buff[position-1] == 'e' || buff[position-1] == 'E') {
+						ungetc(buff[position-1], f);							//undo readings
 						position--;
 					}
 				}
@@ -189,6 +279,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					position = 0;								//reset
 					isDouble = false;							//reset
 					hasE = false;
+					end = false;
 					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}

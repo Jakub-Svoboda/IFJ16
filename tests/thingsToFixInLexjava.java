@@ -10,9 +10,5 @@ class Main{
 	//	int ř;				//exit 2, token je ale invalid	> exit 1
 	//	int h4ck0;				//projde
 	//	int h4ck0řiNámR0zbiliL3x;	//syntax
-	}
-}	
 
-
-
-
+}
