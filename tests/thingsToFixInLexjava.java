@@ -2,17 +2,13 @@
 
 class Main{
 	static void run(){
-		int a^a;			// exit 2, token je ale invalid	> exit 1
-		int #a;				// Toto projde jako id....
-		int a&a;			//exit 2, token je ale invalid	> exit 1
-		int a\a;			//exit 2, token je ale invalid	> exit 1
-		int 8a;				//dojde 45 intNumber, ale cislo je invalid > exit 1
-		int ř;				//exit 2, token je ale invalid	> exit 1
+		int a^a;			// solved
+		int #a;				// solved
+		int a&a;			//solved
+		int a\a;			//solved
+		int 8a;				//tohle jsme resili ale myslim ze to ma byt intNum a ID
+		int ř;				//solved
 		int h4ck0;				//projde
-		int h4ck0řiNámR0zbiliL3x;	//syntax
+		int h4ck0řiNámR0zbiliL3x;	//solved as lex error
 	}
-}	
-
-
-
-
+}
