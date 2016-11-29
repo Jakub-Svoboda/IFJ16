@@ -18,7 +18,9 @@
 #include "scanner.h"
 //#include "htab.c"
 
-
+#define memalloc malloc
+#define memrealloc realloc
+#define memfreeall() ;
 
 #define true 1
 #define false 0
@@ -90,7 +92,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 		c = fgetc(f);
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
-				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_'){			//id's may contain numbers and characters or 1 dot
+				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_' || c == '$'){			//id's may contain numbers and characters or 1 dot
 					if(c == '.') isComplex = 1;
 					buff[position] = c;
 					position++;
@@ -112,6 +114,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -139,6 +142,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					t->type = token_string;
 					t->name = buff;
 					position = 0;
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -185,6 +189,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					position = 0;								//reset
 					isDouble = false;							//reset
 					hasE = false;
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
@@ -361,8 +366,11 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						if(isdigit(c)){								//if c is number, set state to readingNumber
 							state = state_readingNumber;
 							tempc = c;
-						}else {										//strings and numbers are alredy handled, it must be ID or KW
+						}else if(isalpha(c) || c == '$' || c == '_') {										//strings and numbers are alredy handled, it must be ID or KW
 							state = state_readingIdentifier;
+						}else {
+							fprintf(stderr, "Lex error\n");		//TODO: not sure
+							exit(1);
 						}
 						buff[position] = c;							//buffer it
 						position++;
@@ -372,3 +380,74 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 		}
 	}
 }
+
+///TESTING SECTION DON'T DELETE
+/*
+void identifyToken(Token *tempTok) {
+   if(tempTok->type == token_identifier) printf("id ");
+   if(tempTok->type == token_invalid) printf("invalid ");
+   if(tempTok->type == token_assign) printf("= ");
+   if(tempTok->type == token_EOF) printf("EOF ");
+   if(tempTok->type == token_boolean) printf("boolean ");
+   if(tempTok->type == token_break) printf("break ");
+   if(tempTok->type == token_class) printf("class ");
+   if(tempTok->type == token_continue) printf("continue ");
+   if(tempTok->type == token_do) printf("do ");
+   if(tempTok->type == token_double) printf("double ");
+   if(tempTok->type == token_else) printf("else ");
+   if(tempTok->type == token_false) printf("false ");
+   if(tempTok->type == token_for) printf("for ");
+   if(tempTok->type == token_if) printf("if ");
+   if(tempTok->type == token_int) printf("int ");
+   if(tempTok->type == token_return) printf("return ");
+   if(tempTok->type == token_String) printf("String ");
+   if(tempTok->type == token_static) printf("static ");
+   if(tempTok->type == token_true) printf("true ");
+   if(tempTok->type == token_void) printf("void ");
+   if(tempTok->type == token_while) printf("while ");
+   if(tempTok->type == token_equal) printf("equal ");
+   if(tempTok->type == token_greater) printf("greater ");
+   if(tempTok->type == token_less) printf("less ");
+   if(tempTok->type == token_notEqual) printf("notEqual ");
+   if(tempTok->type == token_greaterEqual) printf("greaterEqual ");
+   if(tempTok->type == token_lessEqual) printf("lessEqual ");
+   if(tempTok->type == token_add) printf("add ");
+   if(tempTok->type == token_subtract) printf("subtract ");
+   if(tempTok->type == token_multiply) printf("multiply ");
+   if(tempTok->type == token_divide) printf("divide ");
+   if(tempTok->type == token_dot) printf("dot ");
+   if(tempTok->type == token_bracketLeftRound) printf("bracketLeftRound ");
+   if(tempTok->type == token_bracketRightRound) printf("bracketRightRound ");
+   if(tempTok->type == token_comma) printf("comma ");
+   if(tempTok->type == token_bracketLeftCurly) printf("bracketLeftCurly ");
+   if(tempTok->type == token_bracketRightCurly) printf("bracketRightCurly ");
+   if(tempTok->type == token_semicolon) printf("semicolon ");
+   if(tempTok->type == token_bracketLeftSquare) printf("bracketLeftSquare ");
+   if(tempTok->type == token_bracketRightSquare) printf("bracketRightSquare ");
+   if(tempTok->type == token_quotesSingle) printf("quotesSingle ");
+   if(tempTok->type == token_quotesDouble) printf("quotesDouble ");
+   if(tempTok->type == token_string) printf("string ");
+   if(tempTok->type == token_intNumber) printf("intNumber ");
+   if(tempTok->type == token_doubleNumber) printf("doubleNumber ");
+   printf("\n");
+}
+
+int main(int argc, char *argv[]) {
+
+   FILE *f;
+   f = fopen("tests/lex.java", "r");
+   Token *tempTok = lookAhead(f, 0);
+
+
+   while(tempTok->type != token_EOF) {
+	   printf("\t\t%d",tempTok->type);
+	   //if (tempTok->name != NULL) printf("@@@%s@@@",tempTok->name);
+	   identifyToken(tempTok);
+	   tempTok = lookAhead(f, 0);
+   }
+   fclose(f);
+   printf("\n");
+   return 1;
+
+}
+*/
