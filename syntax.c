@@ -353,6 +353,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			if (tokenPtr->type== token_identifier) {
 				return 0;
 			}else{
+				//fprintf(stderr,"%d\n",tokenPtr->type)			;
 				return -1;
 			}
 			break;
@@ -928,6 +929,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 	EXIT:
 		fprintf(stderr, "Syntax Error! \n");
 		//printType(tokenPtr);
+		fclose(f);
 		memfreeall();
 		exit(2);
 		return result;
