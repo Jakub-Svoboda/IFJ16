@@ -73,14 +73,16 @@ Token *lookAhead(FILE *f, int steps) { 	//take a look at the next token without 
 Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 
 	int buffSize = BUFFER_SIZE;
+	int compSize = BUFFER_SIZE;
 	char *buff = (char*) memalloc(buffSize * sizeof(char));
+	char *complex = (char*) memalloc(buffSize * sizeof(char));
 	char* name2 = memalloc(sizeof(char)*2);
 	char* name3 = memalloc(sizeof(char)*3);
 
 	Token *t = tokenInit();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
-    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0;
+    int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0, complexPos = 0;
 	State_type state = state_default;					//choose between states
 
 	if(t->type == token_invalid){						//initialization faiulure
@@ -93,7 +95,14 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 		switch (state) {								//check if I'm not in reading number/id/string phase
 			case state_readingIdentifier:
 				if(isalpha(c) || isdigit(c) || (c == '.' && isComplex==0) || c == '_' || c == '$'){			//id's may contain numbers and characters or 1 dot
-					if(c == '.') isComplex = 1;
+					if(c == '.') {
+						isComplex = 1;
+						if((kwIndex = isKeyword(buff)) != -1) {		//if buffered word is in keyword array return kw token
+							memfreeall();
+							fprintf(stderr, "Lexical error.\n");
+							exit(1);
+						}
+					}
 					if(buff[position-1] == '.') {
 						if(isalpha(c) || c == '$' || c == '_') {
 
@@ -111,6 +120,19 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						if(position+2 == buffSize) {
 							buffSize += BUFFER_SIZE;
 							buff = memrealloc(buff, buffSize);
+						}
+						if(isComplex == 1 && c != '.') {
+							complex[complexPos] = c;
+							complexPos++;
+							if((kwIndex = isKeyword(complex)) != -1) {		//if buffered word is in keyword array return kw token
+								memfreeall();
+								fprintf(stderr, "Lexical error.\n");
+								exit(1);
+							}
+							if(complexPos+2 == buffSize) {
+								compSize += BUFFER_SIZE;
+								complex = memrealloc(complex, compSize);
+							}
 						}
 					}
 				}else {											//end of allowed chars
@@ -131,6 +153,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
+					complexPos = 0;
 					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
