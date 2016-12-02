@@ -131,7 +131,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -221,7 +221,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					t->type = token_string;
 					t->name = buff;
 					position = 0;
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				break;
@@ -280,7 +280,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					isDouble = false;							//reset
 					hasE = false;
 					end = false;
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
@@ -343,7 +343,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							return t;
 						}
 					case '\'':									//TODO how to handle chars? does java require only "" for strings?
-						fprintf(stderr, "No token matches '\n");
+						fprintf(stderr, "Lexical error\n");
 						memfreeall();
 						exit(1);
 						break;
@@ -352,9 +352,13 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						break;
 					//Delimiters
 					case '.':
-						t->type = token_dot;
-						name2 = ".";
-						t->name = name2;
+						fprintf(stderr, "Lexical error\n");
+						memfreeall();
+						exit(1);
+						break;
+						//t->type = token_dot;
+						//name2 = ".";
+						//t->name = name2;
 						return t;
 					case '(':
 						t->type = token_bracketLeftRound;
