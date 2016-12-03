@@ -22,13 +22,13 @@ extern resourceStruct * resources;
 int runInterpret(tListOfInstr *list){
 	listFirst(list);
 
-//	while(list->active->nextItem !=NULL){											//test output for instruction list
-//		printInstType(list->active->Instruction.instType);
-//		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
-//		listNext(list);
-//	}
-//	printInstType(list->active->Instruction.instType);	//print the very last instr
-//	fprintf(stderr,"\n");
+	while(list->active->nextItem !=NULL){											//test output for instruction list
+		printInstType(list->active->Instruction.instType);
+		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
+		listNext(list);
+	}
+	printInstType(list->active->Instruction.instType);	//print the very last instr
+	fprintf(stderr,"\n");
 
 	listFirst(list);					//resets instruction pointer
 	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);	//allocates memory for variable table
@@ -95,7 +95,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						break;
 					}
 					if(list->active->nextItem == NULL){		//the label was not found, This is likely error in OUR code.
-						fprintf(stderr,"\ncalled function not found\n\n\n");
+						fprintf(stderr,"\nGOTO label not found %s\n\n\n",list->active->Instruction.addr1);
 						memfreeall();
 						exit(3);
 					}

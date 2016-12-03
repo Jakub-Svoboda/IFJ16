@@ -310,7 +310,10 @@ void getModifiedToken(FILE *f,Token* tokenPtr){
 /* The main function that controls syntax and generates instructions. This function is called recursively and goes to appropriate case state by
 its first argument. The states copy the design of LL grammar. In each state the syntax is checked and if a mistake is found, the program ends.*/
 int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfInstr * list){
-
+	static int breakable = 0;	//counter for dept
+	int lastBreakable=0;
+	static char breakJump[2047],continueJump[2047];	//Labes where break and continue should jump
+	char lastBreakJump[2047], lastContinueJump[2047];
 	tInstr I;
 	int result=1;	
 	static int counter=0; // coutner for loop labels
@@ -593,6 +596,8 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_while: 
 					sprintf(buf, "#while%d",counter);								//while label is generated
 					generateInstruction(I,I_LABEL, buf, "", "",list);
+					sprintf(continueJump,"#while%d",counter);						//continue jump is saved
+					sprintf(breakJump,"#while_end%d",counter);						//break jump is saved						
 					int gotoLabel = counter;
 					counter++;
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
@@ -601,7 +606,15 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}
 					sprintf(buf, "#while_end%d",gotoLabel);
 					generateInstruction(I,I_WHILE_GOTO, buffer, buf, "",list);		//jump to command block
+					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
+					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
+					breakable++;													//increment loop depth counter
+					lastBreakable=breakable;										//save loop depth
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					sprintf(breakJump, "%s",lastBreakJump);							//restore breakJump
+					sprintf(continueJump, "%s",lastContinueJump);					//restore continueJump				
+					breakable=lastBreakable;										//restore loop depth
+					breakable--;													//decrement loop depth counter
 					sprintf(buf, "#while%d",gotoLabel);
 					generateInstruction(I,I_GOTO, buf, "", "",list);
 					sprintf(buf, "#while_end%d",gotoLabel);
@@ -809,12 +822,33 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			break;
 
 //******************COMMAND_BLOCK*******************//
-		case COMMAND_BLOCK:
+		case COMMAND_BLOCK:			
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			switch (tokenPtr -> type){
 				case token_bracketRightCurly:											//end of expression block
 					return 0;
+					break;
+				case token_break:			
+					getModifiedToken(f,tokenPtr);
+					//printType(tokenPtr);	
+					if(tokenPtr->type != token_semicolon){fprintf(stderr,"\nNo semicolon after break. ");goto EXIT;}	
+					if(breakable <= 0){fprintf(stderr,"\nBreak not inside a loop. ");goto EXIT;}					
+fprintf(stderr,"BREAKING NEWS: current: %s\n",breakJump);					
+					sprintf(buf, "%s",breakJump);
+					generateInstruction(I,I_GOTO, buf,"","", list);
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;
+					break;
+				case token_continue:
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);	
+					if(tokenPtr->type != token_semicolon){fprintf(stderr,"\nNo semicolon after continue. ");goto EXIT;}
+					if(breakable <= 0){fprintf(stderr,"\nContinue not inside a loop. ");goto EXIT;}
+					sprintf(buf, "%s",continueJump);
+					generateInstruction(I,I_GOTO, buf,"","", list);
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}					
+					return result;
 					break;
 				case token_identifier:													//id
 					lastToken =memcpy(lastToken,tokenPtr,sizeof(Token));	
@@ -864,9 +898,13 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					}
 					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					break;
-				case token_while:														//while labels and conditional jumps generation
+				case token_while:														//while labels and conditional jumps generation				
 					sprintf(buf, "#while%d",counter);
-					generateInstruction(I,I_LABEL, buf, "", "",list);
+					generateInstruction(I,I_LABEL, buf, "", "",list);	
+					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
+					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump		
+					sprintf(continueJump,"#while%d",counter);						//continue jump is saved
+					sprintf(breakJump,"#while_end%d",counter);						//break jump is saved					
 					int gotoLabel = counter;
 					counter++;															//increment counter for unique label identifier
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
@@ -874,8 +912,17 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					char * buffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
 					if(tokenPtr -> type != token_bracketRightRound){fprintf(stderr,"\n)\n");goto EXIT;}	//end of while expression
 					sprintf(buf, "#while_end%d",gotoLabel);
-					generateInstruction(I,I_WHILE_GOTO, buffer, buf, "",list);							//recursive call for command block.
-					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					generateInstruction(I,I_WHILE_GOTO, buffer, buf, "",list);							//recursive call for command block.							
+					breakable++;													//increment loop depth counter
+					lastBreakable=breakable;										//save loop depth
+fprintf(stderr,"down b: %s, last %s 			",breakJump,lastBreakJump);					
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}				
+					sprintf(breakJump, "%s",lastBreakJump);							//restore breakJump
+					sprintf(continueJump, "%s",lastContinueJump);					//restore continueJump					
+					breakable=lastBreakable;										//restore loop depth
+					breakable--;													//decrement loop depth counter
+fprintf(stderr,"\n");
+fprintf(stderr,"up b:%s, last %s				",breakJump,lastBreakJump);						
 					sprintf(buf, "#while%d",gotoLabel);
 					generateInstruction(I,I_GOTO, buf, "", "",list);
 					sprintf(buf, "#while_end%d",gotoLabel);
