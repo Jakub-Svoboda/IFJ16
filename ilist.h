@@ -65,6 +65,7 @@
 #define I_FIND2				44
 #define I_FIND3				45
 #define I_SORT				46
+#define I_DO_GOTO			47	//reversed I_WHILE_GOTO
 
 typedef struct		//List of instructions
 {

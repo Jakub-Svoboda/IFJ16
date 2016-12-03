@@ -1864,7 +1864,43 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 				
 			break;
+			
+	//************************I_DO_GOTO******************************//
+			case I_DO_GOTO:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
+						memfreeall();
+						exit(3);
+					}
+				}
+				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
+				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is double
+				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;	//logical switch is bool
+				else{jumpBool=0;}
 
+				if(!jumpBool){
+					lastActive=list->active;	//save pointer to active instr
+					listFirst(list);			//reset active to first for label search
+					while(1){			//search through instructions until the same label is found
+						if(list->active->Instruction.instType == 1 && strcmp(list->active->Instruction.addr1, lastActive->Instruction.addr2)==0){
+
+							break;
+						}
+						if(list->active->nextItem == NULL){		//if label was not found
+							fprintf(stderr,"\ncalled function not found\n\n\n");
+							memfreeall();			//user has called a function that does not exist.
+							exit(3);
+						}
+						listNext(list);
+					}
+				}
+
+				jumpBool=0;
+			break;
 
 
 
@@ -1875,6 +1911,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 		listNext(list);
 
 
+		
 	}
 }
 
@@ -1928,6 +1965,7 @@ void printInstType(int instructionType){
 		case I_FIND2:		fprintf(stderr,"  I_FIND2:\t"); 	break;
 		case I_FIND3:		fprintf(stderr,"  I_FIND3:\t"); 	break;
 		case I_SORT:		fprintf(stderr,"  I_SORT:\t"); 	break;
+		case I_DO_GOTO:		fprintf(stderr,"  I_DO_GOTO:\t"); 	break;
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }

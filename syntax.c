@@ -622,11 +622,10 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_do:
-					sprintf(buf, "#do%d",counter);								//do label is generated
+					sprintf(buf, "#do%d",counter);									//do label is generated
 					generateInstruction(I,I_LABEL, buf, "", "",list);				
-					sprintf(continueJump,"#do%d",counter);						//continue jump is saved
-					sprintf(breakJump,"#do_end%d",counter);						//break jump is saved				
-					int gotoLabel2 = counter;
+					sprintf(continueJump,"#do%d",counter);							//continue jump is saved
+					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved	
 					counter++;	
 					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
 					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
@@ -645,14 +644,9 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * doBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
-					sprintf(buf, "#do_end%d",gotoLabel);
-					generateInstruction(I,I_WHILE_GOTO, doBuffer, buf, "",list);		//jump to command block
-					
-					
-					
-					sprintf(buf, "#while_end%d",gotoLabel);
-					generateInstruction(I,I_LABEL, buf, "", "",list);
-					
+					sprintf(buf2, "#do_end%d",gotoLabel);
+					generateInstruction(I,I_DO_GOTO, doBuffer, buf, "",list);		//jump to command block
+					generateInstruction(I,I_LABEL, buf2, "", "",list);	
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_if:													 	//if syntax check
@@ -959,6 +953,34 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					generateInstruction(I,I_LABEL, buf, "", "",list);									//after the end of expression block, continue with next line in expression block
 					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
+				case token_do:
+					sprintf(buf, "#do%d",counter);									//do label is generated
+					generateInstruction(I,I_LABEL, buf, "", "",list);				
+					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
+					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
+					sprintf(continueJump,"#do%d",counter);							//continue jump is saved
+					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved
+					counter++;	
+					breakable++;													//increment loop depth counter
+					lastBreakable=breakable;										//save loop depth
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}	
+					sprintf(breakJump, "%s",lastBreakJump);							//restore breakJump
+					sprintf(continueJump, "%s",lastContinueJump);					//restore continueJump				
+					breakable=lastBreakable;										//restore loop depth
+					breakable--;
+					getModifiedToken(f,tokenPtr);
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_while){fprintf(stderr,"\nWhile at do-while loop expected but not found. \n");goto EXIT;}
+					getModifiedToken(f,tokenPtr);
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
+					char * doBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					sprintf(buf2, "#do_end%d",gotoLabel);
+					generateInstruction(I,I_DO_GOTO, doBuffer, buf, "",list);		//jump to command block
+					generateInstruction(I,I_LABEL, buf2, "", "",list);	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;	
 				case token_if:																			//if labels and conditional jumps generation
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
 					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);

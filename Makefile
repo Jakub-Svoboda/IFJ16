@@ -32,7 +32,7 @@ test4: project
 	./project ./tests/test4.java
 
 cleantest: project
-	./project ./tests/test0.java
+	./project test0.java
 	rm *o project
 zip:
 
