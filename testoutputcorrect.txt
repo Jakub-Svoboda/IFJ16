@@ -1,0 +1,444 @@
+Test output file
+---------------------------------------------tests/1/1.java---------------------------------------------
+
+id
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/1/2.java---------------------------------------------
+
+id
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/2/1.java---------------------------------------------
+
+}
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/2/2.java---------------------------------------------
+Lexical error
+Navratova hodnota: 1
+---------------------------------------------tests/2/3.java---------------------------------------------
+Lexical error
+Navratova hodnota: 1
+---------------------------------------------tests/2/4.java---------------------------------------------
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/2/5.java---------------------------------------------
+String is incorrect.
+Navratova hodnota: 1
+---------------------------------------------tests/2/6.java---------------------------------------------
+
+FNB
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/2/7.java---------------------------------------------
+
+FNB
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/2/8.java---------------------------------------------
+Lexical error
+Navratova hodnota: 1
+---------------------------------------------tests/2/9.java---------------------------------------------
+Lexical error
+Navratova hodnota: 1
+---------------------------------------------tests/3/1.java---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/3/2.java---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/3/3.java---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/builtin/10.java---------------------------------------------
+Builtin 10.java
+ a je středníček b je klopetek klop je klop
+find(b,a) -1| (b, klop) 0| (a,a) 0| ("klopetek",b) 0| ("klopetek",klop) 0
+---------------------------------------------tests/builtin/11.java---------------------------------------------
+Builtin 11.java
+a: hesoyam b: aezakmi c: wanrltv
+aSort: aehmosy bSort: aaeikmz cSort: alnrtvw
+---------------------------------------------tests/builtin/12.java---------------------------------------------
+Builtin 12.java
+a: hesoyam b: aezakmi c: wanrltv
+aSort: aehmosy bSort: aaeikmz cSort: alnrtvw
+adiff: 0 bdiff: 0 cdiff: 0
+---------------------------------------------tests/builtin/16.java---------------------------------------------
+Builtin 16.java
+ a je středníček b je klopetek
+(b,a) -1(a,b) 1(a,a) 0("klopetek",b) 0("klopetek","klopetek") 0
+---------------------------------------------tests/builtin/6.java---------------------------------------------
+Builtin 6.java
+Delka: strednicek je 10.
+Delka: kleptoman je 9.
+---------------------------------------------tests/builtin/7.java---------------------------------------------
+Builtin 7.java
+substr(a,0,4) a = "strednicekaa"; stre.
+substr(a,4,4) a = "strednicekaa"; dnic.
+substr(a,8,2) a = "strednicekaa"; ek.
+---------------------------------------------tests/builtin/8.java---------------------------------------------
+Builtin 8.java
+substr: stre.
+substr: dnic.
+substr: ek.
+---------------------------------------------tests/builtin/9.java---------------------------------------------
+Builtin 9.java
+ a je středníček b je klopetek
+compare(b,a) -1| (a,b) 1| (a,a) 0| ("klopetek",b) 0| ("klopetek","klopetek") 0
+---------------------------------------------tests/correct/correct.java---------------------------------------------
+Sem_Error. I_SUB nonexistant left operand variable.
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/13.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/14.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/15.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/17.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/18.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/1.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/2.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/3.txt---------------------------------------------
+Lex error
+Navratova hodnota: 1
+---------------------------------------------tests/inputfiles/4.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/5.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/classMainComplex.txt---------------------------------------------
+Lex error
+Navratova hodnota: 1
+---------------------------------------------tests/inputfiles/ok-complex-1.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/inputfiles/string_test_4.txt---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/other2/b.f.test.java---------------------------------------------
+
+	Not from the stars do I my judgement pluck,
+	And yet methinks I have astronomy,
+	But not to tell of good, or evil luck,
+	Of plagues, of dearths, or seasons' quality.
+
+32
+12.5664
+5
+10
+11
+10
+20
+
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+
+---------------------------------------------tests/other2/buffertest.java---------------------------------------------
+String is incorrect.
+Navratova hodnota: 1
+---------------------------------------------tests/other2/double.java---------------------------------------------
+Cannot find funtion "run" in class "Main"
+Navratova hodnota: 3
+---------------------------------------------tests/other2/find.java---------------------------------------------
+Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
+---------------------------------------------tests/other2/lex.java---------------------------------------------
+Navratova hodnota: 139
+---------------------------------------------tests/other2/semantictest1.java---------------------------------------------
+semantic error - redefining class
+Navratova hodnota: 3
+---------------------------------------------tests/other2/semantictest2.java---------------------------------------------
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other2/semantictest3.java---------------------------------------------
+
+CBC
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other2/test0.java---------------------------------------------
+Lexical error.
+Navratova hodnota: 1
+---------------------------------------------tests/other2/thingsToFixInLexjava.java---------------------------------------------
+Lexical error
+Navratova hodnota: 1
+---------------------------------------------tests/other/class-ifj16-redefinition.java---------------------------------------------
+semantic error - redefining class
+Navratova hodnota: 3
+---------------------------------------------tests/other/class-not-defined.java---------------------------------------------
+Sem_Error. I_PUSH function not found
+Navratova hodnota: 3
+---------------------------------------------tests/other/class-redefinition.java---------------------------------------------
+semantic error - redefining class
+Navratova hodnota: 3
+---------------------------------------------tests/other/division-by-zero.java---------------------------------------------
+Division by zero.
+Navratova hodnota: 9
+---------------------------------------------tests/other/function-name-missing.java---------------------------------------------
+
+id
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/function-non-static-definition.java---------------------------------------------
+
+CBC
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/function-non-void-returns-nothing.java---------------------------------------------
+I_FN_END. Function has ended but no return found.
+Navratova hodnota: 8
+---------------------------------------------tests/other/function-not-defined.java---------------------------------------------
+Sem_Error. I_PUSH function not found
+Navratova hodnota: 3
+---------------------------------------------tests/other/function-parentheses-missing-left.java---------------------------------------------
+
+}
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/function-parentheses-missing-right.java---------------------------------------------
+
+CBC
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/function-redefinition.java---------------------------------------------
+Error function redeclaration.
+Navratova hodnota: 3
+---------------------------------------------tests/other/function-too-few-arguments.java---------------------------------------------
+Sem_Error. I_GT nonexistant right operand variable.
+Navratova hodnota: 3
+---------------------------------------------tests/other/function-too-many-arguments.java---------------------------------------------
+I_PUSH. Too many arguments. 1 
+Navratova hodnota: 3
+---------------------------------------------tests/other/function-void-returns-value.java---------------------------------------------
+Sem_Error. I_RETURN. Returning variable type does not match with defined return type.
+Navratova hodnota: 4
+---------------------------------------------tests/other/function-wrong-argument-type.java---------------------------------------------
+I_PUSH. Argument type not matching. 1 
+Navratova hodnota: 3
+---------------------------------------------tests/other/ok-classes-static-variables.java---------------------------------------------
+---------------------------------------------tests/other/ok-factorial-iterative.java---------------------------------------------
+3628800
+---------------------------------------------tests/other/ok-factorial-recursive.java---------------------------------------------
+3628800
+---------------------------------------------tests/other/ok-operation-in-parentheses.java---------------------------------------------
+11
+---------------------------------------------tests/other/ok-string-concatenation.java---------------------------------------------
+String given :Toto je nejaky text, ktery jeste trochu obohatime
+---------------------------------------------tests/other/ok-variable-in-parentheses.java---------------------------------------------
+11
+---------------------------------------------tests/other/ok-variable-static-non-static.java---------------------------------------------
+15
+---------------------------------------------tests/other/parentheses-missing-left.java---------------------------------------------
+
+;
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/parentheses-missing-right.java---------------------------------------------
+Syntax Error
+Navratova hodnota: 2
+---------------------------------------------tests/other/variable-local-name-missing.java---------------------------------------------
+
+ID
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/variable-local-not-defined.java---------------------------------------------
+Sem_Error. I_MOV to nonexistant target variable. Main.a
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-local-not-initialized.java---------------------------------------------
+Operand not initialized.
+Navratova hodnota: 8
+---------------------------------------------tests/other/variable-local-redefinition.java---------------------------------------------
+Semanticky error htab
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-static-name-missing.java---------------------------------------------
+
+id
+Syntax Error! 
+Navratova hodnota: 2
+---------------------------------------------tests/other/variable-static-not-defined.java---------------------------------------------
+Sem_Error. I_MOV to nonexistant target variable. Main.a
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-static-not-initialized.java---------------------------------------------
+Operand not initialized.
+Navratova hodnota: 8
+---------------------------------------------tests/other/variable-static-redefinition.java---------------------------------------------
+Error variable redeclaration.
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-wrong-type-1.java---------------------------------------------
+I_MOV source and target type not matching.
+Navratova hodnota: 4
+---------------------------------------------tests/other/variable-wrong-type-2.java---------------------------------------------
+I_EQ left operand not INT, DOUBLE or BOOLEAN
+Navratova hodnota: 4
+---------------------------------------------tests/other/variable-wrong-type-3.java---------------------------------------------
+I_MOV source and target type not matching.
+Navratova hodnota: 4
+Builtin 1.java
+Zadej integer:
+Zadej double:
+Zadej string:
+Vstup byl 8 2.5 Text
+Znovu byl 8 2.5 Text
+Builtin 2.java
+Zadej double:
+2.5
+Vstup double je 2.5
+Vstup double je 2.5
+Builtin 3.java
+Zadej \octal number:
+Test octal [pivo]
+Builtin 4.java
+Zadej string:
+Text
+Vstup string je Text
+Vstup string je Text
+Builtin 5.java
+Zadej string:
+Prepis String b na:
+Jiny text
+Jiny text Text
+Builtin 13.java
+Zadej string:
+
+
+
+:Nejsem Doma 3241:     unsorted string
+:  1234DNaeejmmos:     sorted string
+Builtin 14.java
+Zadej string:
+Zadej int:
+Zadej double:
+StrIntDou
+Text82.5
+IntDouStr
+82.5Text
+DouStrInt
+2.5Text8
+Builtin 15.java
+Type string: Type int: Type double: Text82.5
+82.5Text
+2.5Text8
+Builtin 17.java
+Enter a number to guess first but don't show it to anyone. I know it might be hard in this case.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Okay, lets guess.
+Try again!
+Try again!
+Try again!
+Wow, you are such a clever boy. The number was 8 and you guessed it on 4 try.
+Builtin 18.java
+Hey you, try to guess my secre number ;)
+Try again!
+Try again!
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+Challenge: Think of a word and then code it.
+(Change its characters positions like: Hello -> oHlel)
+Original and coded word cannot match.
+Input original word: Input a coded word: Congratulations! You managed to code the word correctly.
+Now input a string, which contains your original word OR your coded word OR both: Congratulations! You managed to input a string which contains your original word "Hello" on index: 0 and your coded word "oHlel" on index: 4
+Text     :HelloHlel:
+Original :Hello    :
+Coded    :    oHlel:
+Napis retazec abc
+Teraz napis abcdef
+Uspesne si dokoncil test 4 !!!
+35 - Zadej "pivo":
+Prvni tisk pivo
+Druhy tisk pivo
+
+-------------------
+
+6 - Compare vstup "pivo" se stringem:
+ifj16.compare("pivo", pivo) 0 <- ma byt 0.
+ifj16.compare(pivoStr, pivo) 0 <- ma byt 0.
+ifj16.compare("Pivo", pivo) -1 <- nema byt 0.
+
+-------------------
+
+7 - Zadej "to pivo je moje":
+Tisk to pivo moje
+
+-------------------
+
+8 - Compare vstup "pivo" s "topivojemoje":
+ifj16.compare("topivojemoje", pivo) 1 <- nema byt 0.
+ifj16.compare(toPivoJeMoje, pivo) 1 <- nema byt 0.
+
+-------------------
+
+9 - Find vstup "pivo" s "topivojemoje":
+ifj16.find(toPivoJeMoje, pivo) 3 <- ma byt 3.
+ifj16.find(toPivoJeMoje, "pivo") 3 <- ma byt 3.
+ifj16.find(pivo, toPivoJeMoje) -1 <- ma byt -1.
+ifj16.find("Pivo je pivo", pivo) 8 <- ma byt 8.
+
+-------------------
+
+10 - zadej octal "pivo" (\160\151\166\157):
+ifj16.compare(pivoOct, pivo) 0 <- ma byt nejspise 0.
+ifj16.find(pivo, pivoOct) 0 <- ma byt nejspise 0.
+ifj16.find(pivo, "\160\151\166\157") 0 <- ma byt nejspise 0.
