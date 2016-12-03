@@ -13,7 +13,7 @@ class Main{
 					break;
 				}else{}
 			}
-			ifj16.print("/n");			// << THIS
+			ifj16.print("\n");			// << THIS
 			b=0;
 			if(a>=10){
 				break;

@@ -1872,7 +1872,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						fprintf(stderr,"Sem_Error. I_WHILE_GOTO expression based on nonexistant variable\n");
+						fprintf(stderr,"Sem_Error. I_DO_GOTO expression based on nonexistant variable\n");
 						memfreeall();
 						exit(3);
 					}
@@ -1901,6 +1901,22 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 				jumpBool=0;
 			break;
+		//************************I_DELETE_VAR******************************//
+			case I_DELETE_VAR:
+				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search for var
+					if(!strstr(list->active->Instruction.addr1,dot)){		//if short identifier
+						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
+					}
+					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
+						fprintf(stderr,"Sem_Error. I_DELETE_VAR expression based on nonexistant variable\n");
+						memfreeall();
+						exit(3);
+					}
+				}
+				
+				htabDelete(localVarTable,list->active->Instruction.addr1);
+			break;		
+			
 
 
 
@@ -1966,6 +1982,8 @@ void printInstType(int instructionType){
 		case I_FIND3:		fprintf(stderr,"  I_FIND3:\t"); 	break;
 		case I_SORT:		fprintf(stderr,"  I_SORT:\t"); 	break;
 		case I_DO_GOTO:		fprintf(stderr,"  I_DO_GOTO:\t"); 	break;
+		case I_DELETE_VAR:		fprintf(stderr,"  I_DELETE_VAR:\t"); 	break;
+		
 		default: fprintf(stderr," unknown instruciton found:\t"); 	break;
 	}
 }

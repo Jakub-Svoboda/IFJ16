@@ -626,6 +626,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					generateInstruction(I,I_LABEL, buf, "", "",list);				
 					sprintf(continueJump,"#do%d",counter);							//continue jump is saved
 					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved	
+					int gotoLabel2 = counter;
 					counter++;	
 					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
 					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
@@ -644,9 +645,78 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * doBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
-					sprintf(buf2, "#do_end%d",gotoLabel);
+					sprintf(buf2, "#do_end%d",gotoLabel2);
 					generateInstruction(I,I_DO_GOTO, doBuffer, buf, "",list);		//jump to command block
 					generateInstruction(I,I_LABEL, buf2, "", "",list);	
+					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;
+				case token_for:
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at for loop expected but not found. \n");goto EXIT;}
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_int && tokenPtr->type != token_double && tokenPtr->type != token_String){fprintf(stderr,"\nType at for loop expected but not found. \n");goto EXIT;}
+					char forType[2047];
+					sprintf(forType,"%d",tokenPtr->type);									//save new variable type to string variable
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_identifier){fprintf(stderr,"\nID at for loop expected but not found. \n");goto EXIT;}
+					sprintf(buf,"%s",tokenPtr->name);
+					char iterativeVar[2047];
+					sprintf(iterativeVar,"%s",buf);
+					generateInstruction(I,I_NEW_VAR, buf, forType, "",list);						//generate new FOR loop variable
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_semicolon){	
+						if(tokenPtr->type != token_assign){fprintf(stderr,"\n= at for loop expected but not found. \n");goto EXIT;}
+						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
+						char * forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+						generateInstruction(I,I_MOV, buf, forBuffer,"",list);
+					}
+					sprintf(buf, "#for%d",counter);									//for label is generated
+					generateInstruction(I,I_LABEL, buf, "", "",list);				
+					sprintf(continueJump,"#for_assign%d",counter);							//continue jump is saved
+					sprintf(breakJump,"#for_end%d",counter);							//break jump is saved	
+					int gotoLabel3 = counter;
+					counter++;	
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
+					char * forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n; at for expected\n");goto EXIT;}
+					sprintf(buf3, "#for_end%d",gotoLabel3);					
+					generateInstruction(I,I_WHILE_GOTO, forBuffer, buf3, "",list);
+					sprintf(buf2, "#for_block%d",gotoLabel3);
+					generateInstruction(I,I_GOTO, buf2, "", "",list);
+					sprintf(buf3, "#for_assign%d",gotoLabel3);
+					generateInstruction(I,I_LABEL, buf3, "", "",list);
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_identifier){fprintf(stderr,"\nID at for loop expected but not found. \n");goto EXIT;}
+					char forAssign[2047];
+					sprintf(forAssign,"%s",tokenPtr->name);							//save name for assign
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_assign){fprintf(stderr,"\n= at for loop expected but not found. \n");goto EXIT;}
+					forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					generateInstruction(I,I_MOV, forAssign , forBuffer,"",list);
+					sprintf(buf3, "#for%d",gotoLabel3);
+					generateInstruction(I,I_GOTO, buf3, "", "",list);
+					sprintf(buf2, "#for_block%d",gotoLabel3);
+					generateInstruction(I,I_LABEL, buf2, "","",list);
+					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
+					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
+					breakable++;													//increment loop depth counter
+					lastBreakable=breakable;										//save loop depth
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					sprintf(breakJump, "%s",lastBreakJump);							//restore breakJump
+					sprintf(continueJump, "%s",lastContinueJump);					//restore continueJump				
+					breakable=lastBreakable;										//restore loop depth
+					breakable--;	
+					sprintf(buf3, "#for_assign%d",gotoLabel3);
+					generateInstruction(I,I_GOTO, buf3, "","",list);
+					sprintf(buf3, "#for_end%d",gotoLabel3);
+					generateInstruction(I,I_LABEL, buf3, "","",list);	
+					generateInstruction(I,I_DELETE_VAR,iterativeVar,"","",list);
 					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;
 				case token_if:													 	//if syntax check
@@ -960,6 +1030,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
 					sprintf(continueJump,"#do%d",counter);							//continue jump is saved
 					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved
+					int gotoLabel2 = counter;
 					counter++;	
 					breakable++;													//increment loop depth counter
 					lastBreakable=breakable;										//save loop depth
@@ -976,10 +1047,79 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * doBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
-					sprintf(buf2, "#do_end%d",gotoLabel);
+					sprintf(buf2, "#do_end%d",gotoLabel2);
 					generateInstruction(I,I_DO_GOTO, doBuffer, buf, "",list);		//jump to command block
 					generateInstruction(I,I_LABEL, buf2, "", "",list);	
-					if ((result=syntaxCheck( FN_BODY, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
+					return result;	
+				case token_for:
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at for loop expected but not found. \n");goto EXIT;}
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_int && tokenPtr->type != token_double && tokenPtr->type != token_String){fprintf(stderr,"\nType at for loop expected but not found. \n");goto EXIT;}
+					char forType[2047];
+					sprintf(forType,"%d",tokenPtr->type);									//save new variable type to string variable
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_identifier){fprintf(stderr,"\nID at for loop expected but not found. \n");goto EXIT;}
+					sprintf(buf,"%s",tokenPtr->name);
+					char iterativeVar[2047];
+					sprintf(iterativeVar,"%s",buf);
+					generateInstruction(I,I_NEW_VAR, buf, forType, "",list);						//generate new FOR loop variable
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_semicolon){	
+						if(tokenPtr->type != token_assign){fprintf(stderr,"\n= at for loop expected but not found. \n");goto EXIT;}
+						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
+						char * forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+						generateInstruction(I,I_MOV, buf, forBuffer,"",list);
+					}
+					sprintf(buf, "#for%d",counter);									//for label is generated
+					generateInstruction(I,I_LABEL, buf, "", "",list);				
+					sprintf(continueJump,"#for_assign%d",counter);							//continue jump is saved
+					sprintf(breakJump,"#for_end%d",counter);							//break jump is saved	
+					int gotoLabel3 = counter;
+					counter++;	
+					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
+					char * forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					if(tokenPtr -> type != token_semicolon){fprintf(stderr,"\n; at for expected\n");goto EXIT;}
+					sprintf(buf3, "#for_end%d",gotoLabel3);					
+					generateInstruction(I,I_WHILE_GOTO, forBuffer, buf3, "",list);
+					sprintf(buf2, "#for_block%d",gotoLabel3);
+					generateInstruction(I,I_GOTO, buf2, "", "",list);
+					sprintf(buf3, "#for_assign%d",gotoLabel3);
+					generateInstruction(I,I_LABEL, buf3, "", "",list);
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_identifier){fprintf(stderr,"\nID at for loop expected but not found. \n");goto EXIT;}
+					char forAssign[2047];
+					sprintf(forAssign,"%s",tokenPtr->name);							//save name for assign
+					getModifiedToken(f,tokenPtr);	
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_assign){fprintf(stderr,"\n= at for loop expected but not found. \n");goto EXIT;}
+					forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					generateInstruction(I,I_MOV, forAssign , forBuffer,"",list);
+					sprintf(buf3, "#for%d",gotoLabel3);
+					generateInstruction(I,I_GOTO, buf3, "", "",list);
+					sprintf(buf2, "#for_block%d",gotoLabel3);
+					generateInstruction(I,I_LABEL, buf2, "","",list);
+					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
+					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
+					breakable++;													//increment loop depth counter
+					lastBreakable=breakable;										//save loop depth
+					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}
+					sprintf(breakJump, "%s",lastBreakJump);							//restore breakJump
+					sprintf(continueJump, "%s",lastContinueJump);					//restore continueJump				
+					breakable=lastBreakable;										//restore loop depth
+					breakable--;	
+					sprintf(buf3, "#for_assign%d",gotoLabel3);
+					generateInstruction(I,I_GOTO, buf3, "","",list);
+					sprintf(buf3, "#for_end%d",gotoLabel3);
+					generateInstruction(I,I_LABEL, buf3, "","",list);	
+					generateInstruction(I,I_DELETE_VAR,iterativeVar,"","",list);
+					if ((result=syntaxCheck( COMMAND_BLOCK, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\nFNB\n");goto EXIT;}
 					return result;	
 				case token_if:																			//if labels and conditional jumps generation
 					if ((result=syntaxCheck( LEFT_ROUND, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}

@@ -1150,8 +1150,8 @@ I_LABEL:	: #do0, ,
   I_MOV_INT:	: #var3, 10, 
   I_NEW_VAR:	: #var4, , 
   I_LT:		: #var4, a, #var3
-  I_WHILE_GOTO:	: #var4, #do_end0, 
-I_LABEL:	: #do0, , 
+  I_DO_GOTO:	: #var4, #do0, 
+I_LABEL:	: #do_end0, , 
   I_FN_END:	: , , 
   I_STOP:	
 ---------------------------------------------tests/other2/thingsToFixInLexjava.java---------------------------------------------
@@ -1742,3 +1742,257 @@ Navratova hodnota: 3
 id
 Syntax Error! 
 Navratova hodnota: 2
+---------------------------------------------tests/other/variable-static-not-defined.java---------------------------------------------
+  I_PROGRAM:	: , , 
+  I_CLASS:	: Main, , 
+I_LABEL:	: Main.run, , 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var0, 28, 
+  I_MOV_INT:	: #var0, 5, 
+  I_MOV:	: Main.a, #var0, 
+  I_FN_END:	: , , 
+  I_STOP:	
+Sem_Error. I_MOV to nonexistant target variable. Main.a
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-static-not-initialized.java---------------------------------------------
+  I_PROGRAM:	: , , 
+  I_CLASS:	: Main, , 
+I_LABEL:	: Main.run, , 
+  I_NEW_VAR:	: b, 28, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var0, 28, 
+  I_MOV_INT:	: #var0, 5, 
+  I_NEW_VAR:	: #var1, , 
+  I_ADD:	: #var1, #var0, Main.a
+  I_MOV:	: b, #var1, 
+  I_FN_END:	: , , 
+  I_STOP:	
+Operand not initialized.
+Navratova hodnota: 8
+---------------------------------------------tests/other/variable-static-redefinition.java---------------------------------------------
+Error variable redeclaration.
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-wrong-type-1.java---------------------------------------------
+  I_PROGRAM:	: , , 
+  I_CLASS:	: Main, , 
+I_LABEL:	: Main.run, , 
+  I_NEW_VAR:	: a, 28, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var0, 28, 
+  I_MOV_INT:	: #var0, 5, 
+  I_MOV:	: a, #var0, 
+  I_NEW_VAR:	: b, 30, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var1, 30, 
+  I_MOV_STRING:	: #var1, Text, 
+  I_MOV:	: b, #var1, 
+  I_NEW_VAR:	: c, 28, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var2, , 
+  I_ADD:	: #var2, a, b
+  I_MOV:	: c, #var2, 
+  I_FN_END:	: , , 
+  I_STOP:	
+I_MOV source and target type not matching.
+Navratova hodnota: 4
+---------------------------------------------tests/other/variable-wrong-type-2.java---------------------------------------------
+  I_PROGRAM:	: , , 
+  I_CLASS:	: Main, , 
+I_LABEL:	: Main.run, , 
+  I_NEW_VAR:	: a, 28, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var0, 28, 
+  I_MOV_INT:	: #var0, 5, 
+  I_MOV:	: a, #var0, 
+  I_NEW_VAR:	: b, 30, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var1, 30, 
+  I_MOV_STRING:	: #var1, Text, 
+  I_MOV:	: b, #var1, 
+  I_NEW_VAR:	: c, 28, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var2, , 
+  I_EQ:		: #var2, a, b
+  I_IF_GOTO:	: #var2, #else0, 
+  I_CLEAR_TMPS:	: , , 
+  I_MOV:	: c, a, 
+  I_GOTO:	: #cond_end0, , 
+I_LABEL:	: #else0, , 
+I_LABEL:	: #cond_end0, , 
+  I_FN_END:	: , , 
+  I_STOP:	
+I_EQ left operand not INT, DOUBLE or BOOLEAN
+Navratova hodnota: 4
+---------------------------------------------tests/other/variable-wrong-type-3.java---------------------------------------------
+  I_PROGRAM:	: , , 
+  I_CLASS:	: Main, , 
+I_LABEL:	: Main.run, , 
+  I_NEW_VAR:	: a, 28, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var0, 28, 
+  I_MOV_INT:	: #var0, 5, 
+  I_MOV:	: a, #var0, 
+  I_NEW_VAR:	: b, 30, 
+  I_CLEAR_TMPS:	: , , 
+  I_NEW_VAR:	: #var1, 28, 
+  I_MOV_INT:	: #var1, 6, 
+  I_MOV:	: b, #var1, 
+  I_FN_END:	: , , 
+  I_STOP:	
+I_MOV source and target type not matching.
+Navratova hodnota: 4
+Builtin 1.java
+Zadej integer:
+Zadej double:
+Zadej string:
+Vstup byl 8 2.5 Text
+Znovu byl 8 2.5 Text
+Builtin 2.java
+Zadej double:
+2.5
+Vstup double je 2.5
+Vstup double je 2.5
+Builtin 3.java
+Zadej \octal number:
+Test octal [pivo]
+Builtin 4.java
+Zadej string:
+Text
+Vstup string je Text
+Vstup string je Text
+Builtin 5.java
+Zadej string:
+Prepis String b na:
+Jiny text
+Jiny text Text
+Builtin 13.java
+Zadej string:
+
+
+
+:Nejsem Doma 3241:     unsorted string
+:  1234DNaeejmmos:     sorted string
+Builtin 14.java
+Zadej string:
+Zadej int:
+Zadej double:
+StrIntDou
+Text82.5
+IntDouStr
+82.5Text
+DouStrInt
+2.5Text8
+Builtin 15.java
+Type string: Type int: Type double: Text82.5
+82.5Text
+2.5Text8
+Builtin 17.java
+Enter a number to guess first but don't show it to anyone. I know it might be hard in this case.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Okay, lets guess.
+Try again!
+Try again!
+Try again!
+Wow, you are such a clever boy. The number was 8 and you guessed it on 4 try.
+Builtin 18.java
+Hey you, try to guess my secre number ;)
+Try again!
+Try again!
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+Challenge: Think of a word and then code it.
+(Change its characters positions like: Hello -> oHlel)
+Original and coded word cannot match.
+Input original word: Input a coded word: Congratulations! You managed to code the word correctly.
+Now input a string, which contains your original word OR your coded word OR both: Congratulations! You managed to input a string which contains your original word "Hello" on index: 0 and your coded word "oHlel" on index: 4
+Text     :HelloHlel:
+Original :Hello    :
+Coded    :    oHlel:
+Napis retazec abc
+Teraz napis abcdef
+Uspesne si dokoncil test 4 !!!
+35 - Zadej "pivo":
+Prvni tisk pivo
+Druhy tisk pivo
+
+-------------------
+
+6 - Compare vstup "pivo" se stringem:
+ifj16.compare("pivo", pivo) 0 <- ma byt 0.
+ifj16.compare(pivoStr, pivo) 0 <- ma byt 0.
+ifj16.compare("Pivo", pivo) -1 <- nema byt 0.
+
+-------------------
+
+7 - Zadej "to pivo je moje":
+Tisk to pivo moje
+
+-------------------
+
+8 - Compare vstup "pivo" s "topivojemoje":
+ifj16.compare("topivojemoje", pivo) 1 <- nema byt 0.
+ifj16.compare(toPivoJeMoje, pivo) 1 <- nema byt 0.
+
+-------------------
+
+9 - Find vstup "pivo" s "topivojemoje":
+ifj16.find(toPivoJeMoje, pivo) 3 <- ma byt 3.
+ifj16.find(toPivoJeMoje, "pivo") 3 <- ma byt 3.
+ifj16.find(pivo, toPivoJeMoje) -1 <- ma byt -1.
+ifj16.find("Pivo je pivo", pivo) 8 <- ma byt 8.
+
+-------------------
+
+10 - zadej octal "pivo" (\160\151\166\157):
+ifj16.compare(pivoOct, pivo) 0 <- ma byt nejspise 0.
+ifj16.find(pivo, pivoOct) 0 <- ma byt nejspise 0.
+ifj16.find(pivo, "\160\151\166\157") 0 <- ma byt nejspise 0.
