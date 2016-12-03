@@ -98,11 +98,6 @@ class Main
 class Other
 {
 	static void printspace(int n) {
-		/*
-//		for(int i = 0; i < n; i++) {			//This also does not work, even if int i declared before for()
-			ifj16.print(" ");
-		}
-		*/
 		while((n) > (0)) {
 			ifj16.print(" ");
 			n = (n - 1);
