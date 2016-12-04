@@ -25,6 +25,57 @@
 #define true 1
 #define false 0
 
+int ipowLex(int base, int exp)
+{
+    int num = 1;
+    while (exp != 0) {
+        if ((exp & 1) == 1)
+            num *= base;
+        exp >>= 1;
+        base *= base;
+    }
+    return num;
+}
+
+char* intToStr(int num) {
+	int count = 0, temp = num;
+	while(temp != 0) {
+		count++;
+        temp/=10;
+    }
+	char *buff = (char*) memalloc((count + 1) * sizeof(char));
+	for(int i = count-1; i >= 0; i--) {
+		buff[i] = '0' + num%10;
+		//printf("[%c]",buff[i]);  //TODO: remove
+		num/=10;
+	}
+	buff[count] = '\0';
+	//printf("%s coun,",buff);  //TODO: remove
+	return buff;
+}
+
+
+char* octToDecLex(int oct)
+{
+    int dec = 0, i = 0;
+    while(oct != 0) {
+        dec += (oct%10) * ipowLex(8,i);
+        ++i;
+        oct/=10;
+    }
+    return intToStr(dec);
+}
+
+char* binToDecLex(int bin)
+{
+    int dec = 0, i = 0;
+    while(bin != 0) {
+        dec += (bin%10) * ipowLex(2,i);
+        ++i;
+        bin/=10;
+    }
+	return intToStr(dec);
+}
 
 
 int isKeyword(char *string) {							//return index value of choosen keyword in array
@@ -275,13 +326,13 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					//tempest = fgetc(f);
 					//printf("%cfdsf \n", tempest);
 					if(c == 'b') {
-						if((tempest = fgetc(f)) == '0' || c == '1') {
-							buff[position] = c;
+						if((tempest = fgetc(f)) == '0' || tempest == '1') {
+						/*	buff[position] = c;
 							position++;
 							if(position+2 == buffSize) {
 								buffSize += BUFFER_SIZE;
 								buff = memrealloc(buff, buffSize);
-							}
+							}*/
 							buff[position] = tempest;
 							position++;
 							if(position+2 == buffSize) {
@@ -556,6 +607,11 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}
 				if(state == state_default) {
 					buff[position] = '\0';
+					if(binInt == 1) {
+						buff = binToDecLex(atoi(buff));
+					}else if(octInt == 1) {
+						buff = octToDecLex(atoi(buff));
+					}
 					if((isDouble) || (!isDouble && hasE)) {
 						t->type = token_doubleNumber;
 						t->name = buff;
@@ -570,7 +626,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					binInt = 0;
 					octInt = 0;
 					hexadecInt = 0;
-		//			printf(" [%s]",buff);	//TODO:remove
+
 					return t;
 				}
 				tempc = c;
