@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "scanner.h"
+#include <math.h>
 //#include "htab.c"
 
 //#define memalloc malloc
@@ -77,6 +78,254 @@ char* binToDecLex(int bin)
 	return intToStr(dec);
 }
 
+char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
+{
+	//printf("hexereere %s %d %d %d prislo", hexadec,isDouble,hasDot,hasHaxE); //TODO remove
+    int dec = 0, i = 0, count = 0, expSign = 0, expNum = 0, quiet;
+	double decDouble = 0, mantissa = 0;
+	char* temp = hexadec;
+	if(isDouble == 0) {
+		//printf("neni double\n" ); //TODO remove
+		while(*temp != '\0'){
+			;
+			quiet = *temp++;
+		}
+		quiet = quiet;
+		quiet = *temp--;
+	    while(temp != hexadec) {
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			//printf("[[%c %d]]",*temp, i);  //TODO remove
+			dec += i * ipowLex(16,count);
+	        ++count;
+			temp--;
+	    }
+	}else if(isDouble == 1 && hasDot == 1 && hasHaxE != 1) {
+		memfreeall();
+		fprintf(stderr, "Lexical error, invalid hexadecimal number.\n");
+		exit(1);
+	/*	printf("je double s teckou\n" );
+		while(*temp != '.'){
+			;
+			*temp++;
+		}
+		char* dot = temp;
+		*temp--;
+		while(temp != hexadec) {
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			printf("[[%c %d]]",*temp, i);
+			decDouble += i * ipowLex(16,count);
+			++count;
+			temp--;
+
+		}
+		//calc .part
+		count = 0; 		//reset counter
+		*dot++; 		//skip the dot
+		while(*dot != '\0'){
+			printf("%c", *dot);
+			if(*dot == 'A') {
+				i = 10;
+			}else if(*dot == 'B'){
+				i = 11;
+			}else if(*dot == 'C'){
+				i = 12;
+			}else if(*dot == 'D'){
+				i = 13;
+			}else if(*dot == 'E'){
+				i = 14;
+			}else if(*dot == 'F'){
+				i = 15;
+			}else {
+				i = (*dot) - '0';
+			}
+			printf("[[%c %d]]",*dot, i);
+			++count;
+			mantissa += i * (1.0/(double)ipowLex(16,count));
+			dot++;
+		}
+  		decDouble += mantissa;
+		printf("cislo je %f \n", decDouble);
+	}*/}else if(isDouble == 1 && hasDot == 1 && hasHaxE == 1) {  //hexadec with dot and exp
+		//printf("je double s teckou a exp {%s} \n",hexadec ); //TODO remove
+		while(*temp != '.'){
+			;
+			quiet = *temp++;
+		}
+		char* dot = temp;
+		quiet = *temp--;
+		while(temp != hexadec) {
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			//printf("[[%c %d]]",*temp, i); //TODO remove
+			decDouble += i * ipowLex(16,count);
+			++count;
+			temp--;
+		}
+		//calc .part
+		count = 0; 		//reset counter
+		dot++; 			//skip the dot
+		while(*dot != 'p' && *dot != 'P'){
+			//printf("%c", *dot); //TODO remove
+			if(*dot == 'A') {
+				i = 10;
+			}else if(*dot == 'B'){
+				i = 11;
+			}else if(*dot == 'C'){
+				i = 12;
+			}else if(*dot == 'D'){
+				i = 13;
+			}else if(*dot == 'E'){
+				i = 14;
+			}else if(*dot == 'F'){
+				i = 15;
+			}else {
+				i = (*dot) - '0';
+			}
+			printf("[[%c %d]]",*dot, i);
+			++count;
+			mantissa += i * (1.0/(double)ipowLex(16,count));
+			dot++;
+		}
+		//printf("[%c hleda]",*dot); //TODO remove
+		dot++;
+		if(*dot == '+') {
+			expSign = 1;
+		}else if(*dot == '-') {
+			expSign = -1;
+		}
+		dot++;
+		while(*dot != '\0') {
+	        expNum += (*dot) - '0';
+			dot++;
+			if(*dot != '\0') {
+				expNum *= 10;
+			}
+			//printf("{%d} expNum", expNum); //TODO remove
+	    }
+
+	//	printf("num %f . %f p %d exp %d", decDouble,mantissa, expSign, expNum); //TODO remove
+		decDouble = decDouble + mantissa;
+		if(expSign == 1) {
+			decDouble *= pow(2, expNum);
+		}else if(expSign == -1) {
+			decDouble *= pow(2, -expNum);
+		}
+	//	printf("dec double je %f\n",decDouble ); //TODO remove
+
+	}else if(isDouble == 1 && hasDot != 1 && hasHaxE == 1) {  //hexadec with dot and exp
+	//	printf("je double bez tecky a exp {%s} \n",hexadec ); //TODO remove
+		while(*temp != 'p' && *temp != 'P'){
+			;
+			quiet = *temp++;
+		}
+		char* dot = temp;
+		quiet = *temp--;
+		while(temp != hexadec) {
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			printf("[[%c %d]]",*temp, i);
+			dec += i * ipowLex(16,count);
+			++count;
+			temp--;
+		}
+		//calc .part
+		count = 0; 		//reset counter
+		dot++; 		//skip the dot
+		if(*dot == '+') {
+			expSign = 1;
+		}else if(*dot == '-') {
+			expSign = -1;
+		}
+		dot++;
+		while(*dot != '\0') {
+	        expNum += (*dot) - '0';
+			dot++;
+			if(*dot != '\0') {
+				expNum *= 10;
+			}
+		//	printf("{%d} expNum", expNum); //TODO remove
+	    }
+
+	//	printf("num %d p %d exp %d", dec, expSign, expNum); //TODO remove
+		decDouble = (double)dec;
+		if(expSign == 1) {
+			decDouble *= pow(2, expNum);
+		}else if(expSign == -1) {
+			decDouble *= pow(2, -expNum);
+		}
+	//	printf(" Doublas je %f\n", decDouble);  //TODO remove
+	}
+	char* tempDouble = memalloc(2048 * sizeof(char));
+	char* buffDouble;
+	int len = 0;
+	if(decDouble != 0) {
+		len = sprintf(tempDouble,"%lf",decDouble);
+		buffDouble = memalloc(len * sizeof(char));
+		sprintf(buffDouble,"%d",dec);
+	}else {
+		len = sprintf(tempDouble,"%d",dec);
+		buffDouble = memalloc(len * sizeof(char));
+		sprintf(buffDouble,"%d",dec);
+	}
+	//printf("hexedec vraci {%s}",buffDouble); //TODO remove
+	return buffDouble;
+	//return intToStr(dec);
+}
+
 
 int isKeyword(char *string) {							//return index value of choosen keyword in array
 	char *keywords[] = {"boolean", "break", "class", "continue", "do", "double",
@@ -136,7 +385,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
     int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0, complexPos = 0;
-	int binInt = 0, tempest = 0, tempestc = 0, octInt = 0, hexadecInt = 0;
+	int binInt = 0, tempest = 0, tempestc = 0, octInt = 0, hexadecInt = 0, hasDot = 0, hasHaxE = 0;
 	State_type state = state_default;					//choose between states
 
 	if(t->type == token_invalid){						//initialization faiulure
@@ -363,20 +612,22 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}else if(c == 'x') {
 						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || tempest == '_' || (tempest >= 'A' && tempest <= 'F')) {
 
-							buff[position] = c;
+						/*	buff[position] = c;
 							position++;
 							if(position+2 == buffSize) {
 								buffSize += BUFFER_SIZE;
 								buff = memrealloc(buff, buffSize);
-							}
+							}*/
+							hexadecInt = 1;
 							buff[position] = tempest;
 							position++;
 							if(position+2 == buffSize) {
 								buffSize += BUFFER_SIZE;
 								buff = memrealloc(buff, buffSize);
 							}
+
 							while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_' || (c >= 'A' && c <= 'F')) {
-								hexadecInt = 1;
+
 								if(c == '_') {
 									tempest = fgetc(f);
 									if(tempest == '_') {
@@ -393,6 +644,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 								}
 							}
 							if(c == '.') {
+								hasDot = 1;
 								c = fgetc(f);
 								if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || c == '_'){
 									buff[position] = '.';
@@ -451,6 +703,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 												buffSize += BUFFER_SIZE;
 												buff = memrealloc(buff, buffSize);
 											}
+											hasHaxE = 1;
+
 											while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 												if(c == '_' && isdigit(buff[position-1])) {
 													tempest = fgetc(f);
@@ -480,7 +734,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									ungetc('.',f);
 									ungetc(c,f);
 								}
-							}else {	//there is no decimal point
+							}else if(c == 'p' || c == 'P'){	//there is no decimal point
 								if(c == 'p' || c == 'P') {
 									tempestc = c;
 									if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
@@ -496,6 +750,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 											buffSize += BUFFER_SIZE;
 											buff = memrealloc(buff, buffSize);
 										}
+										hasHaxE = 1;
 										while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 											if(c == '_' && isdigit(buff[position-1])) {
 												tempest = fgetc(f);
@@ -522,6 +777,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 								}else {
 									ungetc(c, f);
 								}
+							}else {		//next char is not p or P
+								ungetc(c,f);
 							}
 						}else {
 							ungetc(c,f);
@@ -553,7 +810,6 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
-
 					}
 				}
 
@@ -600,7 +856,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						ungetc(tempc, f);							//undo readings
 						position--;
 					}
-					if(buff[position-1] == 'e' || buff[position-1] == 'E') {
+					if(buff[position-1] == 'e' || (buff[position-1] == 'E' && hexadecInt == 0)) {
 						ungetc(buff[position-1], f);							//undo readings
 						position--;
 					}
@@ -611,6 +867,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						buff = binToDecLex(atoi(buff));
 					}else if(octInt == 1) {
 						buff = octToDecLex(atoi(buff));
+					}else if(hexadecInt == 1) {
+					//	printf(" posilam %s haha\n", buff); //TODO: remove
+						buff = hexadecToDecLex(buff, isDouble, hasDot, hasHaxE);
 					}
 					if((isDouble) || (!isDouble && hasE)) {
 						t->type = token_doubleNumber;
@@ -622,11 +881,13 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					position = 0;								//reset
 					isDouble = false;							//reset
 					hasE = false;
+					hasHaxE = 0;
+					hasDot = 0;
 					end = false;
 					binInt = 0;
 					octInt = 0;
 					hexadecInt = 0;
-					//printf(" [%s]",buff);	//TODO:remove
+					//printf(" buff[%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;

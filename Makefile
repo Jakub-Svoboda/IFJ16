@@ -7,7 +7,7 @@ OBJ=main.o precedence.o scanner.o syntax.o 	 	firstrun.o 	ilist.o	interpret.o ga
 all: project
 
 project: $(OBJ) $(DEPS)
-	$(CC) $(OBJ)       -g -o project -I.
+	$(CC) $(OBJ)       -g -o project -I. -lm
 
 %.o: %.c $(DEPS)
 	$(CC) -g -c -o $@ $< $(CFLAGS)
