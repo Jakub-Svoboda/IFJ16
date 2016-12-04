@@ -570,7 +570,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					binInt = 0;
 					octInt = 0;
 					hexadecInt = 0;
-					printf(" [%s]",buff);	//TODO:remove
+					//printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
