@@ -17,7 +17,7 @@ clean:
 	rm *o project
 
 test: project
-	./project ./tests/test0.java
+	./tests/testscriptnew.sh
 
 test1: project
 	./project ./tests/test.java
