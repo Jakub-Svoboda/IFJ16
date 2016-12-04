@@ -410,7 +410,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						else if(itemPtr->varType == 30 || itemPtr->varType == 0){
 							itemPtr->stringValue=memalloc(sizeof(itemPtr2->doubleValue)+sizeof(char)*(strlen(itemPtr3->stringValue)+1));
-							sprintf(itemPtr->stringValue,"%g%s",itemPtr2->doubleValue, itemPtr3->stringValue);
+							sprintf(itemPtr->stringValue,"%lf%s",itemPtr2->doubleValue, itemPtr3->stringValue);
 							itemPtr->isInit=1;
 							itemPtr->varType=30;
 						}
@@ -458,7 +458,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							exit(4);
 						}
 						itemPtr->stringValue=memalloc(sizeof(char)*(strlen(itemPtr2->stringValue)+1)+sizeof(itemPtr3->doubleValue));
-						sprintf(itemPtr->stringValue,"%s%g",itemPtr2->stringValue, itemPtr3->doubleValue);
+						sprintf(itemPtr->stringValue,"%s%lf",itemPtr2->stringValue, itemPtr3->doubleValue);
 						itemPtr->isInit=1;
 						itemPtr->varType=30;
 					}else if(itemPtr3->varType == 30){									// STRING + STRING

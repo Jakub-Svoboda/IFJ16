@@ -672,6 +672,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 						if(tokenPtr->type != token_assign){fprintf(stderr,"\n= at for loop expected but not found. \n");goto EXIT;}
 						generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 						char * forBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+						if(tokenPtr->type != token_semicolon){fprintf(stderr,"\n; at for loop expected but not found. \n");goto EXIT;}
 						generateInstruction(I,I_MOV, buf, forBuffer,"",list);
 					}
 					sprintf(buf, "#for%d",counter);									//for label is generated
