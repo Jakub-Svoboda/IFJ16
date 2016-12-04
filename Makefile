@@ -17,7 +17,7 @@ clean:
 	rm *o project
 
 test: project
-	./project ./tests/test0.java
+	./tests/testscriptnew.sh
 
 test1: project
 	./project ./tests/test.java
@@ -36,4 +36,4 @@ cleantest: project
 	rm *o project
 zip:
 
-		zip xschmi08.zip builtin.c builtin.h firstrun.c firstrun.h garbage.c garbage.h ial.c ial.h ilist.c ilist.h interpret.c interpret.h main.c precedence.c precedence.h scanner.c scanner.h syntax.c syntax.h Makefile rozdeleni dokumentace.pdf
+		zip xschmi08.zip builtin.c builtin.h firstrun.c firstrun.h garbage.c garbage.h ial.c ial.h ilist.c ilist.h interpret.c interpret.h main.c precedence.c precedence.h scanner.c scanner.h syntax.c syntax.h Makefile rozdeleni rozsireni dokumentace.pdf
