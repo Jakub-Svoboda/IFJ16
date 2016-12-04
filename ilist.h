@@ -66,6 +66,7 @@
 #define I_FIND3				45
 #define I_SORT				46
 #define I_DO_GOTO			47	//reversed I_WHILE_GOTO
+#define I_DELETE_VAR		48	//delete iterative variable after for loop is over
 
 typedef struct		//List of instructions
 {

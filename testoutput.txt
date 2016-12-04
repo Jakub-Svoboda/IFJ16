@@ -52,511 +52,41 @@ Navratova hodnota: 3
 Cannot find funtion "run" in class "Main"
 Navratova hodnota: 3
 ---------------------------------------------tests/builtin/10.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 10.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_NEW_VAR:	: b, 30, 
-  I_NEW_VAR:	: klop, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, středníček, 
-  I_MOV:	: a, #var0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, klopetek, 
-  I_MOV:	: b, #var1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 30, 
-  I_MOV_STRING:	: #var2, klop, 
-  I_MOV:	: klop, #var2, 
-  I_NEW_VAR:	: num0, 28, 
-  I_NEW_VAR:	: num1, 28, 
-  I_NEW_VAR:	: num2, 28, 
-  I_NEW_VAR:	: num3, 28, 
-  I_NEW_VAR:	: num4, 28, 
-  I_FIND1:	: b, 1, 
-  I_FIND2:	: a, 1, 
-  I_FIND3:	: num0, , 
-  I_FIND1:	: b, 1, 
-  I_FIND2:	: klop, 1, 
-  I_FIND3:	: num1, , 
-  I_FIND1:	: a, 1, 
-  I_FIND2:	: a, 1, 
-  I_FIND3:	: num2, , 
-  I_FIND1:	: klopetek, 0, 
-  I_FIND2:	: b, 1, 
-  I_FIND3:	: num3, , 
-  I_FIND1:	: klopetek, 0, 
-  I_FIND2:	: klop, 1, 
-  I_FIND3:	: num4, , 
-  I_PRINT:	:  a je , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	:  b je , 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	:  klop je , 0, 
-  I_PRINT:	: klop, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PRINT:	: find(b,a) , 0, 
-  I_PRINT:	: num0, 1, 
-  I_PRINT:	: | (b, klop) , 0, 
-  I_PRINT:	: num1, 1, 
-  I_PRINT:	: | (a,a) , 0, 
-  I_PRINT:	: num2, 1, 
-  I_PRINT:	: | (\"klopetek\",b) , 0, 
-  I_PRINT:	: num3, 1, 
-  I_PRINT:	: | (\"klopetek\",klop) , 0, 
-  I_PRINT:	: num4, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 10.java
  a je středníček b je klopetek klop je klop
 find(b,a) -1| (b, klop) 0| (a,a) 0| ("klopetek",b) 0| ("klopetek",klop) 0
 ---------------------------------------------tests/builtin/11.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 11.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_NEW_VAR:	: b, 30, 
-  I_NEW_VAR:	: c, 30, 
-  I_NEW_VAR:	: aS, 30, 
-  I_NEW_VAR:	: bS, 30, 
-  I_NEW_VAR:	: cS, 30, 
-  I_NEW_VAR:	: aSort, 30, 
-  I_NEW_VAR:	: bSort, 30, 
-  I_NEW_VAR:	: cSort, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, hesoyam, 
-  I_MOV:	: a, #var0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, aehmosy, 
-  I_MOV:	: cS, #var1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 30, 
-  I_MOV_STRING:	: #var2, aezakmi, 
-  I_MOV:	: b, #var2, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 30, 
-  I_MOV_STRING:	: #var3, aaeikmz, 
-  I_MOV:	: bS, #var3, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var4, 30, 
-  I_MOV_STRING:	: #var4, wanrltv, 
-  I_MOV:	: c, #var4, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, 30, 
-  I_MOV_STRING:	: #var5, alnrtvw, 
-  I_MOV:	: cS, #var5, 
-  I_SORT:	: a, 1, aSort
-  I_SORT:	: b, 1, bSort
-  I_SORT:	: c, 1, cSort
-  I_PRINT:	: a: , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	:  b: , 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	:  c: , 0, 
-  I_PRINT:	: c, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PRINT:	: aSort: , 0, 
-  I_PRINT:	: aSort, 1, 
-  I_PRINT:	:  bSort: , 0, 
-  I_PRINT:	: bSort, 1, 
-  I_PRINT:	:  cSort: , 0, 
-  I_PRINT:	: cSort, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 11.java
 a: hesoyam b: aezakmi c: wanrltv
 aSort: aehmosy bSort: aaeikmz cSort: alnrtvw
 ---------------------------------------------tests/builtin/12.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 12.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_NEW_VAR:	: b, 30, 
-  I_NEW_VAR:	: c, 30, 
-  I_NEW_VAR:	: aS, 30, 
-  I_NEW_VAR:	: bS, 30, 
-  I_NEW_VAR:	: cS, 30, 
-  I_NEW_VAR:	: aSort, 30, 
-  I_NEW_VAR:	: bSort, 30, 
-  I_NEW_VAR:	: cSort, 30, 
-  I_NEW_VAR:	: adiff, 28, 
-  I_NEW_VAR:	: bdiff, 28, 
-  I_NEW_VAR:	: cdiff, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, hesoyam, 
-  I_MOV:	: a, #var0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, aehmosy, 
-  I_MOV:	: aS, #var1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 30, 
-  I_MOV_STRING:	: #var2, aezakmi, 
-  I_MOV:	: b, #var2, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 30, 
-  I_MOV_STRING:	: #var3, aaeikmz, 
-  I_MOV:	: bS, #var3, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var4, 30, 
-  I_MOV_STRING:	: #var4, wanrltv, 
-  I_MOV:	: c, #var4, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, 30, 
-  I_MOV_STRING:	: #var5, alnrtvw, 
-  I_MOV:	: cS, #var5, 
-  I_SORT:	: a, 1, aSort
-  I_SORT:	: b, 1, bSort
-  I_SORT:	: c, 1, cSort
-  I_COMPARE1:	: aSort, 1, 
-  I_COMPARE2:	: aS, 1, 
-  I_COMPARE3:	: adiff, , 
-  I_COMPARE1:	: bSort, 1, 
-  I_COMPARE2:	: bS, 1, 
-  I_COMPARE3:	: bdiff, , 
-  I_COMPARE1:	: cSort, 1, 
-  I_COMPARE2:	: cS, 1, 
-  I_COMPARE3:	: cdiff, , 
-  I_PRINT:	: a: , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	:  b: , 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	:  c: , 0, 
-  I_PRINT:	: c, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PRINT:	: aSort: , 0, 
-  I_PRINT:	: aSort, 1, 
-  I_PRINT:	:  bSort: , 0, 
-  I_PRINT:	: bSort, 1, 
-  I_PRINT:	:  cSort: , 0, 
-  I_PRINT:	: cSort, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PRINT:	: adiff: , 0, 
-  I_PRINT:	: adiff, 1, 
-  I_PRINT:	:  bdiff: , 0, 
-  I_PRINT:	: bdiff, 1, 
-  I_PRINT:	:  cdiff: , 0, 
-  I_PRINT:	: cdiff, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 12.java
 a: hesoyam b: aezakmi c: wanrltv
 aSort: aehmosy bSort: aaeikmz cSort: alnrtvw
 adiff: 0 bdiff: 0 cdiff: 0
 ---------------------------------------------tests/builtin/16.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 16.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_NEW_VAR:	: b, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, středníček, 
-  I_MOV:	: a, #var0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, klopetek, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: num0, 28, 
-  I_NEW_VAR:	: num1, 28, 
-  I_NEW_VAR:	: num2, 28, 
-  I_NEW_VAR:	: num3, 28, 
-  I_NEW_VAR:	: num4, 28, 
-  I_COMPARE1:	: b, 1, 
-  I_COMPARE2:	: a, 1, 
-  I_COMPARE3:	: num0, , 
-  I_COMPARE1:	: a, 1, 
-  I_COMPARE2:	: b, 1, 
-  I_COMPARE3:	: num1, , 
-  I_COMPARE1:	: a, 1, 
-  I_COMPARE2:	: a, 1, 
-  I_COMPARE3:	: num2, , 
-  I_COMPARE1:	: klopetek, 0, 
-  I_COMPARE2:	: b, 1, 
-  I_COMPARE3:	: num3, , 
-  I_COMPARE1:	: klopetek, 0, 
-  I_COMPARE2:	: klopetek, 0, 
-  I_COMPARE3:	: num4, , 
-  I_PRINT:	:  a je , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	:  b je , 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PRINT:	: (b,a) , 0, 
-  I_PRINT:	: num0, 1, 
-  I_PRINT:	: (a,b) , 0, 
-  I_PRINT:	: num1, 1, 
-  I_PRINT:	: (a,a) , 0, 
-  I_PRINT:	: num2, 1, 
-  I_PRINT:	: (\"klopetek\",b) , 0, 
-  I_PRINT:	: num3, 1, 
-  I_PRINT:	: (\"klopetek\",\"klopetek\") , 0, 
-  I_PRINT:	: num4, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 16.java
  a je středníček b je klopetek
 (b,a) -1(a,b) 1(a,a) 0("klopetek",b) 0("klopetek","klopetek") 0
 ---------------------------------------------tests/builtin/6.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 6.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, strednicek, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, kleptoman, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: aLength, 28, 
-  I_NEW_VAR:	: bLength, 28, 
-  I_LENGTH:	: a, 1, aLength
-  I_LENGTH:	: b, 1, bLength
-  I_PRINT:	: Delka: , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	:  je , 0, 
-  I_PRINT:	: aLength, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_PRINT:	: Delka: , 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	:  je , 0, 
-  I_PRINT:	: bLength, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 6.java
 Delka: strednicek je 10.
 Delka: kleptoman je 9.
 ---------------------------------------------tests/builtin/7.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 7.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, strednicekaa, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: substr1, 30, 
-  I_NEW_VAR:	: substr2, 30, 
-  I_NEW_VAR:	: substr3, 30, 
-  I_SUBSTR1:	: a, 1, 
-  I_SUBSTR2:	: 0, 0, 
-  I_SUBSTR3:	: 4, 0, 
-  I_SUBSTR4:	: substr1, , 
-  I_PRINT:	: substr(a,0,4) a = \"strednicekaa\"; , 0, 
-  I_PRINT:	: substr1, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_SUBSTR1:	: a, 1, 
-  I_SUBSTR2:	: 4, 0, 
-  I_SUBSTR3:	: 4, 0, 
-  I_SUBSTR4:	: substr2, , 
-  I_PRINT:	: substr(a,4,4) a = \"strednicekaa\"; , 0, 
-  I_PRINT:	: substr2, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_SUBSTR1:	: a, 1, 
-  I_SUBSTR2:	: 8, 0, 
-  I_SUBSTR3:	: 2, 0, 
-  I_SUBSTR4:	: substr3, , 
-  I_PRINT:	: substr(a,8,2) a = \"strednicekaa\"; , 0, 
-  I_PRINT:	: substr3, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 7.java
 substr(a,0,4) a = "strednicekaa"; stre.
 substr(a,4,4) a = "strednicekaa"; dnic.
 substr(a,8,2) a = "strednicekaa"; ek.
 ---------------------------------------------tests/builtin/8.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 8.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, strednicek, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: substr1, 30, 
-  I_NEW_VAR:	: substr2, 30, 
-  I_NEW_VAR:	: substr3, 30, 
-  I_NEW_VAR:	: num1, 28, 
-  I_NEW_VAR:	: num2, 28, 
-  I_NEW_VAR:	: num3, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 0, 
-  I_MOV:	: num1, #var1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 4, 
-  I_MOV:	: num2, #var2, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 28, 
-  I_MOV_INT:	: #var3, 2, 
-  I_MOV:	: num3, #var3, 
-  I_SUBSTR1:	: a, 1, 
-  I_SUBSTR2:	: num1, 1, 
-  I_SUBSTR3:	: num2, 1, 
-  I_SUBSTR4:	: substr1, , 
-  I_PRINT:	: substr: , 0, 
-  I_PRINT:	: substr1, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_SUBSTR1:	: a, 1, 
-  I_SUBSTR2:	: num2, 1, 
-  I_SUBSTR3:	: num2, 1, 
-  I_SUBSTR4:	: substr2, , 
-  I_PRINT:	: substr: , 0, 
-  I_PRINT:	: substr2, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_SUBSTR1:	: a, 1, 
-  I_SUBSTR2:	: 8, 0, 
-  I_SUBSTR3:	: num3, 1, 
-  I_SUBSTR4:	: substr3, , 
-  I_PRINT:	: substr: , 0, 
-  I_PRINT:	: substr3, 1, 
-  I_PRINT:	: .\n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 8.java
 substr: stre.
 substr: dnic.
 substr: ek.
 ---------------------------------------------tests/builtin/9.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_PRINT:	: Builtin 9.java\n, 0, 
-  I_NEW_VAR:	: a, 30, 
-  I_NEW_VAR:	: b, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, středníček, 
-  I_MOV:	: a, #var0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, klopetek, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: num0, 28, 
-  I_NEW_VAR:	: num1, 28, 
-  I_NEW_VAR:	: num2, 28, 
-  I_NEW_VAR:	: num3, 28, 
-  I_NEW_VAR:	: num4, 28, 
-  I_COMPARE1:	: b, 1, 
-  I_COMPARE2:	: a, 1, 
-  I_COMPARE3:	: num0, , 
-  I_COMPARE1:	: a, 1, 
-  I_COMPARE2:	: b, 1, 
-  I_COMPARE3:	: num1, , 
-  I_COMPARE1:	: a, 1, 
-  I_COMPARE2:	: a, 1, 
-  I_COMPARE3:	: num2, , 
-  I_COMPARE1:	: klopetek, 0, 
-  I_COMPARE2:	: b, 1, 
-  I_COMPARE3:	: num3, , 
-  I_COMPARE1:	: klopetek, 0, 
-  I_COMPARE2:	: klopetek, 0, 
-  I_COMPARE3:	: num4, , 
-  I_PRINT:	:  a je , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	:  b je , 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PRINT:	: compare(b,a) , 0, 
-  I_PRINT:	: num0, 1, 
-  I_PRINT:	: | (a,b) , 0, 
-  I_PRINT:	: num1, 1, 
-  I_PRINT:	: | (a,a) , 0, 
-  I_PRINT:	: num2, 1, 
-  I_PRINT:	: | (\"klopetek\",b) , 0, 
-  I_PRINT:	: num3, 1, 
-  I_PRINT:	: | (\"klopetek\",\"klopetek\") , 0, 
-  I_PRINT:	: num4, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Builtin 9.java
  a je středníček b je klopetek
 compare(b,a) -1| (a,b) 1| (a,a) 0| ("klopetek",b) 0| ("klopetek","klopetek") 0
 ---------------------------------------------tests/correct/breakContine.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 0, 
-  I_MOV:	: a, #var0, 
-I_LABEL:	: #while0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 1, 
-  I_WHILE_GOTO:	: #var1, #while_end0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 1, 
-  I_NEW_VAR:	: #var3, , 
-  I_ADD:	: #var3, a, #var2
-  I_MOV:	: a, #var3, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var4, 28, 
-  I_MOV_INT:	: #var4, 100, 
-  I_NEW_VAR:	: #var5, , 
-  I_GT:		: #var5, a, #var4
-  I_IF_GOTO:	: #var5, #else1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var6, 28, 
-  I_MOV_INT:	: #var6, 110, 
-  I_NEW_VAR:	: #var7, , 
-  I_LT:		: #var7, a, #var6
-  I_IF_GOTO:	: #var7, #else2, 
-  I_PRINT:	: a is : , 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \n, 0, 
-  I_GOTO:	: #while0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var8, 28, 
-  I_MOV_INT:	: #var8, 2, 
-  I_NEW_VAR:	: #var9, , 
-  I_ADD:	: #var9, a, #var8
-  I_MOV:	: a, #var9, 
-  I_GOTO:	: #cond_end2, , 
-I_LABEL:	: #else2, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var10, 28, 
-  I_MOV_INT:	: #var10, 150, 
-  I_NEW_VAR:	: #var11, , 
-  I_GT:		: #var11, a, #var10
-  I_IF_GOTO:	: #var11, #else3, 
-  I_GOTO:	: #while_end0, , 
-  I_GOTO:	: #cond_end3, , 
-I_LABEL:	: #else3, , 
-I_LABEL:	: #cond_end3, , 
-I_LABEL:	: #cond_end2, , 
-  I_GOTO:	: #cond_end1, , 
-I_LABEL:	: #else1, , 
-I_LABEL:	: #cond_end1, , 
-  I_GOTO:	: #while0, , 
-I_LABEL:	: #while_end0, , 
-  I_FN_END:	: , , 
-  I_STOP:	
 a is : 101
 a is : 102
 a is : 103
@@ -567,159 +97,42 @@ a is : 107
 a is : 108
 a is : 109
 ---------------------------------------------tests/correct/correct.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-I_LABEL:	: #while0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, , 
-  I_SUB:	: #var0, a, a
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 4, 
-  I_NEW_VAR:	: #var2, , 
-  I_ADD:	: #var2, #var0, #var1
-  I_NEW_VAR:	: #var3, 28, 
-  I_MOV_INT:	: #var3, 0, 
-  I_NEW_VAR:	: #var4, , 
-  I_LT:		: #var4, #var2, #var3
-  I_WHILE_GOTO:	: #var4, #while_end0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, , 
-  I_ADD:	: #var5, a, b
-  I_MOV:	: a, #var5, 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: a, lel, 
-  I_GOTO:	: #while0, , 
-I_LABEL:	: #while_end0, , 
-  I_PUSH:	: a, function, 
-  I_PUSH:	: a, function, 
-  I_PUSH:	: a, function, 
-  I_FN_CALL:	: function, , 
-  I_PUSH:	: a, function, 
-  I_PUSH:	: a, function, 
-  I_PUSH:	: a, function, 
-  I_FN_CALL:	: function, , 
-  I_RETURN_MOV:	: a, , 
-  I_NEW_VAR:	: a, 28, 
-  I_PUSH:	: a, function, 
-  I_PUSH:	: a, function, 
-  I_PUSH:	: a, function, 
-  I_FN_CALL:	: function, , 
-  I_RETURN_MOV:	: a, , 
-  I_CLEAR_TMPS:	: , , 
-  I_IF_GOTO:	: podminka, #else1, 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: a, x, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var6, 28, 
-  I_MOV_INT:	: #var6, 0, 
-  I_NEW_VAR:	: #var7, 28, 
-  I_MOV_INT:	: #var7, 0, 
-  I_NEW_VAR:	: #var8, , 
-  I_ADD:	: #var8, #var6, #var7
-  I_NEW_VAR:	: #var9, 28, 
-  I_MOV_INT:	: #var9, 0, 
-  I_NEW_VAR:	: #var10, 28, 
-  I_MOV_INT:	: #var10, 4, 
-  I_NEW_VAR:	: #var11, , 
-  I_DIV:	: #var11, #var9, #var10
-  I_NEW_VAR:	: #var12, , 
-  I_ADD:	: #var12, #var8, #var11
-  I_MOV:	: b, #var12, 
-  I_GOTO:	: #cond_end1, , 
-I_LABEL:	: #else1, , 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: a, x, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var13, 28, 
-  I_MOV_INT:	: #var13, 0, 
-  I_NEW_VAR:	: #var14, 28, 
-  I_MOV_INT:	: #var14, 0, 
-  I_NEW_VAR:	: #var15, , 
-  I_ADD:	: #var15, #var13, #var14
-  I_NEW_VAR:	: #var16, 28, 
-  I_MOV_INT:	: #var16, 0, 
-  I_NEW_VAR:	: #var17, 28, 
-  I_MOV_INT:	: #var17, 4, 
-  I_NEW_VAR:	: #var18, , 
-  I_DIV:	: #var18, #var16, #var17
-  I_NEW_VAR:	: #var19, , 
-  I_ADD:	: #var19, #var15, #var18
-  I_MOV:	: b, #var19, 
-I_LABEL:	: #cond_end1, , 
-  I_FN_END:	: , , 
-  I_STOP:	
 Sem_Error. I_SUB nonexistant left operand variable.
 Navratova hodnota: 3
+---------------------------------------------tests/correct/doInDo.java---------------------------------------------
+0 1 2 3 4 6 7 8 9    0
+0 1 2 3 4 6 7 8 9    1
+0 1 2 3 4 6 7 8 9    2
+0 1 2 3 4 6 7 8 9    3
+0 1 2 3 4 6 7 8 9    4
+0 1 2 3 4 6 7 8 9    5
+0 1 2 3 4 6 7 8 9    6
+0 1 2 3 4 6 7 8 9    7
+0 1 2 3 4 6 7 8 9    8
+0 1 2 3 4 6 7 8 9    9
+---------------------------------------------tests/correct/for.java---------------------------------------------
+0 1 2 3 4 6 7 8 9     0
+0 1 2 3 4 6 7 8 9     1
+0 1 2 3 4 6 7 8 9     2
+0 1 2 3 4 6 7 8 9     3
+0 1 2 3 4 6 7 8 9     4
+0 1 2 3 4 6 7 8 9     5
+0 1 2 3 4 6 7 8 9     6
+0 1 2 3 4 6 7 8 9     7
+0 1 2 3 4 6 7 8 9     8
+0 1 2 3 4 6 7 8 9     9
 ---------------------------------------------tests/correct/printSquare.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 0, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 0, 
-  I_MOV:	: b, #var1, 
-I_LABEL:	: #while0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 1, 
-  I_WHILE_GOTO:	: #var2, #while_end0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 28, 
-  I_MOV_INT:	: #var3, 1, 
-  I_NEW_VAR:	: #var4, , 
-  I_ADD:	: #var4, a, #var3
-  I_MOV:	: a, #var4, 
-I_LABEL:	: #while1, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, 28, 
-  I_MOV_INT:	: #var5, 1, 
-  I_WHILE_GOTO:	: #var5, #while_end1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var6, 28, 
-  I_MOV_INT:	: #var6, 1, 
-  I_NEW_VAR:	: #var7, , 
-  I_ADD:	: #var7, b, #var6
-  I_MOV:	: b, #var7, 
-  I_PRINT:	: M, 0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var8, 28, 
-  I_MOV_INT:	: #var8, 10, 
-  I_NEW_VAR:	: #var9, , 
-  I_GE:		: #var9, b, #var8
-  I_IF_GOTO:	: #var9, #else2, 
-  I_GOTO:	: #while_end1, , 
-  I_GOTO:	: #cond_end2, , 
-I_LABEL:	: #else2, , 
-I_LABEL:	: #cond_end2, , 
-  I_GOTO:	: #while1, , 
-I_LABEL:	: #while_end1, , 
-  I_PRINT:	: /n, 0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var10, 28, 
-  I_MOV_INT:	: #var10, 0, 
-  I_MOV:	: b, #var10, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var11, 28, 
-  I_MOV_INT:	: #var11, 10, 
-  I_NEW_VAR:	: #var12, , 
-  I_GE:		: #var12, a, #var11
-  I_IF_GOTO:	: #var12, #else3, 
-  I_GOTO:	: #while_end0, , 
-  I_GOTO:	: #cond_end3, , 
-I_LABEL:	: #else3, , 
-I_LABEL:	: #cond_end3, , 
-  I_GOTO:	: #while0, , 
-I_LABEL:	: #while_end0, , 
-  I_FN_END:	: , , 
-  I_STOP:	
-MMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/nMMMMMMMMMM/n---------------------------------------------tests/inputfiles/13.txt---------------------------------------------
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MMMMMMMMMM
+---------------------------------------------tests/inputfiles/13.txt---------------------------------------------
 Cannot find funtion "run" in class "Main"
 Navratova hodnota: 3
 ---------------------------------------------tests/inputfiles/14.txt---------------------------------------------
@@ -759,223 +172,6 @@ Navratova hodnota: 3
 Cannot find funtion "run" in class "Main"
 Navratova hodnota: 3
 ---------------------------------------------tests/other2/b.f.test.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: pre, , 
-I_LABEL:	: pre.inc, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 1, 
-  I_NEW_VAR:	: #var1, , 
-  I_ADD:	: #var1, x, #var0
-  I_MOV:	: x, #var1, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: x, , 
-  I_FN_END:	: , , 
-  I_GLOBAL_PRE:		: #PRE0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 4, 
-  I_NEW_VAR:	: #var3, 28, 
-  I_MOV_INT:	: #var3, 8, 
-  I_NEW_VAR:	: #var4, , 
-  I_ADD:	: #var4, #var2, #var3
-  I_NEW_VAR:	: #var5, 28, 
-  I_MOV_INT:	: #var5, 3, 
-  I_NEW_VAR:	: #var6, , 
-  I_DIV:	: #var6, #var4, #var5
-  I_NEW_VAR:	: #var7, 28, 
-  I_MOV_INT:	: #var7, 4, 
-  I_NEW_VAR:	: #var8, , 
-  I_MUL:	: #var8, #var6, #var7
-  I_NEW_VAR:	: #var9, 28, 
-  I_MOV_INT:	: #var9, 1, 
-  I_NEW_VAR:	: #var10, 28, 
-  I_MOV_INT:	: #var10, 2, 
-  I_NEW_VAR:	: #var11, , 
-  I_MUL:	: #var11, #var9, #var10
-  I_NEW_VAR:	: #var12, , 
-  I_MUL:	: #var12, #var8, #var11
-  I_MOV:	: a, #var12, 
-  I_GLOBAL_POST:	: #POST0, , 
-I_LABEL:	: pre.basnicka, , 
-  I_PRINT:	: Main.shakesbro, 1, 
-  I_PRINT:	: \n, 0, 
-  I_RETURN_NOTHING:	: , , 
-  I_FN_END:	: , , 
-I_LABEL:	: pre.dec, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var13, 28, 
-  I_MOV_INT:	: #var13, 1, 
-  I_NEW_VAR:	: #var14, , 
-  I_SUB:	: #var14, x, #var13
-  I_MOV:	: x, #var14, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: x, , 
-  I_FN_END:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_FN_CALL:	: pre.basnicka, , 
-  I_PRINT:	: pre.a, 1, 
-  I_PRINT:	: \n, 0, 
-  I_NEW_VAR:	: mujDouble, 23, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var15, 28, 
-  I_MOV_INT:	: #var15, 4, 
-  I_MOV:	: mujDouble, #var15, 
-  I_PUSH:	: mujDouble, mulpi, 
-  I_FN_CALL:	: mulpi, , 
-  I_RETURN_MOV:	: mujDouble, , 
-  I_PRINT:	: post.counter, 1, 
-  I_PRINT:	: \n, 0, 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var16, 28, 
-  I_MOV_INT:	: #var16, 10, 
-  I_MOV:	: a, #var16, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PUSH:	: a, pre.inc, 
-  I_FN_CALL:	: pre.inc, , 
-  I_RETURN_MOV:	: a, , 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PUSH:	: a, pre.dec, 
-  I_FN_CALL:	: pre.dec, , 
-  I_RETURN_MOV:	: a, , 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \n, 0, 
-  I_PUSH:	: a, post.mulByTwo, 
-  I_FN_CALL:	: post.mulByTwo, , 
-  I_RETURN_MOV:	: a, , 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \n, 0, 
-  I_NEW_VAR:	: #var17, 28, 
-  I_MOV_INT:	: #var17, 5, 
-  I_PUSH:	: #var17, post.rectangle, 
-  I_NEW_VAR:	: #var18, 28, 
-  I_MOV_INT:	: #var18, 10, 
-  I_PUSH:	: #var18, post.rectangle, 
-  I_FN_CALL:	: post.rectangle, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-  I_GLOBAL_PRE:		: #PRE1, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var19, 30, 
-  I_MOV_STRING:	: #var19, \n\tNot from the stars do I my judgement pluck,\n\tAnd yet methinks I have astronomy,\n\tBut not to tell of good, or evil luck,\n\tOf plagues, of dearths, or seasons' quality.\n, 
-  I_MOV:	: shakesbro, #var19, 
-  I_GLOBAL_POST:	: #POST1, , 
-I_LABEL:	: Main.mulpi, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var20, 23, 
-  I_MOV_DOUBLE:	: #var20, 3.1415926, 
-  I_NEW_VAR:	: #var21, , 
-  I_MUL:	: #var21, d, #var20
-  I_MOV:	: d, #var21, 
-  I_PRINT:	: d, 1, 
-  I_PRINT:	: \n, 0, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: d, , 
-  I_FN_END:	: , , 
-  I_CLASS:	: post, , 
-I_LABEL:	: post.mulByTwo, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var22, 28, 
-  I_MOV_INT:	: #var22, 2, 
-  I_NEW_VAR:	: #var23, , 
-  I_MUL:	: #var23, x, #var22
-  I_MOV:	: x, #var23, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: x, , 
-  I_FN_END:	: , , 
-  I_GLOBAL_PRE:		: #PRE2, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var24, 28, 
-  I_MOV_INT:	: #var24, 5, 
-  I_NEW_VAR:	: #var25, 28, 
-  I_MOV_INT:	: #var25, 5, 
-  I_NEW_VAR:	: #var26, , 
-  I_MUL:	: #var26, #var24, #var25
-  I_NEW_VAR:	: #var27, 28, 
-  I_MOV_INT:	: #var27, 5, 
-  I_NEW_VAR:	: #var28, , 
-  I_MUL:	: #var28, #var26, #var27
-  I_NEW_VAR:	: #var29, 28, 
-  I_MOV_INT:	: #var29, 5, 
-  I_NEW_VAR:	: #var30, , 
-  I_DIV:	: #var30, #var28, #var29
-  I_NEW_VAR:	: #var31, 28, 
-  I_MOV_INT:	: #var31, 5, 
-  I_NEW_VAR:	: #var32, , 
-  I_DIV:	: #var32, #var30, #var31
-  I_MOV:	: counter, #var32, 
-  I_GLOBAL_POST:	: #POST2, , 
-I_LABEL:	: post.recurse, , 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: x, , 
-  I_FN_END:	: , , 
-I_LABEL:	: post.rectangle, , 
-  I_NEW_VAR:	: i, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var33, 28, 
-  I_MOV_INT:	: #var33, 0, 
-  I_MOV:	: i, #var33, 
-  I_NEW_VAR:	: j, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var34, 28, 
-  I_MOV_INT:	: #var34, 0, 
-  I_MOV:	: j, #var34, 
-  I_PRINT:	: \n, 0, 
-I_LABEL:	: #while3, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var35, , 
-  I_LT:		: #var35, i, width
-  I_WHILE_GOTO:	: #var35, #while_end3, 
-I_LABEL:	: #while4, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var36, , 
-  I_LT:		: #var36, j, height
-  I_WHILE_GOTO:	: #var36, #while_end4, 
-  I_PRINT:	: M, 0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var37, 28, 
-  I_MOV_INT:	: #var37, 1, 
-  I_NEW_VAR:	: #var38, , 
-  I_ADD:	: #var38, j, #var37
-  I_MOV:	: j, #var38, 
-  I_GOTO:	: #while4, , 
-I_LABEL:	: #while_end4, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var39, 28, 
-  I_MOV_INT:	: #var39, 0, 
-  I_MOV:	: j, #var39, 
-  I_PRINT:	: \n, 0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var40, 28, 
-  I_MOV_INT:	: #var40, 1, 
-  I_NEW_VAR:	: #var41, , 
-  I_ADD:	: #var41, i, #var40
-  I_MOV:	: i, #var41, 
-  I_GOTO:	: #while3, , 
-I_LABEL:	: #while_end3, , 
-  I_PRINT:	: \n, 0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var42, 28, 
-  I_MOV_INT:	: #var42, 5, 
-  I_NEW_VAR:	: #var43, , 
-  I_GT:		: #var43, counter, #var42
-  I_IF_GOTO:	: #var43, #else5, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var44, 28, 
-  I_MOV_INT:	: #var44, 0, 
-  I_RETURN:	: #var44, , 
-  I_GOTO:	: #cond_end5, , 
-I_LABEL:	: #else5, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var45, 28, 
-  I_MOV_INT:	: #var45, 1, 
-  I_RETURN:	: #var45, , 
-I_LABEL:	: #cond_end5, , 
-  I_FN_END:	
 
 	Not from the stars do I my judgement pluck,
 	And yet methinks I have astronomy,
@@ -1003,118 +199,6 @@ Navratova hodnota: 1
 Cannot find funtion "run" in class "Main"
 Navratova hodnota: 3
 ---------------------------------------------tests/other2/find.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, ahoj, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, Karel ahroj vola zdola aheoj., 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: findino, 28, 
-  I_PUSH:	: b, find.find, 
-  I_PUSH:	: a, find.find, 
-  I_FN_CALL:	: find.find, , 
-  I_RETURN_MOV:	: findino, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 0, 
-  I_NEW_VAR:	: #var3, , 
-  I_EQ:		: #var3, findino, #var2
-  I_IF_GOTO:	: #var3, #else0, 
-  I_PRINT:	: Retezec \", 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \" byl v \", 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	: \" nalezen.\n, 0, 
-  I_GOTO:	: #cond_end0, , 
-I_LABEL:	: #else0, , 
-  I_PRINT:	: Retezec \", 0, 
-  I_PRINT:	: a, 1, 
-  I_PRINT:	: \" nebyl v \", 0, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	: \" nalezen. :(\n, 0, 
-I_LABEL:	: #cond_end0, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-  I_CLASS:	: find, , 
-I_LABEL:	: find.find, , 
-  I_NEW_VAR:	: strLen, 28, 
-  I_LENGTH:	: toFind, 1, strLen
-  I_NEW_VAR:	: srcLen, 28, 
-  I_LENGTH:	: source, 1, srcLen
-  I_NEW_VAR:	: srcCount, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var4, 28, 
-  I_MOV_INT:	: #var4, 0, 
-  I_MOV:	: srcCount, #var4, 
-  I_NEW_VAR:	: found, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, 28, 
-  I_MOV_INT:	: #var5, 99, 
-  I_MOV:	: found, #var5, 
-  I_NEW_VAR:	: srcSubstr, 30, 
-  I_NEW_VAR:	: err, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var6, 28, 
-  I_MOV_INT:	: #var6, 0, 
-  I_MOV:	: err, #var6, 
-I_LABEL:	: #while1, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var7, 28, 
-  I_MOV_INT:	: #var7, 0, 
-  I_NEW_VAR:	: #var8, , 
-  I_NE:		: #var8, found, #var7
-  I_WHILE_GOTO:	: #var8, #while_end1, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var9, , 
-  I_ADD:	: #var9, srcCount, strLen
-  I_NEW_VAR:	: #var10, , 
-  I_GT:		: #var10, #var9, srcLen
-  I_IF_GOTO:	: #var10, #else2, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var11, 28, 
-  I_MOV_INT:	: #var11, 1, 
-  I_MOV:	: err, #var11, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var12, 28, 
-  I_MOV_INT:	: #var12, 0, 
-  I_MOV:	: found, #var12, 
-  I_GOTO:	: #cond_end2, , 
-I_LABEL:	: #else2, , 
-  I_SUBSTR1:	: source, 1, 
-  I_SUBSTR2:	: srcCount, 1, 
-  I_SUBSTR3:	: strLen, 1, 
-  I_SUBSTR4:	: srcSubstr, , 
-  I_COMPARE1:	: toFind, 1, 
-  I_COMPARE2:	: srcSubstr, 1, 
-  I_COMPARE3:	: found, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var13, 28, 
-  I_MOV_INT:	: #var13, 1, 
-  I_NEW_VAR:	: #var14, , 
-  I_ADD:	: #var14, #var13, srcCount
-  I_MOV:	: srcCount, #var14, 
-I_LABEL:	: #cond_end2, , 
-  I_GOTO:	: #while1, , 
-I_LABEL:	: #while_end1, , 
-  I_CLEAR_TMPS:	: , , 
-  I_IF_GOTO:	: err, #else3, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var15, 28, 
-  I_MOV_INT:	: #var15, 666, 
-  I_RETURN:	: #var15, , 
-  I_GOTO:	: #cond_end3, , 
-I_LABEL:	: #else3, , 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: found, , 
-I_LABEL:	: #cond_end3, , 
-  I_FN_END:	
 Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
 ---------------------------------------------tests/other2/lex.java---------------------------------------------
 Navratova hodnota: 139
@@ -1130,30 +214,6 @@ CBC
 Syntax Error! 
 Navratova hodnota: 2
 ---------------------------------------------tests/other2/test0.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 0, 
-  I_MOV:	: a, #var0, 
-I_LABEL:	: #do0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 1, 
-  I_NEW_VAR:	: #var2, , 
-  I_ADD:	: #var2, a, #var1
-  I_MOV:	: a, #var2, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 28, 
-  I_MOV_INT:	: #var3, 10, 
-  I_NEW_VAR:	: #var4, , 
-  I_LT:		: #var4, a, #var3
-  I_WHILE_GOTO:	: #var4, #do_end0, 
-I_LABEL:	: #do0, , 
-  I_FN_END:	: , , 
-  I_STOP:	
 ---------------------------------------------tests/other2/thingsToFixInLexjava.java---------------------------------------------
 Lexical error
 Navratova hodnota: 1
@@ -1161,69 +221,12 @@ Navratova hodnota: 1
 semantic error - redefining class
 Navratova hodnota: 3
 ---------------------------------------------tests/other/class-not-defined.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 28, 
-  I_PUSH:	: a, nec.min, 
-  I_PUSH:	: b, nec.min, 
-  I_FN_CALL:	: nec.min, , 
-  I_RETURN_MOV:	: c, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-  I_CLASS:	: Smth, , 
-I_LABEL:	: Smth.min, , 
-  I_NEW_VAR:	: min, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_GT:		: #var2, a, b
-  I_IF_GOTO:	: #var2, #else0, 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, b, 
-  I_GOTO:	: #cond_end0, , 
-I_LABEL:	: #else0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, a, 
-I_LABEL:	: #cond_end0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: min, , 
-  I_FN_END:	
 Sem_Error. I_PUSH function not found
 Navratova hodnota: 3
 ---------------------------------------------tests/other/class-redefinition.java---------------------------------------------
 semantic error - redefining class
 Navratova hodnota: 3
 ---------------------------------------------tests/other/division-by-zero.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 0, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 23, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_DIV:	: #var2, a, b
-  I_MOV:	: c, #var2, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Division by zero.
 Navratova hodnota: 9
 ---------------------------------------------tests/other/function-name-missing.java---------------------------------------------
@@ -1237,63 +240,9 @@ CBC
 Syntax Error! 
 Navratova hodnota: 2
 ---------------------------------------------tests/other/function-non-void-returns-nothing.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 28, 
-  I_PUSH:	: a, min, 
-  I_PUSH:	: b, min, 
-  I_FN_CALL:	: min, , 
-  I_RETURN_MOV:	: c, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-I_LABEL:	: Main.min, , 
-  I_NEW_VAR:	: min, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_GT:		: #var2, a, b
-  I_IF_GOTO:	: #var2, #else0, 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, b, 
-  I_GOTO:	: #cond_end0, , 
-I_LABEL:	: #else0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, a, 
-I_LABEL:	: #cond_end0, , 
-  I_FN_END:	
 I_FN_END. Function has ended but no return found.
 Navratova hodnota: 8
 ---------------------------------------------tests/other/function-not-defined.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 28, 
-  I_PUSH:	: a, max, 
-  I_PUSH:	: b, max, 
-  I_FN_CALL:	: max, , 
-  I_RETURN_MOV:	: c, , 
-  I_FN_END:	: , , 
-  I_STOP:	
 Sem_Error. I_PUSH function not found
 Navratova hodnota: 3
 ---------------------------------------------tests/other/function-parentheses-missing-left.java---------------------------------------------
@@ -1310,381 +259,29 @@ Navratova hodnota: 2
 Error function redeclaration.
 Navratova hodnota: 3
 ---------------------------------------------tests/other/function-too-few-arguments.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_PUSH:	: a, min, 
-  I_FN_CALL:	: min, , 
-  I_RETURN_MOV:	: a, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-I_LABEL:	: Main.min, , 
-  I_NEW_VAR:	: min, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_GT:		: #var2, a, b
-  I_IF_GOTO:	: #var2, #else0, 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, b, 
-  I_GOTO:	: #cond_end0, , 
-I_LABEL:	: #else0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, a, 
-I_LABEL:	: #cond_end0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: min, , 
-  I_FN_END:	
 Sem_Error. I_GT nonexistant right operand variable.
 Navratova hodnota: 3
 ---------------------------------------------tests/other/function-too-many-arguments.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_PUSH:	: a, inc, 
-  I_PUSH:	: b, inc, 
-  I_FN_CALL:	: inc, , 
-  I_RETURN_MOV:	: a, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-I_LABEL:	: Main.inc, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 1, 
-  I_NEW_VAR:	: #var3, , 
-  I_ADD:	: #var3, a, #var2
-  I_MOV:	: a, #var3, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: a, , 
-  I_FN_END:	
 I_PUSH. Too many arguments. 1 
 Navratova hodnota: 3
 ---------------------------------------------tests/other/function-void-returns-value.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 28, 
-  I_PUSH:	: a, min, 
-  I_PUSH:	: b, min, 
-  I_FN_CALL:	: min, , 
-  I_RETURN_MOV:	: c, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-I_LABEL:	: Main.min, , 
-  I_NEW_VAR:	: min, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_GT:		: #var2, a, b
-  I_IF_GOTO:	: #var2, #else0, 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, b, 
-  I_GOTO:	: #cond_end0, , 
-I_LABEL:	: #else0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_MOV:	: min, a, 
-I_LABEL:	: #cond_end0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: min, , 
-  I_FN_END:	
 Sem_Error. I_RETURN. Returning variable type does not match with defined return type.
 Navratova hodnota: 4
 ---------------------------------------------tests/other/function-wrong-argument-type.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 23, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 23, 
-  I_MOV_DOUBLE:	: #var0, 0.0, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 0, 
-  I_MOV:	: b, #var1, 
-  I_PUSH:	: a, inc, 
-  I_FN_CALL:	: inc, , 
-  I_RETURN_MOV:	: b, , 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-I_LABEL:	: Main.inc, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 1, 
-  I_NEW_VAR:	: #var3, , 
-  I_ADD:	: #var3, a, #var2
-  I_MOV:	: a, #var3, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: a, , 
-  I_FN_END:	
 I_PUSH. Argument type not matching. 1 
 Navratova hodnota: 3
 ---------------------------------------------tests/other/ok-classes-static-variables.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-  I_GLOBAL_PRE:		: #PRE0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_GLOBAL_POST:	: #POST0, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, , 
-  I_ADD:	: #var1, Main.a, Smth.a
-  I_MOV:	: b, #var1, 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-  I_CLASS:	: Smth, , 
-  I_GLOBAL_PRE:		: #PRE1, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 10, 
-  I_MOV:	: a, #var2, 
-  I_GLOBAL_POST:	: #POST1, , 
-I_LABEL:	: Smth.neco, , 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, , 
-  I_ADD:	: #var3, Main.a, Smth.a
-  I_MOV:	: b, #var3, 
-  I_FN_END:	
 ---------------------------------------------tests/other/ok-factorial-iterative.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 10, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: vysl, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 1, 
-  I_MOV:	: vysl, #var1, 
-I_LABEL:	: #while0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, 28, 
-  I_MOV_INT:	: #var2, 0, 
-  I_NEW_VAR:	: #var3, , 
-  I_GT:		: #var3, a, #var2
-  I_WHILE_GOTO:	: #var3, #while_end0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var4, , 
-  I_MUL:	: #var4, vysl, a
-  I_MOV:	: vysl, #var4, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, 28, 
-  I_MOV_INT:	: #var5, 1, 
-  I_NEW_VAR:	: #var6, , 
-  I_SUB:	: #var6, a, #var5
-  I_MOV:	: a, #var6, 
-  I_GOTO:	: #while0, , 
-I_LABEL:	: #while_end0, , 
-  I_PRINT:	: vysl, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 3628800
 ---------------------------------------------tests/other/ok-factorial-recursive.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 10, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: vysl, 28, 
-  I_NEW_VAR:	: neg, 28, 
-  I_PUSH:	: a, factorial, 
-  I_FN_CALL:	: factorial, , 
-  I_RETURN_MOV:	: vysl, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 0, 
-  I_NEW_VAR:	: #var2, , 
-  I_SUB:	: #var2, #var1, vysl
-  I_MOV:	: neg, #var2, 
-  I_PRINT:	: vysl, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-I_LABEL:	: Main.factorial, , 
-  I_NEW_VAR:	: temp_result, 28, 
-  I_NEW_VAR:	: decremented_n, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 28, 
-  I_MOV_INT:	: #var3, 1, 
-  I_NEW_VAR:	: #var4, , 
-  I_SUB:	: #var4, n, #var3
-  I_MOV:	: decremented_n, #var4, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var5, 28, 
-  I_MOV_INT:	: #var5, 2, 
-  I_NEW_VAR:	: #var6, , 
-  I_LT:		: #var6, n, #var5
-  I_IF_GOTO:	: #var6, #else0, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var7, 28, 
-  I_MOV_INT:	: #var7, 1, 
-  I_RETURN:	: #var7, , 
-  I_GOTO:	: #cond_end0, , 
-I_LABEL:	: #else0, , 
-  I_PUSH:	: decremented_n, factorial, 
-  I_FN_CALL:	: factorial, , 
-  I_RETURN_MOV:	: temp_result, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var8, , 
-  I_MUL:	: #var8, n, temp_result
-  I_MOV:	: temp_result, #var8, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: temp_result, , 
-I_LABEL:	: #cond_end0, , 
-  I_FN_END:	
 3628800
 ---------------------------------------------tests/other/ok-operation-in-parentheses.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_ADD:	: #var2, a, b
-  I_MOV:	: c, #var2, 
-  I_PRINT:	: c, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 11
 ---------------------------------------------tests/other/ok-string-concatenation.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: str1, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 30, 
-  I_MOV_STRING:	: #var0, Toto je nejaky text, 
-  I_MOV:	: str1, #var0, 
-  I_NEW_VAR:	: str2, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 30, 
-  I_MOV_STRING:	: #var1, , ktery jeste trochu obohatime, 
-  I_NEW_VAR:	: #var2, , 
-  I_ADD:	: #var2, str1, #var1
-  I_MOV:	: str2, #var2, 
-  I_NEW_VAR:	: str3, 30, 
-  I_PUSH:	: str2, Smth.func, 
-  I_FN_CALL:	: Smth.func, , 
-  I_RETURN_MOV:	: str3, , 
-  I_PRINT:	: str3, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	: , , 
-  I_CLASS:	: Smth, , 
-I_LABEL:	: Smth.func, , 
-  I_NEW_VAR:	: str1, 30, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var3, 30, 
-  I_MOV_STRING:	: #var3, String given :, 
-  I_MOV:	: str1, #var3, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var4, , 
-  I_ADD:	: #var4, str1, str
-  I_MOV:	: str, #var4, 
-  I_CLEAR_TMPS:	: , , 
-  I_RETURN:	: str, , 
-  I_FN_END:	
 String given :Toto je nejaky text, ktery jeste trochu obohatime
 ---------------------------------------------tests/other/ok-variable-in-parentheses.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 6, 
-  I_MOV:	: b, #var1, 
-  I_NEW_VAR:	: c, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_ADD:	: #var2, a, b
-  I_MOV:	: c, #var2, 
-  I_PRINT:	: c, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 11
 ---------------------------------------------tests/other/ok-variable-static-non-static.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-  I_GLOBAL_PRE:		: #PRE0, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 10, 
-  I_MOV:	: a, #var0, 
-  I_GLOBAL_POST:	: #POST0, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var1, 28, 
-  I_MOV_INT:	: #var1, 5, 
-  I_MOV:	: a, #var1, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var2, , 
-  I_ADD:	: #var2, a, Main.a
-  I_MOV:	: b, #var2, 
-  I_PRINT:	: b, 1, 
-  I_PRINT:	: \n, 0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 15
 ---------------------------------------------tests/other/parentheses-missing-left.java---------------------------------------------
 
@@ -1700,41 +297,12 @@ ID
 Syntax Error! 
 Navratova hodnota: 2
 ---------------------------------------------tests/other/variable-local-not-defined.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_MOV:	: a, #var0, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Sem_Error. I_MOV to nonexistant target variable. Main.a
 Navratova hodnota: 3
 ---------------------------------------------tests/other/variable-local-not-initialized.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_NEW_VAR:	: b, 28, 
-  I_CLEAR_TMPS:	: , , 
-  I_NEW_VAR:	: #var0, 28, 
-  I_MOV_INT:	: #var0, 5, 
-  I_NEW_VAR:	: #var1, , 
-  I_ADD:	: #var1, #var0, a
-  I_MOV:	: b, #var1, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Operand not initialized.
 Navratova hodnota: 8
 ---------------------------------------------tests/other/variable-local-redefinition.java---------------------------------------------
-  I_PROGRAM:	: , , 
-  I_CLASS:	: Main, , 
-I_LABEL:	: Main.run, , 
-  I_NEW_VAR:	: a, 28, 
-  I_NEW_VAR:	: a, 30, 
-  I_FN_END:	: , , 
-  I_STOP:	
 Semanticky error htab
 Navratova hodnota: 3
 ---------------------------------------------tests/other/variable-static-name-missing.java---------------------------------------------
@@ -1742,3 +310,176 @@ Navratova hodnota: 3
 id
 Syntax Error! 
 Navratova hodnota: 2
+---------------------------------------------tests/other/variable-static-not-defined.java---------------------------------------------
+Sem_Error. I_MOV to nonexistant target variable. Main.a
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-static-not-initialized.java---------------------------------------------
+Operand not initialized.
+Navratova hodnota: 8
+---------------------------------------------tests/other/variable-static-redefinition.java---------------------------------------------
+Error variable redeclaration.
+Navratova hodnota: 3
+---------------------------------------------tests/other/variable-wrong-type-1.java---------------------------------------------
+I_MOV source and target type not matching.
+Navratova hodnota: 4
+---------------------------------------------tests/other/variable-wrong-type-2.java---------------------------------------------
+I_EQ left operand not INT, DOUBLE or BOOLEAN
+Navratova hodnota: 4
+---------------------------------------------tests/other/variable-wrong-type-3.java---------------------------------------------
+I_MOV source and target type not matching.
+Navratova hodnota: 4
+Builtin 1.java
+Zadej integer:
+Zadej double:
+Zadej string:
+Vstup byl 8 2.5 Text
+Znovu byl 8 2.5 Text
+Builtin 2.java
+Zadej double:
+2.5
+Vstup double je 2.5
+Vstup double je 2.5
+Builtin 3.java
+Zadej \octal number:
+Test octal [pivo]
+Builtin 4.java
+Zadej string:
+Text
+Vstup string je Text
+Vstup string je Text
+Builtin 5.java
+Zadej string:
+Prepis String b na:
+Jiny text
+Jiny text Text
+Builtin 13.java
+Zadej string:
+
+
+
+:Nejsem Doma 3241:     unsorted string
+:  1234DNaeejmmos:     sorted string
+Builtin 14.java
+Zadej string:
+Zadej int:
+Zadej double:
+StrIntDou
+Text82.5
+IntDouStr
+82.5Text
+DouStrInt
+2.5Text8
+Builtin 15.java
+Type string: Type int: Type double: Text82.5
+82.5Text
+2.5Text8
+Builtin 17.java
+Enter a number to guess first but don't show it to anyone. I know it might be hard in this case.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Okay, lets guess.
+Try again!
+Try again!
+Try again!
+Wow, you are such a clever boy. The number was 8 and you guessed it on 4 try.
+Builtin 18.java
+Hey you, try to guess my secre number ;)
+Try again!
+Try again!
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+You found out that the number is lucky 7.
+Challenge: Think of a word and then code it.
+(Change its characters positions like: Hello -> oHlel)
+Original and coded word cannot match.
+Input original word: Input a coded word: Congratulations! You managed to code the word correctly.
+Now input a string, which contains your original word OR your coded word OR both: Congratulations! You managed to input a string which contains your original word "Hello" on index: 0 and your coded word "oHlel" on index: 4
+Text     :HelloHlel:
+Original :Hello    :
+Coded    :    oHlel:
+Napis retazec abc
+Teraz napis abcdef
+Uspesne si dokoncil test 4 !!!
+35 - Zadej "pivo":
+Prvni tisk pivo
+Druhy tisk pivo
+
+-------------------
+
+6 - Compare vstup "pivo" se stringem:
+ifj16.compare("pivo", pivo) 0 <- ma byt 0.
+ifj16.compare(pivoStr, pivo) 0 <- ma byt 0.
+ifj16.compare("Pivo", pivo) -1 <- nema byt 0.
+
+-------------------
+
+7 - Zadej "to pivo je moje":
+Tisk to pivo moje
+
+-------------------
+
+8 - Compare vstup "pivo" s "topivojemoje":
+ifj16.compare("topivojemoje", pivo) 1 <- nema byt 0.
+ifj16.compare(toPivoJeMoje, pivo) 1 <- nema byt 0.
+
+-------------------
+
+9 - Find vstup "pivo" s "topivojemoje":
+ifj16.find(toPivoJeMoje, pivo) 3 <- ma byt 3.
+ifj16.find(toPivoJeMoje, "pivo") 3 <- ma byt 3.
+ifj16.find(pivo, toPivoJeMoje) -1 <- ma byt -1.
+ifj16.find("Pivo je pivo", pivo) 8 <- ma byt 8.
+
+-------------------
+
+10 - zadej octal "pivo" (\160\151\166\157):
+ifj16.compare(pivoOct, pivo) 0 <- ma byt nejspise 0.
+ifj16.find(pivo, pivoOct) 0 <- ma byt nejspise 0.
+ifj16.find(pivo, "\160\151\166\157") 0 <- ma byt nejspise 0.
