@@ -32,8 +32,9 @@ int isKeyword(char *string) {							//return index value of choosen keyword in a
 		"else", "false", "for", "if", "int", "return", "String", "static", "true","void","while"};
     int i;
     for (i = 0; i < 17; i++) {
-        if (!strcmp(keywords[i], string))
+        if (!strcmp(keywords[i], string)){
             return i;
+		}
     }
     return -1;											//if string is not keyword return -1
 }
@@ -76,6 +77,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 	int compSize = BUFFER_SIZE;
 	char *buff = (char*) memalloc(buffSize * sizeof(char));
 	char *complex = (char*) memalloc(buffSize * sizeof(char));
+
 	char* name2 = memalloc(sizeof(char)*2);
 	char* name3 = memalloc(sizeof(char)*3);
 
@@ -83,6 +85,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
     int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0, complexPos = 0;
+	int binInt = 0, tempest = 0, tempestc = 0, octInt = 0, hexadecInt = 0;
 	State_type state = state_default;					//choose between states
 
 	if(t->type == token_invalid){						//initialization faiulure
@@ -158,6 +161,10 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					return t;
 				}
 				break;
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
 			case state_readingString:							//reading string now doesn't store ""
 				if(c == EOF || c == '\n') {
 					memfreeall();
@@ -248,7 +255,257 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					return t;
 				}
 				break;
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
 			case state_readingNumber:
+				if(c == '_') {
+					;//Ve všech soustavách lze použít
+					//speciální symbol _ (podtržítko), který slouží jako oddělovač skupin číslic v čísle pro
+					//zajištění lepší čitelnosti. Více viz popis číselných literálů v normě 2 jazyka Java.
+					c = fgetc(f);
+					if(c == '_') {
+
+						ungetc(c, f);
+					}
+
+				}
+				if(tempc == '0' && position == 1) {
+					//tempest = fgetc(f);
+					//printf("%cfdsf \n", tempest);
+					if(c == 'b') {
+						if((tempest = fgetc(f)) == '0' || c == '1') {
+							buff[position] = c;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							buff[position] = tempest;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							while((c = fgetc(f)) == '0' || c == '1' || c == '_') {
+								binInt = 1;
+								if(c == '_') {
+									tempest = fgetc(f);
+									if(tempest == '_') {
+										break;
+									}
+									ungetc(tempest, f);
+								}else {
+									buff[position] = c;
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+								}
+							}
+						}else {
+							ungetc(c,f);
+							ungetc(tempest,f);
+						}
+					}else if(c == 'x') {
+						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || tempest == '_' || (tempest >= 'A' && tempest <= 'F')) {
+
+							buff[position] = c;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							buff[position] = tempest;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_' || (c >= 'A' && c <= 'F')) {
+								hexadecInt = 1;
+								if(c == '_') {
+									tempest = fgetc(f);
+									if(tempest == '_') {
+										break;
+									}
+									ungetc(tempest, f);
+								}else {
+									buff[position] = c;
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+								}
+							}
+							if(c == '.') {
+								c = fgetc(f);
+								if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || c == '_'){
+									buff[position] = '.';
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+									if(c == '_') {
+										tempest = fgetc(f);
+										if(tempest == '_') {
+											break;
+										}
+										ungetc(tempest, f);
+									}else {
+										buff[position] = c;
+										position++;
+										if(position+2 == buffSize) {
+											buffSize += BUFFER_SIZE;
+											buff = memrealloc(buff, buffSize);
+										}
+									}
+									isDouble = 1;
+
+
+									//rest
+									while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_' || (c >= 'A' && c <= 'F')) {
+										hexadecInt = 1;
+										if(c == '_') {
+											tempest = fgetc(f);
+											if(tempest == '_') {
+												break;
+											}
+											ungetc(tempest, f);
+										}else {
+											buff[position] = c;
+											position++;
+											if(position+2 == buffSize) {
+												buffSize += BUFFER_SIZE;
+												buff = memrealloc(buff, buffSize);
+											}
+										}
+									}
+									if(c == 'p' || c == 'P') {
+										tempestc = c;
+										if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
+											buff[position] = tempestc;
+											position++;
+											if(position+2 == buffSize) {
+												buffSize += BUFFER_SIZE;
+												buff = memrealloc(buff, buffSize);
+											}
+											buff[position] = tempest;
+											position++;
+											if(position+2 == buffSize) {
+												buffSize += BUFFER_SIZE;
+												buff = memrealloc(buff, buffSize);
+											}
+											while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
+												if(c == '_' && isdigit(buff[position-1])) {
+													tempest = fgetc(f);
+													if(tempest == '_') {
+														break;
+													}
+													ungetc(tempest, f);
+												}else if(c == '_' && !isdigit(buff[position-1])){
+													break;
+												}else {
+													buff[position] = c;
+													position++;
+													if(position+2 == buffSize) {
+														buffSize += BUFFER_SIZE;
+														buff = memrealloc(buff, buffSize);
+													}
+												}
+											}
+										}else {
+											ungetc(tempestc, f);
+											ungetc(tempest, f);
+										}
+									}else {
+										ungetc(c, f);
+									}
+								}else {
+									ungetc('.',f);
+									ungetc(c,f);
+								}
+							}else {	//there is no decimal point
+								if(c == 'p' || c == 'P') {
+									tempestc = c;
+									if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
+										buff[position] = tempestc;
+										position++;
+										if(position+2 == buffSize) {
+											buffSize += BUFFER_SIZE;
+											buff = memrealloc(buff, buffSize);
+										}
+										buff[position] = tempest;
+										position++;
+										if(position+2 == buffSize) {
+											buffSize += BUFFER_SIZE;
+											buff = memrealloc(buff, buffSize);
+										}
+										while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
+											if(c == '_' && isdigit(buff[position-1])) {
+												tempest = fgetc(f);
+												if(tempest == '_') {
+													break;
+												}
+												ungetc(tempest, f);
+											}else if(c == '_' && !isdigit(buff[position-1])){
+												break;
+											}else {
+												isDouble = 1;
+												buff[position] = c;
+												position++;
+												if(position+2 == buffSize) {
+													buffSize += BUFFER_SIZE;
+													buff = memrealloc(buff, buffSize);
+												}
+											}
+										}
+									}else {
+										ungetc(tempestc, f);
+										ungetc(tempest, f);
+									}
+								}else {
+									ungetc(c, f);
+								}
+							}
+						}else {
+							ungetc(c,f);
+							ungetc(tempest,f);
+						}
+
+					}else if(c >= '0' && c <= '7') {
+
+							buff[position] = c;
+							position++;
+							if(position+2 == buffSize) {
+								buffSize += BUFFER_SIZE;
+								buff = memrealloc(buff, buffSize);
+							}
+							while(((c = fgetc(f)) >= '0' && c <= '7') || c == '_') {
+								octInt = 1;
+								if(c == '_') {
+									tempest = fgetc(f);
+									if(tempest == '_') {
+										break;
+									}
+									ungetc(tempest, f);
+								}else {
+									buff[position] = c;
+									position++;
+									if(position+2 == buffSize) {
+										buffSize += BUFFER_SIZE;
+										buff = memrealloc(buff, buffSize);
+									}
+								}
+							}
+
+					}
+				}
+
 				if(buff[position-1] == '.' && (c == 'e' || c=='E')){
 					end = true;
 					isDouble = false;
@@ -264,14 +521,21 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					end = true;
 				}
 
-				if(isdigit(c)){										//if char is a digit, store it into buffer
+			/*	if((binInt == 1 && (c == '0' || c == '1')) || (c == 'b' && position == 1) && octInt != 1 && hexadecInt != 1) {
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
 						buffSize += BUFFER_SIZE;
 						buff = memrealloc(buff, buffSize);
 					}
-				}else if(!end && isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')){
+				}else */if(isdigit(c) && binInt != 1 && octInt != 1 && hexadecInt != 1){										//if char is a digit, store it into buffer
+					buff[position] = c;
+					position++;
+					if(position+2 == buffSize) {
+						buffSize += BUFFER_SIZE;
+						buff = memrealloc(buff, buffSize);
+					}
+				}else if(!end && isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')  && binInt != 1 && octInt != 1 && hexadecInt != 1){
 					buff[position] = c;								//if number is evaluated as double store double-allowed chars
 					position++;
 					if(position+2 == buffSize) {
@@ -303,11 +567,18 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					isDouble = false;							//reset
 					hasE = false;
 					end = false;
-					//printf(" [%s]",buff);	//TODO:remove
+					binInt = 0;
+					octInt = 0;
+					hexadecInt = 0;
+					printf(" [%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
 				break;
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
+/*000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000*/
 			case state_default:									//this will be done at every beginning of token reading
 				switch (c) {
 					case ' ':									//skip chars like spaces, newlines and tabs
@@ -553,7 +824,7 @@ void identifyToken(Token *tempTok) {
 int main(int argc, char *argv[]) {
 
    FILE *f;
-   f = fopen("tests/lex.java", "r");
+   f = fopen("tests/other2/thingsToFixInLexjava.java", "r");
    Token *tempTok = lookAhead(f, 0);
 
 
