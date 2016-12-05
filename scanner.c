@@ -222,7 +222,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 			}else {
 				i = (*dot) - '0';
 			}
-			printf("[[%c %d]]",*dot, i);
+			//printf("[[%c %d]]",*dot, i);
 			++count;
 			mantissa += i * (1.0/(double)ipowLex(16,count));
 			dot++;
@@ -277,7 +277,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 			}else {
 				i = (*temp) - '0';
 			}
-			printf("[[%c %d]]",*temp, i);
+			//printf("[[%c %d]]",*temp, i);
 			dec += i * ipowLex(16,count);
 			++count;
 			temp--;
@@ -645,7 +645,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							}
 							tempest = c;
 							if(c == '.') {
-								printf("jdu do tecky\n");
+								//printf("jdu do tecky\n");
 								hasDot = 1;
 								c = fgetc(f);
 								if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || c == '_'){
