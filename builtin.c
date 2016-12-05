@@ -134,10 +134,10 @@ int readInt() {                                             //Will convert strin
     char* stringNum = readString();                         //make use of readString();
     char makeUseOf;                                         //get rid of warnings
     do{
-        if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )           //first char may be sign, IDK if it's right
+        /*if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )           //first char may be sign, IDK if it's right
         {
              if(*stringNum == '-') sign *= -1;
-        }else if(isdigit(*stringNum)) {                                         //if it's digit
+        }else */if(isdigit(*stringNum)) {                                         //if it's digit
             num *= 10;                                                          //multiply num value by 10 and add read digit
             num += *stringNum - '0';
         }else if(*stringNum != '\0' && *stringNum != EOF && *stringNum != 0){   //if it is not digit, print error, call memfree and exit
@@ -153,7 +153,7 @@ int readInt() {                                             //Will convert strin
 }
 
 double readDouble() {                                                            //Will convert string into double
-    double num = 0, mantissa = 0;
+    double mantissa = 0;
     char makeUseOf;
     long long longNum = 0;
     int mantCount = 10;                                                            //aka get rid of warnings var
@@ -163,9 +163,9 @@ double readDouble() {                                                           
     do{
         if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
             if(*stringNum == '-') eSign *= -1;
-        }else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
+        }/*else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
             if(*stringNum == '-') sign *= -1;
-        }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
+        }*/else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
             longNum *= 10;
             longNum += *stringNum - '0';
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {              //read part of number past .
