@@ -84,7 +84,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 	double decDouble = 0, mantissa = 0;
 	char* temp = hexadec;
 	if(isDouble == 0) {					//number is integer
-		printf("kek\n" );
+		//printf("kek\n" );
 		while(*temp != '\0'){			//get position of end of string
 			;
 			quiet = *temp++;
