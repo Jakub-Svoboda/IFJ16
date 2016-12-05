@@ -1,8 +1,8 @@
 class Main {
-	static int a = 0+1;
 	static void run() {
-		for(int b = 1; b<0; b=b+1){
-			
-		}
+		double a = 10e-3;
+		int b = 1;
+		a= b;
+		ifj16.print(a);
 	}	
 }

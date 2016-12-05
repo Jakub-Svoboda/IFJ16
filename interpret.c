@@ -1380,10 +1380,15 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					case 23:			//source is type double
 						if(itemPtr->varType == 28){
 							itemPtr->varType=23;
+							fprintf(stderr,"I_MOV cannot move double to int.\n");
+							memfreeall();
+							exit(4);
+							break;
 						}
 						itemPtr->doubleValue=itemPtr2->doubleValue;
 						break;
-
+					
+						
 					default:
 						fprintf(stderr,"I_MOV source operand has unexpected type %d\n",itemPtr->varType);
 						memfreeall();
