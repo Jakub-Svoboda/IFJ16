@@ -643,7 +643,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
+							tempest = c;
 							if(c == '.') {
+								printf("jdu do tecky\n");
 								hasDot = 1;
 								c = fgetc(f);
 								if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || c == '_'){
@@ -778,7 +780,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									ungetc(c, f);
 								}
 							}else {		//next char is not p or P
-								ungetc(c,f);
+								//ungetc(c,f);		//I commented this
+								//ungetc(tempest,f);
 							}
 						}else {
 							ungetc(c,f);
@@ -1141,7 +1144,7 @@ void identifyToken(Token *tempTok) {
 int main(int argc, char *argv[]) {
 
    FILE *f;
-   f = fopen("tests/other2/thingsToFixInLexjava.java", "r");
+   f = fopen("tests/correct/printSquare.java", "r");
    Token *tempTok = lookAhead(f, 0);
 
 
