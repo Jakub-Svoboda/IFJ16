@@ -162,7 +162,8 @@ Navratova hodnota: 3
 ---------------------------------------------tests/tests_without_input/other2/find.java---------------------------------------------
 Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
 ---------------------------------------------tests/tests_without_input/other2/lex.java---------------------------------------------
-5000
+I_MOV cannot move double to int.
+Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/other2/semantictest1.java---------------------------------------------
 semantic error - redefining class
 Navratova hodnota: 3

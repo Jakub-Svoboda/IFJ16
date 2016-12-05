@@ -1,8 +1,8 @@
 class Main {
 	static void run() {
-		int a = 0xFF;
-
-		ifj16.print("h " +a+ "\n");
-
-	}
+		double a = 10e-3;
+		int b = 1;
+		a= b;
+		ifj16.print(a);
+	}	
 }
