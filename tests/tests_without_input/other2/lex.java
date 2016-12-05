@@ -1,4 +1,4 @@
-//static double x = 5e3.4;
+//static double x = 5e3;
 
 /*
 -----------------------------------
@@ -41,3 +41,14 @@ e.3r
 [r]			12id
 
 */
+
+class Main
+{
+ 
+  static void run()
+  {
+    int a = 5e3;
+  
+    ifj16.print(a + "\n");
+  }
+}

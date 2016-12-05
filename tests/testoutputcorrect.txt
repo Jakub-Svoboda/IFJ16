@@ -162,8 +162,7 @@ Navratova hodnota: 3
 ---------------------------------------------tests/tests_without_input/other2/find.java---------------------------------------------
 Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
 ---------------------------------------------tests/tests_without_input/other2/lex.java---------------------------------------------
-Cannot find funtion "run" in class "Main"
-Navratova hodnota: 3
+5000
 ---------------------------------------------tests/tests_without_input/other2/semantictest1.java---------------------------------------------
 semantic error - redefining class
 Navratova hodnota: 3
