@@ -84,6 +84,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 	double decDouble = 0, mantissa = 0;
 	char* temp = hexadec;
 	if(isDouble == 0) {					//number is integer
+		printf("kek\n" );
 		while(*temp != '\0'){			//get position of end of string
 			;
 			quiet = *temp++;
@@ -219,13 +220,20 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		}
 
 		count = 0; 					//reset counter
+		//printf(" dot je [%c]",*dot);
 		dot++; 						//skip the p or P
+		//printf(" a pak  [%c]",*dot);
 		if(*dot == '+') {			//get sign
 			expSign = 1;
+			dot++;
 		}else if(*dot == '-') {
 			expSign = -1;
+			dot++;
+		}else {
+			expSign = 1;
 		}
-		dot++;
+
+		//printf(" nakonec je [%c]",*dot);
 		while(*dot != '\0') {		//read the exponent
 	        expNum += (*dot) - '0';
 			dot++;
@@ -233,6 +241,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 				expNum *= 10;
 			}
 	    }
+		//printf(" expnum je %d ", expNum);
 
 		decDouble = (double)dec;
 		if(expSign == 1) {			//pretty the same as above..
@@ -240,14 +249,16 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		}else if(expSign == -1) {
 			decDouble *= pow(2, -expNum);
 		}
+		//printf(" a dec double je {%lf} ",decDouble);
 	}
 	char* tempDouble = memalloc(2048 * sizeof(char));
 	char* buffDouble;
 	int len = 0;
 	if(decDouble != 0) {		//if number is double
+		//printf("jdu tudy\n");
 		len = sprintf(tempDouble,"%lf",decDouble);	//get number of digits
 		buffDouble = memalloc(len * sizeof(char));	//allocate buffer with ideal length
-		sprintf(buffDouble,"%d",dec);
+		sprintf(buffDouble,"%lf",decDouble);
 	}else {						//if number is ingeter
 		len = sprintf(tempDouble,"%d",dec);			//get number of digits
 		buffDouble = memalloc(len * sizeof(char));	//allocate buffer with ideal lengt
@@ -608,7 +619,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									//there has to be exponent after . part
 									if(c == 'p' || c == 'P') {
 										tempestc = c;
-										if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
+										if((tempest = fgetc(f)) == '+' || tempest == '-' || (tempest >= '0' && tempest <= '9')) { //0xFF.FFp-
 											buff[position] = tempestc;
 											position++;
 											if(position+2 == buffSize) {
@@ -622,6 +633,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 												buff = memrealloc(buff, buffSize);
 											}
 											hasHaxE = 1;
+											isDouble = 1;
 
 											while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 												if(c == '_' && isdigit(buff[position-1])) {
@@ -657,7 +669,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							}else if(c == 'p' || c == 'P'){
 								if(c == 'p' || c == 'P') {		//casual double check
 									tempestc = c;
-									if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
+									if((tempest = fgetc(f)) == '+' || tempest == '-' || (tempest >= '0' && tempest <= '9')) { //0xFF.FFp-
 										buff[position] = tempestc;
 										position++;
 										if(position+2 == buffSize) {
@@ -671,6 +683,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 											buff = memrealloc(buff, buffSize);
 										}
 										hasHaxE = 1;
+										isDouble = 1;
 										while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 											if(c == '_' && isdigit(buff[position-1])) {
 												tempest = fgetc(f);
@@ -783,6 +796,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}else if(octInt == 1) {
 						buff = octToDecLex(atoi(buff));
 					}else if(hexadecInt == 1) {
+								//printf(" buff[%s]",buff);	//TODO:remove
 						buff = hexadecToDecLex(buff, isDouble, hasDot, hasHaxE);
 					}
 					if((isDouble) || (!isDouble && hasE)) {
