@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "scanner.h"
+#include <math.h>
 //#include "htab.c"
 
 //#define memalloc malloc
@@ -25,7 +26,7 @@
 #define true 1
 #define false 0
 
-int ipowLex(int base, int exp)
+int ipowLex(int base, int exp)		//function to calculate pow of integers
 {
     int num = 1;
     while (exp != 0) {
@@ -37,25 +38,23 @@ int ipowLex(int base, int exp)
     return num;
 }
 
-char* intToStr(int num) {
+char* intToStr(int num) {			//function to parse integer into string
 	int count = 0, temp = num;
-	while(temp != 0) {
+	while(temp != 0) {				//get number of digits
 		count++;
         temp/=10;
     }
 	char *buff = (char*) memalloc((count + 1) * sizeof(char));
-	for(int i = count-1; i >= 0; i--) {
+	for(int i = count-1; i >= 0; i--) {			//push each digit into buffer
 		buff[i] = '0' + num%10;
-		//printf("[%c]",buff[i]);  //TODO: remove
 		num/=10;
 	}
-	buff[count] = '\0';
-	//printf("%s coun,",buff);  //TODO: remove
+	buff[count] = '\0';				//end string
 	return buff;
 }
 
 
-char* octToDecLex(int oct)
+char* octToDecLex(int oct)			//function to convert octal numbers into decimal
 {
     int dec = 0, i = 0;
     while(oct != 0) {
@@ -63,10 +62,10 @@ char* octToDecLex(int oct)
         ++i;
         oct/=10;
     }
-    return intToStr(dec);
+    return intToStr(dec);			//return it as string
 }
 
-char* binToDecLex(int bin)
+char* binToDecLex(int bin)			//function to convert binary numbers to decimal
 {
     int dec = 0, i = 0;
     while(bin != 0) {
@@ -74,7 +73,187 @@ char* binToDecLex(int bin)
         ++i;
         bin/=10;
     }
-	return intToStr(dec);
+	return intToStr(dec);			//but return it as string
+}
+
+//function to convert all combinations of hexadecimal number to double or integer and return it as string
+//char* hexadec is string in hexadecimal form
+char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
+{
+    int dec = 0, i = 0, count = 0, expSign = 0, expNum = 0, quiet;
+	double decDouble = 0, mantissa = 0;
+	char* temp = hexadec;
+	if(isDouble == 0) {					//number is integer
+		while(*temp != '\0'){			//get position of end of string
+			;
+			quiet = *temp++;
+		}
+		quiet = quiet;
+		quiet = *temp--;
+	    while(temp != hexadec) {
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			dec += i * ipowLex(16,count);
+	        ++count;
+			temp--;
+	    }
+	}else if(isDouble == 1 && hasDot == 1 && hasHaxE != 1) {
+		//This hexadecimal number is invalid because it has . but no exponent
+		memfreeall();
+		fprintf(stderr, "Lexical error, invalid hexadecimal number.\n");
+		exit(1);
+	}else if(isDouble == 1 && hasDot == 1 && hasHaxE == 1) {
+		//hexadecimal number with . and exponent how it should be
+		while(*temp != '.'){		//get the position of .
+			;
+			quiet = *temp++;
+		}
+		char* dot = temp;
+		quiet = *temp--;
+		while(temp != hexadec) {	//parse integer part
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			decDouble += i * ipowLex(16,count);
+			++count;
+			temp--;
+		}
+
+		count = 0; 		//reset counter
+		dot++; 			//skip the dot character
+		while(*dot != 'p' && *dot != 'P'){ 	//parse mantissa
+			if(*dot == 'A') {
+				i = 10;
+			}else if(*dot == 'B'){
+				i = 11;
+			}else if(*dot == 'C'){
+				i = 12;
+			}else if(*dot == 'D'){
+				i = 13;
+			}else if(*dot == 'E'){
+				i = 14;
+			}else if(*dot == 'F'){
+				i = 15;
+			}else {
+				i = (*dot) - '0';
+			}
+
+			++count;
+			mantissa += i * (1.0/(double)ipowLex(16,count));		//calculation
+			dot++;
+		}
+		dot++;				//now dot points to p or P so go ahead and find sign
+		if(*dot == '+') {
+			expSign = 1;
+		}else if(*dot == '-') {
+			expSign = -1;
+		}
+		dot++;
+		while(*dot != '\0') {					//read rest, decimal digits
+	        expNum += (*dot) - '0';
+			dot++;
+			if(*dot != '\0') {
+				expNum *= 10;
+			}
+	    }
+
+		decDouble = decDouble + mantissa;		//link it together
+		if(expSign == 1) {						//and apply exponent
+			decDouble *= pow(2, expNum);
+		}else if(expSign == -1) {
+			decDouble *= pow(2, -expNum);
+		}
+
+	}else if(isDouble == 1 && hasDot != 1 && hasHaxE == 1) {
+		//hexadecimal number without . but with exponent
+		while(*temp != 'p' && *temp != 'P'){	//get the position of p or P
+			;
+			quiet = *temp++;
+		}
+		char* dot = temp;  						//dot is not currently dot..
+		quiet = *temp--;
+		while(temp != hexadec) {				//parse the integer part of number
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			dec += i * ipowLex(16,count);
+			++count;
+			temp--;
+		}
+
+		count = 0; 					//reset counter
+		dot++; 						//skip the p or P
+		if(*dot == '+') {			//get sign
+			expSign = 1;
+		}else if(*dot == '-') {
+			expSign = -1;
+		}
+		dot++;
+		while(*dot != '\0') {		//read the exponent
+	        expNum += (*dot) - '0';
+			dot++;
+			if(*dot != '\0') {
+				expNum *= 10;
+			}
+	    }
+
+		decDouble = (double)dec;
+		if(expSign == 1) {			//pretty the same as above..
+			decDouble *= pow(2, expNum);
+		}else if(expSign == -1) {
+			decDouble *= pow(2, -expNum);
+		}
+	}
+	char* tempDouble = memalloc(2048 * sizeof(char));
+	char* buffDouble;
+	int len = 0;
+	if(decDouble != 0) {		//if number is double
+		len = sprintf(tempDouble,"%lf",decDouble);	//get number of digits
+		buffDouble = memalloc(len * sizeof(char));	//allocate buffer with ideal length
+		sprintf(buffDouble,"%d",dec);
+	}else {						//if number is ingeter
+		len = sprintf(tempDouble,"%d",dec);			//get number of digits
+		buffDouble = memalloc(len * sizeof(char));	//allocate buffer with ideal lengt
+		sprintf(buffDouble,"%d",dec);
+	}
+	return buffDouble;				//return parsed hexadecimal number as string
 }
 
 
@@ -136,7 +315,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
     int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0, complexPos = 0;
-	int binInt = 0, tempest = 0, tempestc = 0, octInt = 0, hexadecInt = 0;
+	int binInt = 0, tempest = 0, tempestc = 0, octInt = 0, hexadecInt = 0, hasDot = 0, hasHaxE = 0;
 	State_type state = state_default;					//choose between states
 
 	if(t->type == token_invalid){						//initialization faiulure
@@ -222,7 +401,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					fprintf(stderr, "String is incorrect.\n");
 					exit(1);
 				}else {
-					if(c == '\\'){
+					if(c == '\\'){		//check for escape sequences and octal numbers
 						c = fgetc(f);
 						if(isdigit(c)){
 							char oct[] = "zz";
@@ -322,17 +501,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 
 				}
-				if(tempc == '0' && position == 1) {
-					//tempest = fgetc(f);
-					//printf("%cfdsf \n", tempest);
-					if(c == 'b') {
+				if(tempc == '0' && position == 1) {		//if the number starts with 0, it can be binary, octal or hexadecimal
+					if(c == 'b') {						//read the b but don't store it
 						if((tempest = fgetc(f)) == '0' || tempest == '1') {
-						/*	buff[position] = c;
-							position++;
-							if(position+2 == buffSize) {
-								buffSize += BUFFER_SIZE;
-								buff = memrealloc(buff, buffSize);
-							}*/
 							buff[position] = tempest;
 							position++;
 							if(position+2 == buffSize) {
@@ -356,27 +527,23 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
-						}else {
+						}else { 		//there was no 0 or 1 so unget it and unget b
 							ungetc(c,f);
 							ungetc(tempest,f);
 						}
-					}else if(c == 'x') {
+					}else if(c == 'x') {	//it seem;s like hexadecimal number
+						//check for allowed characters
 						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || tempest == '_' || (tempest >= 'A' && tempest <= 'F')) {
-
-							buff[position] = c;
-							position++;
-							if(position+2 == buffSize) {
-								buffSize += BUFFER_SIZE;
-								buff = memrealloc(buff, buffSize);
-							}
+							hexadecInt = 1;
 							buff[position] = tempest;
 							position++;
 							if(position+2 == buffSize) {
 								buffSize += BUFFER_SIZE;
 								buff = memrealloc(buff, buffSize);
 							}
+
 							while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_' || (c >= 'A' && c <= 'F')) {
-								hexadecInt = 1;
+
 								if(c == '_') {
 									tempest = fgetc(f);
 									if(tempest == '_') {
@@ -392,7 +559,10 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
+							tempest = c;
+							//if there is a decimal part of number
 							if(c == '.') {
+								hasDot = 1;				//for parsing purposes
 								c = fgetc(f);
 								if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || c == '_'){
 									buff[position] = '.';
@@ -417,7 +587,6 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 									isDouble = 1;
 
-
 									//rest
 									while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_' || (c >= 'A' && c <= 'F')) {
 										hexadecInt = 1;
@@ -436,6 +605,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 											}
 										}
 									}
+									//there has to be exponent after . part
 									if(c == 'p' || c == 'P') {
 										tempestc = c;
 										if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
@@ -451,6 +621,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 												buffSize += BUFFER_SIZE;
 												buff = memrealloc(buff, buffSize);
 											}
+											hasHaxE = 1;
+
 											while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 												if(c == '_' && isdigit(buff[position-1])) {
 													tempest = fgetc(f);
@@ -469,6 +641,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 													}
 												}
 											}
+//all theese ungets are here to get back into state before reading
 										}else {
 											ungetc(tempestc, f);
 											ungetc(tempest, f);
@@ -480,8 +653,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									ungetc('.',f);
 									ungetc(c,f);
 								}
-							}else {	//there is no decimal point
-								if(c == 'p' || c == 'P') {
+							//if there is no . but only exponent part
+							}else if(c == 'p' || c == 'P'){
+								if(c == 'p' || c == 'P') {		//casual double check
 									tempestc = c;
 									if((tempest = fgetc(f)) == '+' || tempest == '-') { //0xFF.FFp-
 										buff[position] = tempestc;
@@ -496,6 +670,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 											buffSize += BUFFER_SIZE;
 											buff = memrealloc(buff, buffSize);
 										}
+										hasHaxE = 1;
 										while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 											if(c == '_' && isdigit(buff[position-1])) {
 												tempest = fgetc(f);
@@ -522,22 +697,25 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 								}else {
 									ungetc(c, f);
 								}
+							}else {		//next char is not p or P
+								//ungetc(c,f);		//I commented this
+								//ungetc(tempest,f);
 							}
 						}else {
 							ungetc(c,f);
 							ungetc(tempest,f);
 						}
 
-					}else if(c >= '0' && c <= '7') {
-
+					}else if(c >= '0' && c <= '7') {	//if after 0 comes a number in valid range it is octal
 							buff[position] = c;
 							position++;
 							if(position+2 == buffSize) {
 								buffSize += BUFFER_SIZE;
 								buff = memrealloc(buff, buffSize);
 							}
+							//read all of the numbers
 							while(((c = fgetc(f)) >= '0' && c <= '7') || c == '_') {
-								octInt = 1;
+								octInt = 1;				//for parsing purposes
 								if(c == '_') {
 									tempest = fgetc(f);
 									if(tempest == '_') {
@@ -553,10 +731,10 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
-
 					}
 				}
 
+				//number is not binary nor octal nor hexadecimal
 				if(buff[position-1] == '.' && (c == 'e' || c=='E')){
 					end = true;
 					isDouble = false;
@@ -572,14 +750,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					end = true;
 				}
 
-			/*	if((binInt == 1 && (c == '0' || c == '1')) || (c == 'b' && position == 1) && octInt != 1 && hexadecInt != 1) {
-					buff[position] = c;
-					position++;
-					if(position+2 == buffSize) {
-						buffSize += BUFFER_SIZE;
-						buff = memrealloc(buff, buffSize);
-					}
-				}else */if(isdigit(c) && binInt != 1 && octInt != 1 && hexadecInt != 1){										//if char is a digit, store it into buffer
+				if(isdigit(c) && binInt != 1 && octInt != 1 && hexadecInt != 1){										//if char is a digit, store it into buffer
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
@@ -600,7 +771,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						ungetc(tempc, f);							//undo readings
 						position--;
 					}
-					if(buff[position-1] == 'e' || buff[position-1] == 'E') {
+					if(buff[position-1] == 'e' || (buff[position-1] == 'E' && hexadecInt == 0)) {
 						ungetc(buff[position-1], f);							//undo readings
 						position--;
 					}
@@ -611,6 +782,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						buff = binToDecLex(atoi(buff));
 					}else if(octInt == 1) {
 						buff = octToDecLex(atoi(buff));
+					}else if(hexadecInt == 1) {
+						buff = hexadecToDecLex(buff, isDouble, hasDot, hasHaxE);
 					}
 					if((isDouble) || (!isDouble && hasE)) {
 						t->type = token_doubleNumber;
@@ -621,12 +794,14 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 					position = 0;								//reset
 					isDouble = false;							//reset
-					hasE = false;
-					end = false;
-					binInt = 0;
-					octInt = 0;
-					hexadecInt = 0;
-
+					hasE = false;								//reset
+					hasHaxE = 0;								//reset
+					hasDot = 0;									//reset
+					end = false;								//reset
+					binInt = 0;									//reset
+					octInt = 0;									//reset
+					hexadecInt = 0;								//reset
+					//printf(" buff[%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
@@ -880,7 +1055,7 @@ void identifyToken(Token *tempTok) {
 int main(int argc, char *argv[]) {
 
    FILE *f;
-   f = fopen("tests/other2/thingsToFixInLexjava.java", "r");
+   f = fopen("tests/correct/printSquare.java", "r");
    Token *tempTok = lookAhead(f, 0);
 
 
