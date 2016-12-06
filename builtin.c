@@ -235,16 +235,16 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 char* backup = (tempItem->stringValue);
                 while(*(tempItem->stringValue)) {
                     if(preC == '\\') {                                      //If there is a chance of escape sequence
-                        if(isdigit(*(tempItem->stringValue))){              //first check for octal numbers
+                        if(isdigit(*(tempItem->stringValue)) && *(tempItem->stringValue) <= '3'){              //first check for octal numbers
                             char num[] = "000";
                             num[0] = *(tempItem->stringValue);
                             makeUseOf = *(tempItem->stringValue)++;
                             makeUseOf = makeUseOf;
-                            if(isdigit(*(tempItem->stringValue))){          //still finding if octal number is correct
+                            if(isdigit(*(tempItem->stringValue)) && *(tempItem->stringValue) <= '7'){          //still finding if octal number is correct
                                 num[1] = *(tempItem->stringValue);
                                 makeUseOf = *(tempItem->stringValue)++;
                                 makeUseOf = makeUseOf;
-                                if(isdigit(*(tempItem->stringValue))){
+                                if(isdigit(*(tempItem->stringValue)) && *(tempItem->stringValue) <= '7'){
                                     num[2] = *(tempItem->stringValue);
                                     char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
                                     printf("%c",oct);
@@ -367,13 +367,13 @@ int length(String s, int stringOpt, thTable *htab, char* class){
     char makeUseOf;
     while(*s) {
         if(preC == '\\') {
-            if(isdigit((*s))){
+            if(isdigit((*s)) && *s <= '3'){
                 makeUseOf = *(s)++;
                 makeUseOf = makeUseOf;
-                if(isdigit(*s)){
+                if(isdigit(*s) && *s <= '7'){
                     makeUseOf = *s++;
                     makeUseOf = makeUseOf;
-                    if(isdigit(*s)){
+                    if(isdigit(*s) && *s <= '7'){
                         offset++;
                     }
                 }

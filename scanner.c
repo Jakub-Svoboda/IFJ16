@@ -414,14 +414,14 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 				}else {
 					if(c == '\\'){		//check for escape sequences and octal numbers
 						c = fgetc(f);
-						if(isdigit(c)){
+						if(isdigit(c) && c <= '3'){
 							char oct[] = "zz";
 							oct[0] = c;
 							c = fgetc(f);
-							if(isdigit(c)){
+							if(isdigit(c) && c <= '7'){
 								oct[1] = c;
 								c = fgetc(f);
-								if(isdigit(c)){
+								if(isdigit(c) && c <= '7'){
 									buff[position] = '\\';
 									position++;
 									if(position+2 == buffSize) {
@@ -835,20 +835,17 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					//ArOp
 					case '+':
 						t->type = token_add;
-
 						name2 = "+";
 						t->name = name2;
 						return t;
 						break;
 					case '-':
 						t->type = token_subtract;
-
 						name2 = "-";
 						t->name = name2;
 						return t;
 					case '*':
 						t->type = token_multiply;
-
 						name2 = "*";
 						t->name = name2;
 						return t;
@@ -862,15 +859,17 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									return t;
 								}
 							}
-
 							break;
 						}else if(c == '*') {								//block-comment found
 							tempc = ' ';
 							while(((c=fgetc(f)) != '/') || (tempc != '*')) {	//read until the combination of */ is found
 								tempc = c;
 								if(c == EOF) {
-									t->type = token_EOF;
-									return t;
+									fprintf(stderr, "Lexical error. EOF\n");
+									memfreeall();
+									exit(1);
+									//t->type = token_EOF;
+									//return t;
 								}
 							}
 							break;
@@ -930,16 +929,21 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						t->name = name2;
 						return t;
 					case '[':
-						t->type = token_bracketLeftSquare;
-
-						name2 = "[";
-						t->name = name2;
-						return t;
+						fprintf(stderr, "Lexical error.\n");
+						memfreeall();
+						exit(1);
+						//t->type = token_bracketLeftSquare;
+						//name2 = "[";
+						//t->name = name2;
+						//return t;
 					case ']':
-						t->type = token_bracketRightSquare;
-						name2 = "]";
-						t->name = name2;
-						return t;
+						fprintf(stderr, "Lexical error.\n");
+						memfreeall();
+						exit(1);
+						//t->type = token_bracketRightSquare;
+						//name2 = "]";
+						//t->name = name2;
+						//return t;
 					//assign =, equal ==
 					case '=':
 						c = fgetc(f);
@@ -964,8 +968,11 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							t->name = name3;
 							return t;
 						}
-						t->type = token_invalid;	//invalid combination !xx
-						return t;
+						fprintf(stderr, "Lexical error.\n");
+						memfreeall();
+						exit(1);
+						//t->type = token_invalid;	//invalid combination !xx
+						//return t;
 					//RelOp
 					case '<':
 						c = fgetc(f);
@@ -1000,14 +1007,18 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						if(isdigit(c)){								//if c is number, set state to readingNumber
 							state = state_readingNumber;
 							tempc = c;
+							buff[position] = c;							//buffer it
+							position++;
 						}else if(isalpha(c) || c == '$' || c == '_') {										//strings and numbers are alredy handled, it must be ID or KW
 							state = state_readingIdentifier;
+							buff[position] = c;							//buffer it
+							position++;
 						}else {
 							fprintf(stderr, "Lex error\n");		//TODO: not sure
+							memfreeall();
 							exit(1);
 						}
-						buff[position] = c;							//buffer it
-						position++;
+
 						break;
 				}
 				break;
