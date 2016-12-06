@@ -47,7 +47,7 @@ class Main
  
   static void run()
   {
-    int a = 5e3;
+    double a = 5e3;
   
     ifj16.print(a + "\n");
   }
