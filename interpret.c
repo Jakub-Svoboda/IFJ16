@@ -950,7 +950,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}
 
 				if(itemPtr2->isInit == 0 || itemPtr3->isInit == 0){	//checks if variables are initialized
-					fprintf(stderr,"I_GT. Operand not initialized.\n");
+					fprintf(stderr,"I_GT. Operand not initialized: %s: %d or %s: %d.\n",list->active->Instruction.addr2,itemPtr2->isInit, list->active->Instruction.addr3,itemPtr3->isInit );
 					memfreeall();
 					exit(8);
 				}
@@ -1327,7 +1327,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 
 	//************************I_MOV******************************//
 			case I_MOV:
-
+//fprintf(stderr,"\n\naaaaaa %s %s bbbbbb\n\n",list->active->Instruction.addr1,list->active->Instruction.addr2);
 				if((itemPtr=(htabSearch(localVarTable,list->active->Instruction.addr1))) == NULL) {	//localVarTable search
 					if(!strstr(list->active->Instruction.addr1,dot)){		//if called function is short identifier
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
@@ -1513,7 +1513,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						strcpy(list->active->Instruction.addr1,concat(list->active->Instruction.addr1,currentClass));	//the concat it with class name
 					}
 					if((itemPtr=(htabSearch(resources->globalVarTable,list->active->Instruction.addr1))) == NULL){	//if not in local, search global
-						fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+						fprintf(stderr,"I_RETURN_MOV Sem_Error. Expression based on nonexistant variable\n");
 						memfreeall();
 						exit(3);
 					}

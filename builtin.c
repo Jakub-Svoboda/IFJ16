@@ -879,7 +879,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 strcpy(value,concat(value,class));	//the concat it with class name
             }
             if((tempItem=(htabSearch(resources->globalVarTable,value))) == NULL){	//if not in local, search global
-                fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+                fprintf(stderr,"Builtin PRINT: Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
             }
@@ -1015,7 +1015,7 @@ int length(String s, int stringOpt, thTable *htab, char* class){
                 strcpy(s,concat(s,class));	//the concat it with class name
             }
             if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
-                fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+                fprintf(stderr,"Builtin LENGTH.Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
             }
@@ -1080,7 +1080,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 strcpy(s,concat(s,class));	//the concat it with class name
             }
             if((tempItem=(htabSearch(resources->globalVarTable,s))) == NULL){	//if not in local, search global
-                fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+                fprintf(stderr,"Builting SUBSTR.Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
             }
@@ -1099,7 +1099,7 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 strcpy(iNum,concat(iNum,class));	//the concat it with class name
             }
             if((tempItem2=(htabSearch(resources->globalVarTable,iNum))) == NULL){	//if not in local, search global
-                fprintf(stderr,"Sem_Error. Expression based on nonexistant variable\n");
+                fprintf(stderr,"Builting SUBSTR.Sem_Error. Expression based on nonexistant variable\n");
                 memfreeall();
                 exit(3);
             }
@@ -1290,7 +1290,7 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {          //Fu
         }
         s = tempItem->stringValue;
     }
-    printf("{HERE}\n");
+    //printf("{HERE}\n");
     s = replaceOctals(s);
     int s_len = strlen(s);          //Length of string to sort
     char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
