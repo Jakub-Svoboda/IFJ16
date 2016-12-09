@@ -358,7 +358,7 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 }
 
 char* replaceOctals(char *original) {
-    fprintf(stderr, "{%c}\n",*original );
+
     int buffSize = lengthOld(original);
 	char *buff = (char*)memalloc(buffSize * sizeof(char)+1);      //allocate memory for string
 

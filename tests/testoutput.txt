@@ -157,8 +157,8 @@ MMMMMMMMMM
 String is incorrect.
 Navratova hodnota: 1
 ---------------------------------------------tests/tests_without_input/other2/double.java---------------------------------------------
-Cannot find funtion "run" in class "Main"
-Navratova hodnota: 3
+Lexical error. EOF
+Navratova hodnota: 1
 ---------------------------------------------tests/tests_without_input/other2/find.java---------------------------------------------
 Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
 ---------------------------------------------tests/tests_without_input/other2/lex.java---------------------------------------------
@@ -167,8 +167,8 @@ Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
 semantic error - redefining class
 Navratova hodnota: 3
 ---------------------------------------------tests/tests_without_input/other2/semantictest2.java---------------------------------------------
-Syntax Error! 
-Navratova hodnota: 2
+Lexical error.
+Navratova hodnota: 1
 ---------------------------------------------tests/tests_without_input/other2/semantictest3.java---------------------------------------------
 
 CBC
