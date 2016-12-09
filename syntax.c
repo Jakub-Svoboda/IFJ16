@@ -624,7 +624,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_do:
 					sprintf(buf, "#do%d",counter);									//do label is generated
 					generateInstruction(I,I_LABEL, buf, "", "",list);				
-					sprintf(continueJump,"#do%d",counter);							//continue jump is saved
+					sprintf(continueJump,"#do_cond%d",counter);							//continue jump is saved
 					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved	
 					int gotoLabel2 = counter;
 					counter++;	
@@ -642,9 +642,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr->type != token_while){fprintf(stderr,"\nWhile at do-while loop expected but not found. \n");goto EXIT;}
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
+					generateInstruction(I,I_LABEL, lastContinueJump, "", "",list);
 					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * doBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					if(tokenPtr->type != token_bracketRightRound){fprintf(stderr,"\n) at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
+					getModifiedToken(f,tokenPtr);
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_semicolon){fprintf(stderr,"\n; at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					sprintf(buf2, "#do_end%d",gotoLabel2);
 					generateInstruction(I,I_DO_GOTO, doBuffer, buf, "",list);		//jump to command block
 					generateInstruction(I,I_LABEL, buf2, "", "",list);	
@@ -1027,12 +1032,12 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 				case token_do:
 					sprintf(buf, "#do%d",counter);									//do label is generated
 					generateInstruction(I,I_LABEL, buf, "", "",list);				
-					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
-					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
-					sprintf(continueJump,"#do%d",counter);							//continue jump is saved
-					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved
+					sprintf(continueJump,"#do_cond%d",counter);							//continue jump is saved
+					sprintf(breakJump,"#do_end%d",counter);							//break jump is saved	
 					int gotoLabel2 = counter;
 					counter++;	
+					sprintf(lastBreakJump, "%s",breakJump);							//save breakJump	
+					sprintf(lastContinueJump, "%s",continueJump);					//save continueJump	
 					breakable++;													//increment loop depth counter
 					lastBreakable=breakable;										//save loop depth
 					if ((result=syntaxCheck( COMMAND_BLOCK_BEGIN, f, tokenPtr, lastToken, list))	!= 0) {fprintf(stderr,"\n(\n");goto EXIT;}	
@@ -1045,9 +1050,14 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 					if(tokenPtr->type != token_while){fprintf(stderr,"\nWhile at do-while loop expected but not found. \n");goto EXIT;}
 					getModifiedToken(f,tokenPtr);
 					//printType(tokenPtr);
+					generateInstruction(I,I_LABEL, lastContinueJump, "", "",list);
 					if(tokenPtr->type != token_bracketLeftRound){fprintf(stderr,"\n( at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					generateInstruction(I,I_CLEAR_TMPS, "", "", "",list);
 					char * doBuffer=runPrecedenceAnalysis(f,tokenPtr,1,list);
+					if(tokenPtr->type != token_bracketRightRound){fprintf(stderr,"\n) at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
+					getModifiedToken(f,tokenPtr);
+					//printType(tokenPtr);
+					if(tokenPtr->type != token_semicolon){fprintf(stderr,"\n; at do-while loop expected but not found. %d \n",tokenPtr->type);goto EXIT;}
 					sprintf(buf2, "#do_end%d",gotoLabel2);
 					generateInstruction(I,I_DO_GOTO, doBuffer, buf, "",list);		//jump to command block
 					generateInstruction(I,I_LABEL, buf2, "", "",list);	

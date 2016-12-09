@@ -13,7 +13,7 @@ class Main {
 					ifj16.print(b+" ");
 					b=b+1;
 				}		
-			}while(b<10)
+			}while(b<10);
 			
 		
 		
@@ -22,7 +22,7 @@ class Main {
 			ifj16.print("   "a+"\n");
 			a=a+1;
 				
-		}while(a<10)
+		}while(a<10);
 	
 	}
 }

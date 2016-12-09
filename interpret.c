@@ -341,7 +341,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 							memfreeall();
 							exit(4);
 						}
-						itemPtr->intValue=itemPtr->intValue+itemPtr3->doubleValue;
+						itemPtr->doubleValue=itemPtr2->intValue+itemPtr3->doubleValue;
 						itemPtr->isInit=1;
 					}else if(itemPtr3->varType == 30){										// INT + STR
 						if(itemPtr->varType == 23){
@@ -1477,7 +1477,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				if(itemPtr2->argumentNumber <= argumentCounter){					//check whether there is not an extra argument push
 					fprintf(stderr,"I_PUSH. Too many arguments. %d \n", itemPtr2->argumentNumber );
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 
 				if(itemPtr2->arguments[argumentCounter] -> argumentType == (int)itemPtr->varType){			//retyping cos token->type is unsigned for some reason
@@ -1485,7 +1485,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 				}else{
 					fprintf(stderr,"I_PUSH. Argument type not matching. %d \n", itemPtr2->argumentNumber );
 					memfreeall();
-					exit(3);
+					exit(4);
 				}
 				//if everything ok, insert argument to next call local table
 				htabInsert(nextCallTable, itemPtr2->arguments[argumentCounter -1]->argumentName, itemPtr->varType);
