@@ -10,6 +10,8 @@
 * Variant: b/1/II
 */
 
+//TODO: check fprintfs
+
 #include "builtin.h"
 extern resourceStruct * resources;
 
@@ -61,8 +63,7 @@ int binToDec(int bin)			//function to convert binary numbers to decimal
 
 int hexadecToDecI(char* hexadec)
 {
-    int dec = 0, i = 0, count = 0, expSign = 0, expNum = 0, quiet;
-	double decDouble = 0, mantissa = 0;
+    int dec = 0, i = 0, count = 0, quiet;
 	char* temp = hexadec;
 	//printf("kek\n" );
 	while(*temp != '\0'){			//get position of end of string
@@ -111,7 +112,249 @@ int hexadecToDecI(char* hexadec)
     ++count;
     temp--;
 
-	return dec;				//return parsed hexadecimal number as string
+	return dec;				//return parsed hexadecimal number
+}
+
+//function to convert all combinations of hexadecimal number to double or integer and return it as string
+//char* hexadec is string in hexadecimal form
+double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
+{
+    int dec = 0, i = 0, count = 0, expSign = 1, expNum = 0, quiet;
+	double decDouble = 0, mantissa = 0;
+	char* temp = hexadec;
+	if(isDouble == 0) {					//number is integer
+		while(*temp != '\0'){			//get position of end of string
+			;
+			quiet = *temp++;
+		}
+		quiet = quiet;
+		quiet = *temp--;
+	    while(temp != hexadec) {
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			dec += i * ipow(16,count);
+	        ++count;
+			temp--;
+	    }
+        if(*temp == 'A') {
+            i = 10;
+        }else if(*temp == 'B'){
+            i = 11;
+        }else if(*temp == 'C'){
+            i = 12;
+        }else if(*temp == 'D'){
+            i = 13;
+        }else if(*temp == 'E'){
+            i = 14;
+        }else if(*temp == 'F'){
+            i = 15;
+        }else {
+            i = (*temp) - '0';
+        }
+        dec += i * ipow(16,count);
+        ++count;
+        temp--;
+        decDouble = (double)dec;
+	}else if(isDouble == 1 && hasDot == 1 && hasHaxE != 1) {
+		//This hexadecimal number is invalid because it has . but no exponent
+		memfreeall();
+		fprintf(stderr, "Invalid sequence in readDoble().\n");
+		exit(7);
+	}else if(isDouble == 1 && hasDot == 1 && hasHaxE == 1) {
+		//hexadecimal number with . and exponent how it should be
+		while(*temp != '.'){		//get the position of .
+			;
+			quiet = *temp++;
+		}
+		char* dot = temp;
+		quiet = *temp--;
+		while(temp != hexadec) {	//parse integer part
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			decDouble += i * ipow(16,count);
+			++count;
+			temp--;
+		}
+        if(*temp == 'A') {
+            i = 10;
+        }else if(*temp == 'B'){
+            i = 11;
+        }else if(*temp == 'C'){
+            i = 12;
+        }else if(*temp == 'D'){
+            i = 13;
+        }else if(*temp == 'E'){
+            i = 14;
+        }else if(*temp == 'F'){
+            i = 15;
+        }else {
+            i = (*temp) - '0';
+        }
+        decDouble += i * ipow(16,count);
+        ++count;
+        temp--;
+		count = 0; 		//reset counter
+        printf("%c charuj", *dot);
+		dot++; 			//skip the dot character
+		while(*dot != 'p' && *dot != 'P'){ 	//parse mantissa
+            printf("%c charuj", *dot);
+			if(*dot == 'A') {
+				i = 10;
+			}else if(*dot == 'B'){
+				i = 11;
+			}else if(*dot == 'C'){
+				i = 12;
+			}else if(*dot == 'D'){
+				i = 13;
+			}else if(*dot == 'E'){
+				i = 14;
+			}else if(*dot == 'F'){
+				i = 15;
+			}else {
+				i = (*dot) - '0';
+			}
+
+            ++count;
+            mantissa += i * (1.0/(double)ipow(16,count));		//calculation
+            printf("%lf\n", mantissa);
+			dot++;
+		}
+        //printf("%s\n", "dot kekel");
+
+		dot++;				//now dot points to p or P so go ahead and find sign
+		if(*dot == '+') {
+			expSign = 1;
+            dot++;
+		}else if(*dot == '-') {
+			expSign = -1;
+            dot++;
+		}else {
+
+        }
+
+		while(*dot != '\0') {					//read rest, decimal digits
+	        expNum += (*dot) - '0';
+			dot++;
+			if(*dot != '\0') {
+				expNum *= 10;
+			}
+	    }
+
+		decDouble = decDouble + mantissa;		//link it together
+		if(expSign == 1) {						//and apply exponent
+			decDouble *= pow(2, expNum);
+		}else if(expSign == -1) {
+			decDouble *= pow(2, -expNum);
+		}
+
+	}else if(isDouble == 1 && hasDot != 1 && hasHaxE == 1) {
+		//hexadecimal number without . but with exponent
+        //printf("KEKE\n");
+		while(*temp != 'p' && *temp != 'P'){	//get the position of p or P
+			;
+			quiet = *temp++;
+		}
+		char* dot = temp;  						//dot is not currently dot..
+		quiet = *temp--;
+		while(temp != hexadec) {				//parse the integer part of number
+			if(*temp == 'A') {
+				i = 10;
+			}else if(*temp == 'B'){
+				i = 11;
+			}else if(*temp == 'C'){
+				i = 12;
+			}else if(*temp == 'D'){
+				i = 13;
+			}else if(*temp == 'E'){
+				i = 14;
+			}else if(*temp == 'F'){
+				i = 15;
+			}else {
+				i = (*temp) - '0';
+			}
+			dec += i * ipow(16,count);
+			++count;
+			temp--;
+		}
+        if(*temp == 'A') {
+            i = 10;
+        }else if(*temp == 'B'){
+            i = 11;
+        }else if(*temp == 'C'){
+            i = 12;
+        }else if(*temp == 'D'){
+            i = 13;
+        }else if(*temp == 'E'){
+            i = 14;
+        }else if(*temp == 'F'){
+            i = 15;
+        }else {
+            i = (*temp) - '0';
+        }
+        dec += i * ipow(16,count);
+        ++count;
+        temp--;
+
+		count = 0; 					//reset counter
+		//printf(" dot je [%c]",*dot);
+		dot++; 						//skip the p or P
+		//printf(" a pak  [%c]",*dot);
+		if(*dot == '+') {			//get sign
+			expSign = 1;
+			dot++;
+		}else if(*dot == '-') {
+			expSign = -1;
+			dot++;
+		}else {
+			expSign = 1;
+		}
+
+		//printf(" nakonec je [%c]",*dot);
+		while(*dot != '\0') {		//read the exponent
+	        expNum += (*dot) - '0';
+			dot++;
+			if(*dot != '\0') {
+				expNum *= 10;
+			}
+	    }
+		//printf(" expnum je %d ", expNum);
+
+		decDouble = (double)dec;
+		if(expSign == 1) {			//pretty the same as above..
+			decDouble *= pow(2, expNum);
+		}else if(expSign == -1) {
+			decDouble *= pow(2, -expNum);
+		}
+		//printf(" a dec double je {%lf} ",decDouble);
+	}
+
+	return decDouble;				//return parsed hexadecimal
 }
 
 char* replaceOctals(char *original) {
@@ -196,7 +439,7 @@ String readString() {
 }
 
 int readInt() {                                             //Will convert string into integer
-    int buffSize = LOCAL_BUFF_SIZE, position = 0, c;
+    int buffSize = LOCAL_BUFF_SIZE, position = 0;
 	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
 
     int num = 0, sign = 1, binInt = 0, octInt = 0, hexadecInt = 0;                                  //sign is 1 by default, it means +
@@ -351,19 +594,242 @@ int readInt() {                                             //Will convert strin
 }
 
 double readDouble() {                                                            //Will convert string into double
+    int buffSize = LOCAL_BUFF_SIZE, position = 0;
+    char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
+    int isDouble = 0;
     double mantissa = 0;
     char makeUseOf;
     long long longNum = 0;
     int mantCount = 10;                                                            //aka get rid of warnings var
-    int exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0;      //few bool-ints to handle . e +
-    char* stringNum = readString();                                              //make use of readString();
+    int exponent = 0,sign = 1, eSign = 1, hasDot = 0, hasE = 0, hasHaxE = 0;      //few bool-ints to handle . e +
+    char* stringNum = readString();
+    char* temp = stringNum;                                          //make use of readString();
+    if(*temp == '0') {
+        temp++;
+        if(*temp == 'x') {	//it seem;s like hexadecimal number
+            //check for allowed characters
+            temp++;
+            if((*temp >= '0' && *temp <= '9') || *temp == '_' || (*temp >= 'A' && *temp <= 'F')) {
+                buff[position] = *temp;
+                position++;
+                if(position+2 == buffSize) {
+                    buffSize += BUFFER_SIZE;
+                    buff = memrealloc(buff, buffSize);
+                }
+                temp++;
+                while((*temp >= '0' && *temp <= '9') || *temp == '_' || (*temp >= 'A' && *temp <= 'F')) {
 
-    do{
-        if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
-            if(*stringNum == '-') eSign *= -1;
-        }/*else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
-            if(*stringNum == '-') sign *= -1;
-        }*/else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
+                    if(*temp == '_') {
+                        temp++;
+                        if(*temp == '_') {
+                            fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                            memfreeall();
+                            exit(7);
+                        }
+                        temp--;
+                    }else {
+                        buff[position] = *temp;
+                        position++;
+                        if(position+2 == buffSize) {
+                            buffSize += BUFFER_SIZE;
+                            buff = memrealloc(buff, buffSize);
+                        }
+                    }
+                    temp++;
+                }
+
+                //if there is a decimal part of number
+                if(*temp == '.') {
+                    hasDot = 1;				//for parsing purposes
+                    temp++;
+                    if((*temp >= '0' && *temp <= '9') || (*temp >= 'A' && *temp <= 'F') || *temp == '_'){
+                        buff[position] = '.';
+                        position++;
+                        if(position+2 == buffSize) {
+                            buffSize += BUFFER_SIZE;
+                            buff = memrealloc(buff, buffSize);
+                        }
+                        //temp++;
+                        if(*temp == '_') {
+                            temp++;
+                            if(*temp == '_') {
+                                fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                memfreeall();
+                                exit(7);
+                            }
+                            temp--;
+                        }else {
+                            buff[position] = *temp;
+                            position++;
+                            if(position+2 == buffSize) {
+                                buffSize += BUFFER_SIZE;
+                                buff = memrealloc(buff, buffSize);
+                            }
+                        }
+                        isDouble = 1;
+
+                        //rest
+                        temp++;
+                        while((*temp >= '0' && *temp <= '9') || *temp == '_' || (*temp >= 'A' && *temp <= 'F')) {
+                            if(*temp == '_') {
+                                temp++;
+                                if(*temp == '_') {
+                                    fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                    memfreeall();
+                                    exit(7);
+                                }
+                                temp--;
+                            }else {
+                                buff[position] = *temp;
+                                position++;
+                                if(position+2 == buffSize) {
+                                    buffSize += BUFFER_SIZE;
+                                    buff = memrealloc(buff, buffSize);
+                                }
+                            }
+                            temp++;
+                        }
+
+                    //    ******************************************************************************************
+                        //there has to be exponent after . part
+                        if(*temp == 'p' || *temp == 'P') {
+                            //*temp = c; //p
+                            temp++;
+                            if(*temp == '+' || *temp == '-' || (*temp >= '0' && *temp <= '9')) { //0xFF.FFp-
+                                buff[position] = 'p';
+                                position++;
+                                if(position+2 == buffSize) {
+                                    buffSize += BUFFER_SIZE;
+                                    buff = memrealloc(buff, buffSize);
+                                }
+                                buff[position] = *temp;
+                                position++;
+                                if(position+2 == buffSize) {
+                                    buffSize += BUFFER_SIZE;
+                                    buff = memrealloc(buff, buffSize);
+                                }
+                                hasHaxE = 1;
+                                isDouble = 1;
+                                temp++;
+                                while((*temp >= '0' && *temp <= '9') || *temp == '_') {
+                                    if(*temp == '_' && isdigit(buff[position-1])) {
+                                        temp++;
+                                        if(*temp == '_') {
+                                            fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                            memfreeall();
+                                            exit(7);
+                                        }
+                                        temp--;
+                                    }else if(*temp == '_' && !isdigit(buff[position-1])){
+                                        fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                        memfreeall();
+                                        exit(7);
+                                    }else {
+                                        buff[position] = *temp;
+                                        position++;
+                                        if(position+2 == buffSize) {
+                                            buffSize += BUFFER_SIZE;
+                                            buff = memrealloc(buff, buffSize);
+                                        }
+                                    }
+                                    temp++;
+                                }
+        //all theese ungets are here to get back into state before reading
+                            }else {
+                                fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                memfreeall();
+                                exit(7);
+                            }
+                        }else {
+                            fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                            memfreeall();
+                            exit(7);
+                        }
+                    }else {
+                        fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                        memfreeall();
+                        exit(7);
+                    }
+                //if there is no . but only exponent part
+            }else if(*temp == 'p' || *temp == 'P'){
+                    if(*temp == 'p' || *temp == 'P') {		//casual double check
+                        //tempestc = *temp; //P
+                        printf(")XFFAD\n");
+                        temp++;
+                        if(*temp == '+' || *temp == '-' || (*temp >= '0' && *temp <= '9')) { //0xFF.FFp-
+                            buff[position] = 'p';
+                            position++;
+                            if(position+2 == buffSize) {
+                                buffSize += BUFFER_SIZE;
+                                buff = memrealloc(buff, buffSize);
+                            }
+                            buff[position] = *temp;
+                            position++;
+                            if(position+2 == buffSize) {
+                                buffSize += BUFFER_SIZE;
+                                buff = memrealloc(buff, buffSize);
+                            }
+                            hasHaxE = 1;
+                            isDouble = 1;
+                            temp++;
+                            while((*temp >= '0' && *temp <= '9') || *temp == '_') {
+                                if(*temp == '_' && isdigit(buff[position-1])) {
+                                    temp++;
+                                    if(*temp == '_') {
+                                        fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                        memfreeall();
+                                        exit(7);
+                                    }
+                                    temp--;
+                                }else if(*temp == '_' && !isdigit(buff[position-1])){
+                                    fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                                    memfreeall();
+                                    exit(7);
+                                }else {
+                                    isDouble = 1;
+                                    buff[position] = *temp;
+                                    position++;
+                                    if(position+2 == buffSize) {
+                                        buffSize += BUFFER_SIZE;
+                                        buff = memrealloc(buff, buffSize);
+                                    }
+                                }
+                                temp++;
+                            }
+                        }else {
+                            fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                            memfreeall();
+                            exit(7);
+                        }
+                    }else {
+                        fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                        memfreeall();
+                        exit(7);
+                    }
+                }else {		//next char is not p or P
+    //                fprintf(stderr,"Invalid sequence in hreadDouble() function.\n");
+    //                memfreeall();
+    //                exit(7);
+                }
+            }else {
+                fprintf(stderr,"Invalid sequence in readDouble() function.\n");
+                memfreeall();
+                exit(7);
+            }
+            buff[position] = '\0';
+            printf("{%s}",buff);
+            return hexadecToDecD(buff, isDouble, hasDot, hasHaxE);
+        }else {
+            temp--;
+        }
+    }
+
+        do{
+            if(((*stringNum == '-') || (*stringNum == '+')) && hasE == 1 ) {         //read sign of E, it is + by default
+                if(*stringNum == '-') eSign *= -1;
+            }/*else if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 ) {    //read sign of number
+                if(*stringNum == '-') sign *= -1;
+            }*/else if(isdigit(*stringNum) && hasE == 0 && hasDot == 0) {              //read the integer part of number
             longNum *= 10;
             longNum += *stringNum - '0';
         }else if(isdigit(*stringNum) && hasE == 0 && hasDot == 1) {              //read part of number past .
@@ -397,6 +863,7 @@ double readDouble() {                                                           
             }
         }
     }
+
     return ((longNum + (mantissa / mantCount))*fullExp)*sign;      //return number with mantissa but multiply it with calculated exponent (if any) and don't forget the sign
 }
 

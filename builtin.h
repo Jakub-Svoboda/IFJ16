@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include "ial.h"
 #include "garbage.h"
+#include "math.h"
 //#include "ial.h"
 
 #define String char*  //Is this rhe right solution?

@@ -80,7 +80,7 @@ char* binToDecLex(int bin)			//function to convert binary numbers to decimal
 //char* hexadec is string in hexadecimal form
 char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 {
-    int dec = 0, i = 0, count = 0, expSign = 0, expNum = 0, quiet;
+    int dec = 0, i = 0, count = 0, expSign = 1, expNum = 0, quiet;
 	double decDouble = 0, mantissa = 0;
 	char* temp = hexadec;
 	if(isDouble == 0) {					//number is integer
@@ -171,10 +171,12 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		dot++;				//now dot points to p or P so go ahead and find sign
 		if(*dot == '+') {
 			expSign = 1;
+            dot++;
 		}else if(*dot == '-') {
 			expSign = -1;
+            dot++;
 		}
-		dot++;
+		//dot++;
 		while(*dot != '\0') {					//read rest, decimal digits
 	        expNum += (*dot) - '0';
 			dot++;
@@ -182,6 +184,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 				expNum *= 10;
 			}
 	    }
+        //printf("%d %d expnum",expNum, expSign);
 
 		decDouble = decDouble + mantissa;		//link it together
 		if(expSign == 1) {						//and apply exponent
@@ -881,7 +884,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							return t;
 						}
 					case '\'':									//TODO how to handle chars? does java require only "" for strings?
-						fprintf(stderr, "Lexical c error\n");
+						fprintf(stderr, "Lexical error\n");
 						memfreeall();
 						exit(1);
 						break;
@@ -890,7 +893,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						break;
 					//Delimiters
 					case '.':
-						fprintf(stderr, "Lexical d error\n");
+						fprintf(stderr, "Lexical error\n");
 						memfreeall();
 						exit(1);
 						break;
@@ -929,7 +932,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						t->name = name2;
 						return t;
 					case '[':
-						fprintf(stderr, "Lexical e error.\n");
+						fprintf(stderr, "Lexical error.\n");
 						memfreeall();
 						exit(1);
 						//t->type = token_bracketLeftSquare;
@@ -937,7 +940,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						//t->name = name2;
 						//return t;
 					case ']':
-						fprintf(stderr, "Lexical f error.\n");
+						fprintf(stderr, "Lexical error.\n");
 						memfreeall();
 						exit(1);
 						//t->type = token_bracketRightSquare;
