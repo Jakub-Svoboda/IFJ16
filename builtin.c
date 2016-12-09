@@ -358,7 +358,7 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 }
 
 char* replaceOctals(char *original) {
-    fprintf(stderr, "{%c}\n",*original );
+
     int buffSize = lengthOld(original);
 	char *buff = (char*)memalloc(buffSize * sizeof(char)+1);      //allocate memory for string
 
@@ -1290,7 +1290,7 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {          //Fu
         }
         s = tempItem->stringValue;
     }
-    //printf("{HERE}\n");
+
     s = replaceOctals(s);
     int s_len = strlen(s);          //Length of string to sort
     char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
