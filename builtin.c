@@ -220,10 +220,10 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
         ++count;
         temp--;
 		count = 0; 		//reset counter
-        printf("%c charuj", *dot);
+        //printf("%c charuj", *dot);
 		dot++; 			//skip the dot character
 		while(*dot != 'p' && *dot != 'P'){ 	//parse mantissa
-            printf("%c charuj", *dot);
+            //printf("%c charuj", *dot);
 			if(*dot == 'A') {
 				i = 10;
 			}else if(*dot == 'B'){
@@ -242,7 +242,7 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 
             ++count;
             mantissa += i * (1.0/(double)ipow(16,count));		//calculation
-            printf("%lf\n", mantissa);
+            //printf("%lf\n", mantissa);
 			dot++;
 		}
         //printf("%s\n", "dot kekel");
@@ -818,7 +818,7 @@ double readDouble() {                                                           
                 exit(7);
             }
             buff[position] = '\0';
-            printf("{%s}",buff);
+            //printf("{%s}",buff);  //TODO:remove
             return hexadecToDecD(buff, isDouble, hasDot, hasHaxE);
         }else {
             temp--;
