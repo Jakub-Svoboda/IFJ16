@@ -358,6 +358,7 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 }
 
 char* replaceOctals(char *original) {
+    fprintf(stderr, "{%c}\n",*original );
     int buffSize = lengthOld(original);
 	char *buff = (char*)memalloc(buffSize * sizeof(char)+1);      //allocate memory for string
 
@@ -882,7 +883,7 @@ void print(char* value, int opt, thTable *htab, char* class) {
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem->isInit == 0) {
+        }if (tempItem->isInit  != 1) {
             fprintf(stderr, "Error in print function, variable uninitialized.\n");
             memfreeall();
             exit(8);
@@ -1018,8 +1019,8 @@ int length(String s, int stringOpt, thTable *htab, char* class){
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem->isInit != 1) {
+            fprintf(stderr, "Error in length function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1083,8 +1084,8 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem->isInit != 1) {
+            fprintf(stderr, "Error in substr function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1102,8 +1103,8 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem2->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem2->isInit != 1) {
+            fprintf(stderr, "Error in substr function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1121,8 +1122,8 @@ String substr(String s, int stringOpt, char* iNum, int iOpt, char* nNum, int nOp
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem3->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem3->isInit != 1) {
+            fprintf(stderr, "Error in substr function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1158,8 +1159,8 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem->isInit != 1) {
+            fprintf(stderr, "Error in compare function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1177,8 +1178,8 @@ int compare(String s1, int s1Opt, String s2, int s2Opt, thTable *htab, char* cla
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem2->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem2->isInit != 1) {
+            fprintf(stderr, "Error in compare function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1222,8 +1223,8 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem->isInit  != 1) {
+            fprintf(stderr, "Error in find function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1241,8 +1242,8 @@ int find(String s, int stringOpt, String search, int searchOpt, thTable *htab, c
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem2->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }if (tempItem2->isInit != 1) {
+            fprintf(stderr, "Error in find function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
@@ -1281,13 +1282,15 @@ String sort(String s, int stringOpt, thTable *htab, char* class) {          //Fu
                 memfreeall();
                 exit(3);
             }
-        }if (tempItem->isInit == 0) {
-            fprintf(stderr, "Error in print function, variable uninitialized.\n");
+        }
+        if (tempItem->isInit != 1) {
+            fprintf(stderr, "Error in sort function, variable uninitialized.\n");
             memfreeall();
             exit(8);
         }
         s = tempItem->stringValue;
     }
+    printf("{HERE}\n");
     s = replaceOctals(s);
     int s_len = strlen(s);          //Length of string to sort
     char *str = (char*)memalloc((s_len+1) * sizeof(char));          //Allocating help string, which will be sorted
