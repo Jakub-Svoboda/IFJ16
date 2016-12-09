@@ -881,7 +881,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							return t;
 						}
 					case '\'':									//TODO how to handle chars? does java require only "" for strings?
-						fprintf(stderr, "Lexical error\n");
+						fprintf(stderr, "Lexical c error\n");
 						memfreeall();
 						exit(1);
 						break;
@@ -890,7 +890,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						break;
 					//Delimiters
 					case '.':
-						fprintf(stderr, "Lexical error\n");
+						fprintf(stderr, "Lexical d error\n");
 						memfreeall();
 						exit(1);
 						break;
@@ -929,7 +929,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						t->name = name2;
 						return t;
 					case '[':
-						fprintf(stderr, "Lexical error.\n");
+						fprintf(stderr, "Lexical e error.\n");
 						memfreeall();
 						exit(1);
 						//t->type = token_bracketLeftSquare;
@@ -937,7 +937,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						//t->name = name2;
 						//return t;
 					case ']':
-						fprintf(stderr, "Lexical error.\n");
+						fprintf(stderr, "Lexical f error.\n");
 						memfreeall();
 						exit(1);
 						//t->type = token_bracketRightSquare;

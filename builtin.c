@@ -47,6 +47,73 @@ int octToDec(int oct)
     return dec;
 }
 
+
+int binToDec(int bin)			//function to convert binary numbers to decimal
+{
+    int dec = 0, i = 0;
+    while(bin != 0) {
+        dec += (bin%10) * ipow(2,i);
+        ++i;
+        bin/=10;
+    }
+	return dec;			//but return it as string
+}
+
+int hexadecToDecI(char* hexadec)
+{
+    int dec = 0, i = 0, count = 0, expSign = 0, expNum = 0, quiet;
+	double decDouble = 0, mantissa = 0;
+	char* temp = hexadec;
+	//printf("kek\n" );
+	while(*temp != '\0'){			//get position of end of string
+		;
+		quiet = *temp++;
+	}
+	quiet = quiet;
+	quiet = *temp--;
+    while(temp != hexadec) {
+        //printf("once %c ",*temp);
+		if(*temp == 'A') {
+			i = 10;
+		}else if(*temp == 'B'){
+			i = 11;
+		}else if(*temp == 'C'){
+			i = 12;
+		}else if(*temp == 'D'){
+			i = 13;
+		}else if(*temp == 'E'){
+			i = 14;
+		}else if(*temp == 'F'){
+			i = 15;
+		}else {
+			i = (*temp) - '0';
+		}
+		dec += i * ipow(16,count);
+        ++count;
+		temp--;
+    }
+    if(*temp == 'A') {
+        i = 10;
+    }else if(*temp == 'B'){
+        i = 11;
+    }else if(*temp == 'C'){
+        i = 12;
+    }else if(*temp == 'D'){
+        i = 13;
+    }else if(*temp == 'E'){
+        i = 14;
+    }else if(*temp == 'F'){
+        i = 15;
+    }else {
+        i = (*temp) - '0';
+    }
+    dec += i * ipow(16,count);
+    ++count;
+    temp--;
+
+	return dec;				//return parsed hexadecimal number as string
+}
+
 char* replaceOctals(char *original) {
     int buffSize = lengthOld(original);
 	char *buff = (char*)memalloc(buffSize * sizeof(char)+1);      //allocate memory for string
@@ -129,26 +196,157 @@ String readString() {
 }
 
 int readInt() {                                             //Will convert string into integer
+    int buffSize = LOCAL_BUFF_SIZE, position = 0, c;
+	char *buff = (char*)memalloc(buffSize * sizeof(char));      //allocate memory for string
 
-    int num = 0, sign = 1;                                  //sign is 1 by default, it means +
+    int num = 0, sign = 1, binInt = 0, octInt = 0, hexadecInt = 0;                                  //sign is 1 by default, it means +
     char* stringNum = readString();                         //make use of readString();
     char makeUseOf;                                         //get rid of warnings
-    do{
-        /*if(((*stringNum == '-') || (*stringNum == '+')) && num == 0 )           //first char may be sign, IDK if it's right
-        {
-             if(*stringNum == '-') sign *= -1;
-        }else */if(isdigit(*stringNum)) {                                         //if it's digit
-            num *= 10;                                                          //multiply num value by 10 and add read digit
-            num += *stringNum - '0';
-        }else if(*stringNum != '\0' && *stringNum != EOF && *stringNum != 0){   //if it is not digit, print error, call memfree and exit
-            fprintf(stderr,"Invalid sequence in readInt() function.\n");
-            memfreeall();
-            exit(7);
-        }
-        makeUseOf = *stringNum++;
-        makeUseOf += makeUseOf;
-    } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
+    char* temp = stringNum;
 
+    if(*temp == '0') {		//if the number starts with 0, it can be binary, octal or hexadecimal
+        temp++;
+        if(*temp == 'b') {						//read the b but don't store it
+            temp++;
+            if(*temp == '0' || *temp == '1') {
+                buff[position] = *temp;
+                position++;
+                if(position+2 == buffSize) {
+                    buffSize += BUFFER_SIZE;
+                    buff = memrealloc(buff, buffSize);
+                }
+                temp++;
+                while(*temp == '0' || *temp == '1' || *temp == '_') {
+                    binInt = 1;
+                    if(*temp == '_') {
+                        temp++;
+                        if(*temp == '_') {
+                            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                            memfreeall();
+                            exit(7);
+                        }
+                        temp--;
+                    }else {
+                        buff[position] = *temp;
+                        position++;
+                        if(position+2 == buffSize) {
+                            buffSize += BUFFER_SIZE;
+                            buff = memrealloc(buff, buffSize);
+                        }
+                    }
+                    temp++;
+                }
+                if(*temp != '\0') {
+                    fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                    memfreeall();
+                    exit(7);
+                }
+            }else { 		//there was no 0 or 1 so unget it and unget b
+                fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                memfreeall();
+                exit(7);
+            }
+        }else if(*temp == 'x') {	//it seem;s like hexadecimal number
+            //check for allowed characters
+            temp++;
+            if((*temp >= '0' && *temp <= '9') || *temp == '_' || (*temp >= 'A' && *temp <= 'F')) {
+                hexadecInt = 1;
+                buff[position] = *temp;
+                position++;
+                if(position+2 == buffSize) {
+                    buffSize += BUFFER_SIZE;
+                    buff = memrealloc(buff, buffSize);
+                }
+                temp++;
+                while((*temp >= '0' && *temp <= '9') || *temp == '_' || (*temp >= 'A' && *temp <= 'F')) {
+
+                    if(*temp == '_') {
+                        temp++;
+                        if(*temp == '_') {
+                            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                            memfreeall();
+                            exit(7);
+                        }
+                        temp--;
+                    }else {
+                        buff[position] = *temp;
+                        position++;
+                        if(position+2 == buffSize) {
+                            buffSize += BUFFER_SIZE;
+                            buff = memrealloc(buff, buffSize);
+                        }
+                    }
+                    temp++;
+                }
+                if(*temp != '\0') {
+                    fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                    memfreeall();
+                    exit(7);
+                }
+            }else {
+                fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                memfreeall();
+                exit(7);
+            }
+        }else if(*temp >= '0' && *temp <= '7') {	//if after 0 comes a number in valid range it is octal
+            buff[position] = *temp;
+            position++;
+            if(position+2 == buffSize) {
+                buffSize += BUFFER_SIZE;
+                buff = memrealloc(buff, buffSize);
+            }
+            temp++;
+            //read all of the numbers
+            while((*temp >= '0' && *temp <= '7') || *temp == '_') {
+                octInt = 1;				//for parsing purposes
+                if(*temp == '_') {
+                    temp++;
+                    if(*temp == '_') {
+                        fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                        memfreeall();
+                        exit(7);
+                    }
+                    temp--;
+                }else {
+                    buff[position] = *temp;
+                    position++;
+                    if(position+2 == buffSize) {
+                        buffSize += BUFFER_SIZE;
+                        buff = memrealloc(buff, buffSize);
+                    }
+                }
+                temp++;
+            }
+            if(*temp != '\0') {
+                fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                memfreeall();
+                exit(7);
+            }
+        }
+        buff[position] = '\0';
+        printf("{%s}",buff);
+        if(binInt == 1) {
+            return binToDec(atoi(buff));
+        }else if(octInt == 1) {
+            return octToDec(atoi(buff));
+        }else if(hexadecInt == 1) {
+            return hexadecToDecI(buff);
+        }
+        return 1;
+    }else {
+        do{
+            if(isdigit(*stringNum)) {                                         //if it's digit
+                num *= 10;                                                          //multiply num value by 10 and add read digit
+                num += *stringNum - '0';
+            }else if(*stringNum != '\0' && *stringNum != EOF && *stringNum != 0){   //if it is not digit, print error, call memfree and exit
+                fprintf(stderr,"Invalid sequence in readInt() function.\n");
+                memfreeall();
+                exit(7);
+            }
+            makeUseOf = *stringNum++;
+            makeUseOf += makeUseOf;
+        } while (*stringNum != '\0' && *stringNum != EOF && *stringNum != 0);
+    }
     return num*sign;
 }
 
