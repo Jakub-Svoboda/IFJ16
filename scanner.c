@@ -327,6 +327,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 	Token *t = tokenInit();
 
 	//tempc is buffered character, kwIndex is ord. value of keyword type, isDouble is boolean-like var
+    int hasSign = 0;
     int c, position = 0, tempc = 0, kwIndex = 0, isDouble = 0, hasE = 0, isComplex = 0, end = 0, complexPos = 0;
 	int binInt = 0, tempest = 0, tempestc = 0, octInt = 0, hexadecInt = 0, hasDot = 0, hasHaxE = 0;
 	State_type state = state_default;					//choose between states
@@ -508,7 +509,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					//speciální symbol _ (podtržítko), který slouží jako oddělovač skupin číslic v čísle pro
 					//zajištění lepší čitelnosti. Více viz popis číselných literálů v normě 2 jazyka Java.
 					c = fgetc(f);
-					if(c == '_') {
+					if(c == '_' || !isdigit(c)) {
 
 						ungetc(c, f);
 					}
@@ -548,7 +549,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						}
 					}else if(c == 'x') {	//it seem;s like hexadecimal number
 						//check for allowed characters
-						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || tempest == '_' || (tempest >= 'A' && tempest <= 'F')) {
+						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || (tempest >= 'A' && tempest <= 'F')) {
 							hexadecInt = 1;
 							buff[position] = tempest;
 							position++;
@@ -763,6 +764,9 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
                     }
 				}
 
+                if(c == '+' || c == '-') {
+                    hasSign += 1;
+                }
 				//number is not binary nor octal nor hexadecimal
 				if(buff[position-1] == '.' && (c == 'e' || c=='E')){
 					end = true;
@@ -779,7 +783,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					end = true;
 				}
 
-				if(isdigit(c) && binInt != 1 && octInt != 1 && hexadecInt != 1){										//if char is a digit, store it into buffer
+				if(isdigit(c) && binInt != 1 && octInt != 1 && hexadecInt != 1 && (hasSign <= 1)){										//if char is a digit, store it into buffer
 					buff[position] = c;
 					position++;
 					if(position+2 == buffSize) {
@@ -787,7 +791,12 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						buff = memrealloc(buff, buffSize);
 					}
 				}else if(!end && isDouble && (c == 'E' || c == 'e' || c == '+' || c == '-' || c == '.')  && binInt != 1 && octInt != 1 && hexadecInt != 1){
-					buff[position] = c;								//if number is evaluated as double store double-allowed chars
+                    if(hasSign > 1) {
+                        memfreeall();
+                        fprintf(stderr, "Syntax error.\n");
+                        exit(2);
+                    }
+                    buff[position] = c;								//if number is evaluated as double store double-allowed chars
 					position++;
 					if(position+2 == buffSize) {
 						buffSize += BUFFER_SIZE;
@@ -795,6 +804,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}
 				}else {												//current char is not digit or it is double-allowed char when isDouble is false and
 					ungetc(c,f);									//undo readings
+
 					state = state_default;							//end reading state
 					if(tempc == '+' || tempc == '-' || tempc == '.') {
 						ungetc(tempc, f);							//undo readings
