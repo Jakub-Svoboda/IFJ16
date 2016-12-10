@@ -24,7 +24,7 @@ Navratova hodnota: 1
 Syntax Error! 
 Navratova hodnota: 2
 ---------------------------------------------tests/tests_without_input/2/5.java---------------------------------------------
-String is incorrect.
+Lexical Error.
 Navratova hodnota: 1
 ---------------------------------------------tests/tests_without_input/2/6.java---------------------------------------------
 
@@ -154,7 +154,7 @@ MMMMMMMMMM
 MMMMMMMMMM
 
 ---------------------------------------------tests/tests_without_input/other2/buffertest.java---------------------------------------------
-String is incorrect.
+Lexical Error.
 Navratova hodnota: 1
 ---------------------------------------------tests/tests_without_input/other2/double.java---------------------------------------------
 Lexical error. EOF
