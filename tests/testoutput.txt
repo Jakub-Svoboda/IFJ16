@@ -175,6 +175,10 @@ CBC
 Syntax Error! 
 Navratova hodnota: 2
 ---------------------------------------------tests/tests_without_input/other2/test0.java---------------------------------------------
+
+; at do-while loop expected but not found. 38 
+Syntax Error! 
+Navratova hodnota: 2
 ---------------------------------------------tests/tests_without_input/other2/thingsToFixInLexjava.java---------------------------------------------
 Lexical error
 Navratova hodnota: 1
@@ -224,13 +228,13 @@ Sem_Error. I_GT nonexistant right operand variable.
 Navratova hodnota: 3
 ---------------------------------------------tests/tests_without_input/other/function-too-many-arguments.java---------------------------------------------
 I_PUSH. Too many arguments. 1 
-Navratova hodnota: 3
+Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/other/function-void-returns-value.java---------------------------------------------
 Sem_Error. I_RETURN. Returning variable type does not match with defined return type.
 Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/other/function-wrong-argument-type.java---------------------------------------------
 I_PUSH. Argument type not matching. 1 
-Navratova hodnota: 3
+Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/other/ok-classes-static-variables.java---------------------------------------------
 ---------------------------------------------tests/tests_without_input/other/ok-factorial-iterative.java---------------------------------------------
 3628800

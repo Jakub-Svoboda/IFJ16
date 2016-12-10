@@ -329,6 +329,7 @@ int syntaxCheck (int state, FILE *f,Token* tokenPtr,Token* lastToken, tListOfIns
 			getModifiedToken(f,tokenPtr);
 			//printType(tokenPtr);
 			if(tokenPtr->type != token_EOF){
+					if(tokenPtr->type != token_class){fprintf(stderr,"\nCLASS\n");goto EXIT;}
 					if ((result=syntaxCheck( CLASS, f, tokenPtr, lastToken, list))		!= 0) {goto EXIT;}
 					if ((result=syntaxCheck( CLASS_BLOCK, f, tokenPtr, lastToken, list))		!= 0) {goto EXIT;}
 			}else{
