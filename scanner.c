@@ -509,7 +509,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					//speciální symbol _ (podtržítko), který slouží jako oddělovač skupin číslic v čísle pro
 					//zajištění lepší čitelnosti. Více viz popis číselných literálů v normě 2 jazyka Java.
 					c = fgetc(f);
-					if(c == '_') {
+					if(c == '_' || !isdigit(c)) {
 
 						ungetc(c, f);
 					}
@@ -549,7 +549,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						}
 					}else if(c == 'x') {	//it seem;s like hexadecimal number
 						//check for allowed characters
-						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || tempest == '_' || (tempest >= 'A' && tempest <= 'F')) {
+						if(((tempest = fgetc(f)) >= '0' && tempest <= '9') || (tempest >= 'A' && tempest <= 'F')) {
 							hexadecInt = 1;
 							buff[position] = tempest;
 							position++;
