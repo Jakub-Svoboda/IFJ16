@@ -10,7 +10,6 @@
 * Variant: b/1/II
 */
 
-//TODO: check fprintfs
 
 #include "builtin.h"
 extern resourceStruct * resources;
@@ -65,7 +64,6 @@ int hexadecToDecI(char* hexadec)
 {
     int dec = 0, i = 0, count = 0, quiet;
 	char* temp = hexadec;
-	//printf("kek\n" );
 	while(*temp != '\0'){			//get position of end of string
 		;
 		quiet = *temp++;
@@ -73,7 +71,6 @@ int hexadecToDecI(char* hexadec)
 	quiet = quiet;
 	quiet = *temp--;
     while(temp != hexadec) {
-        //printf("once %c ",*temp);
 		if(*temp == 'A') {
 			i = 10;
 		}else if(*temp == 'B'){
@@ -220,10 +217,8 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
         ++count;
         temp--;
 		count = 0; 		//reset counter
-        //printf("%c charuj", *dot);
 		dot++; 			//skip the dot character
 		while(*dot != 'p' && *dot != 'P'){ 	//parse mantissa
-            //printf("%c charuj", *dot);
 			if(*dot == 'A') {
 				i = 10;
 			}else if(*dot == 'B'){
@@ -242,10 +237,8 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 
             ++count;
             mantissa += i * (1.0/(double)ipow(16,count));		//calculation
-            //printf("%lf\n", mantissa);
 			dot++;
 		}
-        //printf("%s\n", "dot kekel");
 
 		dot++;				//now dot points to p or P so go ahead and find sign
 		if(*dot == '+') {
@@ -275,7 +268,6 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 
 	}else if(isDouble == 1 && hasDot != 1 && hasHaxE == 1) {
 		//hexadecimal number without . but with exponent
-        //printf("KEKE\n");
 		while(*temp != 'p' && *temp != 'P'){	//get the position of p or P
 			;
 			quiet = *temp++;
@@ -322,9 +314,7 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
         temp--;
 
 		count = 0; 					//reset counter
-		//printf(" dot je [%c]",*dot);
 		dot++; 						//skip the p or P
-		//printf(" a pak  [%c]",*dot);
 		if(*dot == '+') {			//get sign
 			expSign = 1;
 			dot++;
@@ -334,8 +324,6 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		}else {
 			expSign = 1;
 		}
-
-		//printf(" nakonec je [%c]",*dot);
 		while(*dot != '\0') {		//read the exponent
 	        expNum += (*dot) - '0';
 			dot++;
@@ -343,7 +331,6 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 				expNum *= 10;
 			}
 	    }
-		//printf(" expnum je %d ", expNum);
 
 		decDouble = (double)dec;
 		if(expSign == 1) {			//pretty the same as above..
@@ -351,7 +338,6 @@ double hexadecToDecD(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		}else if(expSign == -1) {
 			decDouble *= pow(2, -expNum);
 		}
-		//printf(" a dec double je {%lf} ",decDouble);
 	}
 
 	return decDouble;				//return parsed hexadecimal
@@ -380,7 +366,6 @@ char* replaceOctals(char *original) {
                     if(isdigit(*original)){
                         num[2] = *original;
                         char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
-                        //printf("%c",oct);
                         buff[pos] = oct;
                         pos++;
                         fflush(stdout);
@@ -568,7 +553,6 @@ int readInt() {                                             //Will convert strin
             }
         }
         buff[position] = '\0';
-        //printf("{%s}",buff); TODO remove
         if(binInt == 1) {
             return binToDec(atoi(buff));
         }else if(octInt == 1) {
@@ -754,8 +738,6 @@ double readDouble() {                                                           
                 //if there is no . but only exponent part
             }else if(*temp == 'p' || *temp == 'P'){
                     if(*temp == 'p' || *temp == 'P') {		//casual double check
-                        //tempestc = *temp; //P
-                        printf(")XFFAD\n");
                         temp++;
                         if(*temp == '+' || *temp == '-' || (*temp >= '0' && *temp <= '9')) { //0xFF.FFp-
                             buff[position] = 'p';
@@ -818,7 +800,6 @@ double readDouble() {                                                           
                 exit(7);
             }
             buff[position] = '\0';
-            //printf("{%s}",buff);  //TODO:remove
             return hexadecToDecD(buff, isDouble, hasDot, hasHaxE);
         }else {
             temp--;
