@@ -22,13 +22,13 @@ extern resourceStruct * resources;
 int runInterpret(tListOfInstr *list){
 	listFirst(list);
 
-//	while(list->active->nextItem !=NULL){											//test output for instruction list
-//		printInstType(list->active->Instruction.instType);
-//		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
-//		listNext(list);
-//	}
-//	printInstType(list->active->Instruction.instType);	//print the very last instr
-//	fprintf(stderr,"\n");
+	/*while(list->active->nextItem !=NULL){											//test output for instruction list
+		printInstType(list->active->Instruction.instType);
+		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
+		listNext(list);
+	}
+	printInstType(list->active->Instruction.instType);	//print the very last instr
+	fprintf(stderr,"\n");*/
 
 	listFirst(list);					//resets instruction pointer
 	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);	//allocates memory for variable table
@@ -1377,7 +1377,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
-
 				itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
 				switch (itemPtr2->varType){
 					case 28:			//source is type int
@@ -1403,6 +1402,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						itemPtr->doubleValue=itemPtr2->doubleValue;
 						break;
+
 					
 						
 					default:
@@ -1534,7 +1534,11 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(3);
 					}
 				}
-
+				if(returnPtr==NULL){
+						fprintf(stderr,"Error:Assignment from void function\n");
+						memfreeall();
+						exit(8);
+				}
 				if(itemPtr->varType != returnPtr->varType){		//Types are not matching, error4
 					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (returnPtr->varType != 23 && returnPtr->varType != 28)){
 						//printHtabLocal(localVarTable);
