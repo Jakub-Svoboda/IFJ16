@@ -568,7 +568,7 @@ int readInt() {                                             //Will convert strin
             }
         }
         buff[position] = '\0';
-        printf("{%s}",buff);
+        //printf("{%s}",buff); TODO remove
         if(binInt == 1) {
             return binToDec(atoi(buff));
         }else if(octInt == 1) {
