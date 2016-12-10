@@ -44,6 +44,7 @@ return 0;
 }
 
 thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
+	fprintf(stderr,"ahoj\n");
 	struct listItem *lastActive;	//pointer to reset position on instruction lost
 	thTable * nextCallTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
 	htabInit(nextCallTable);		//initialize new variable table for future function call
@@ -106,14 +107,22 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 	//************************I_NEW_VAR******************************//
 			case I_NEW_VAR: ;
 			char buffer[2047];
-			sprintf(buffer, "%s%s%s",currentClass,".",list->active->Instruction.addr1);
+			if(!strstr(list->active->Instruction.addr1,dot)){
+				sprintf(buffer, "%s%s%s",currentClass,".",list->active->Instruction.addr1);
 				if(htabSearch(resources->functionTable, buffer)==NULL){
-				htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
+					htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
 				}
 				else{	
 					fprintf(stderr,"Semantic error:Variable name same as function name\n");
+					memfreeall();
 					exit(3);
 				}
+			}else{	
+					fprintf(stderr,"Syntax error:Fully qualified identifier in local var declaration\n");
+					memfreeall();
+					exit(3);
+				}
+
 			break;
 
 	//************************I_FN_END******************************//
