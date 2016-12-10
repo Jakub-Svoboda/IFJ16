@@ -445,11 +445,11 @@ int readInt() {                                             //Will convert strin
                     buff = memrealloc(buff, buffSize);
                 }
                 temp++;
+                binInt = 1;
                 while(*temp == '0' || *temp == '1' || *temp == '_') {
-                    binInt = 1;
                     if(*temp == '_') {
                         temp++;
-                        if(*temp == '_') {
+                        if(*temp == '_' || (*temp != '1' && *temp != '0')) {
                             fprintf(stderr,"Invalid sequence in readInt() function.\n");
                             memfreeall();
                             exit(7);
@@ -491,7 +491,7 @@ int readInt() {                                             //Will convert strin
 
                     if(*temp == '_') {
                         temp++;
-                        if(*temp == '_') {
+                        if(*temp == '_' || ((*temp < '0' || *temp > '9') && (*temp < 'A' || *temp > 'F'))) {
                             fprintf(stderr,"Invalid sequence in readInt() function.\n");
                             memfreeall();
                             exit(7);
@@ -530,7 +530,7 @@ int readInt() {                                             //Will convert strin
             while((*temp >= '0' && *temp <= '7') || *temp == '_') {
                 if(*temp == '_') {
                     temp++;
-                    if(*temp == '_') {
+                    if(*temp == '_' || (*temp < '0' || *temp > '7')) {
                         fprintf(stderr,"Invalid sequence in readInt() function.\n");
                         memfreeall();
                         exit(7);
@@ -610,7 +610,7 @@ double readDouble() {                                                           
 
                     if(*temp == '_') {
                         temp++;
-                        if(*temp == '_') {
+                        if(*temp == '_' || ((*temp < '0' || *temp > '9') && (*temp < 'A' || *temp > 'F'))) {
                             fprintf(stderr,"Invalid sequence in readDouble() function.\n");
                             memfreeall();
                             exit(7);
@@ -641,7 +641,7 @@ double readDouble() {                                                           
                         //temp++;
                         if(*temp == '_') {
                             temp++;
-                            if(*temp == '_') {
+                            if(*temp == '_' || ((*temp < '0' || *temp > '9') && (*temp < 'A' || *temp > 'F'))) {
                                 fprintf(stderr,"Invalid sequence in readDouble() function.\n");
                                 memfreeall();
                                 exit(7);
@@ -662,7 +662,7 @@ double readDouble() {                                                           
                         while((*temp >= '0' && *temp <= '9') || *temp == '_' || (*temp >= 'A' && *temp <= 'F')) {
                             if(*temp == '_') {
                                 temp++;
-                                if(*temp == '_') {
+                                if(*temp == '_' || ((*temp < '0' || *temp > '9') && (*temp < 'A' || *temp > 'F'))) {
                                     fprintf(stderr,"Invalid sequence in readDouble() function.\n");
                                     memfreeall();
                                     exit(7);
@@ -703,7 +703,7 @@ double readDouble() {                                                           
                                 while((*temp >= '0' && *temp <= '9') || *temp == '_') {
                                     if(*temp == '_' && isdigit(buff[position-1])) {
                                         temp++;
-                                        if(*temp == '_') {
+                                        if(*temp == '_' || (*temp < '0' || *temp > '9')) {
                                             fprintf(stderr,"Invalid sequence in readDouble() function.\n");
                                             memfreeall();
                                             exit(7);
@@ -762,7 +762,7 @@ double readDouble() {                                                           
                             while((*temp >= '0' && *temp <= '9') || *temp == '_') {
                                 if(*temp == '_' && isdigit(buff[position-1])) {
                                     temp++;
-                                    if(*temp == '_') {
+                                    if(*temp == '_' || (*temp < '0' || *temp > '9')) {
                                         fprintf(stderr,"Invalid sequence in readDouble() function.\n");
                                         memfreeall();
                                         exit(7);
