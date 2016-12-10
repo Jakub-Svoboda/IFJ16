@@ -526,8 +526,8 @@ int readInt() {                                             //Will convert strin
             }
             temp++;
             //read all of the numbers
+            octInt = 1;				//for parsing purposes
             while((*temp >= '0' && *temp <= '7') || *temp == '_') {
-                octInt = 1;				//for parsing purposes
                 if(*temp == '_') {
                     temp++;
                     if(*temp == '_') {
@@ -551,6 +551,10 @@ int readInt() {                                             //Will convert strin
                 memfreeall();
                 exit(7);
             }
+        }else {
+            fprintf(stderr,"Invalid sequence in readInt() function.\n");
+            memfreeall();
+            exit(7);
         }
         buff[position] = '\0';
         if(binInt == 1) {
