@@ -411,7 +411,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 			case state_readingString:							//reading string now doesn't store ""
 				if(c == EOF || c == '\n') {
 					memfreeall();
-					fprintf(stderr, "String is incorrect.\n");
+					fprintf(stderr, "Lexical Error.\n");
 					exit(1);
 				}else {
 					if(c == '\\'){		//check for escape sequences and octal numbers
@@ -450,17 +450,17 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}else {
 									memfreeall();
-									fprintf(stderr, "String is incorrect.\n");
+									fprintf(stderr, "Lexical Error.\n");
 									exit(1);
 								}
 							}else {
 								memfreeall();
-								fprintf(stderr, "String is incorrect.\n");
+								fprintf(stderr, "Lexical Error.\n");
 								exit(1);
 							}
 						}else if(c != '\"' && c != 'n' && c != 't' && c != '\\') {
 							memfreeall();
-							fprintf(stderr, "String is incorrect.\n");
+							fprintf(stderr, "Lexical Error.\n");
 							exit(1);
 						}else {
 							buff[position] = '\\';
@@ -494,7 +494,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					t->type = token_string;
 					t->name = buff;
 					position = 0;
-					//printf(" [%s]",buff);	//TODO:remove
+
 					return t;
 				}
 				break;
@@ -523,11 +523,11 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 								buffSize += BUFFER_SIZE;
 								buff = memrealloc(buff, buffSize);
 							}
+                            binInt = 1;
 							while((c = fgetc(f)) == '0' || c == '1' || c == '_') {
-								binInt = 1;
 								if(c == '_') {
 									tempest = fgetc(f);
-									if(tempest == '_') {
+									if(tempest == '_' ||( tempest != '0' && tempest != '1')) {
 										break;
 									}
 									ungetc(tempest, f);
@@ -540,6 +540,8 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
+
+                            //ungetc(c,f);
 						}else { 		//there was no 0 or 1 so unget it and unget b
 							ungetc(c,f);
 							ungetc(tempest,f);
@@ -559,7 +561,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 
 								if(c == '_') {
 									tempest = fgetc(f);
-									if(tempest == '_') {
+									if(tempest == '_' || ((tempest < '0' || tempest > '9') && (tempest < 'A' || tempest > 'F'))) {
 										break;
 									}
 									ungetc(tempest, f);
@@ -586,7 +588,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 									if(c == '_') {
 										tempest = fgetc(f);
-										if(tempest == '_') {
+										if(tempest == '_' || ((tempest < '0' || tempest > '9') && (tempest < 'A' || tempest > 'F'))) {
 											break;
 										}
 										ungetc(tempest, f);
@@ -605,7 +607,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 										hexadecInt = 1;
 										if(c == '_') {
 											tempest = fgetc(f);
-											if(tempest == '_') {
+											if(tempest == '_' || ((tempest < '0' || tempest > '9') && (tempest < 'A' || tempest > 'F'))) {
 												break;
 											}
 											ungetc(tempest, f);
@@ -640,7 +642,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 											while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 												if(c == '_' && isdigit(buff[position-1])) {
 													tempest = fgetc(f);
-													if(tempest == '_') {
+													if(tempest == '_' || ((tempest < '0' || tempest > '9') && (tempest < 'A' || tempest > 'F'))) {
 														break;
 													}
 													ungetc(tempest, f);
@@ -689,7 +691,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 										while(((c = fgetc(f)) >= '0' && c <= '9') || c == '_') {
 											if(c == '_' && isdigit(buff[position-1])) {
 												tempest = fgetc(f);
-												if(tempest == '_') {
+												if(tempest == '_' || (tempest < '0' || tempest > '9')) {
 													break;
 												}
 												ungetc(tempest, f);
@@ -729,11 +731,11 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 								buff = memrealloc(buff, buffSize);
 							}
 							//read all of the numbers
+                            octInt = 1;				//for parsing purposes
 							while(((c = fgetc(f)) >= '0' && c <= '7') || c == '_') {
-								octInt = 1;				//for parsing purposes
 								if(c == '_') {
 									tempest = fgetc(f);
-									if(tempest == '_') {
+									if(tempest == '_' || (tempest < '0' && tempest > '7')) {
 										break;
 									}
 									ungetc(tempest, f);
@@ -746,7 +748,19 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 									}
 								}
 							}
-					}
+                            //ungetc(c,f);
+					}else {
+                        buff[position] = tempc;
+                        position++;
+                        if(position+2 == buffSize) {
+                            buffSize += BUFFER_SIZE;
+                            buff = memrealloc(buff, buffSize);
+                        }
+                        //read all of the numbers
+                        //octInt = 1;
+                        //ungetc(c,f);
+                        //ungetc(c,f);
+                    }
 				}
 
 				//number is not binary nor octal nor hexadecimal
@@ -798,7 +812,6 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					}else if(octInt == 1) {
 						buff = octToDecLex(atoi(buff));
 					}else if(hexadecInt == 1) {
-								//printf(" buff[%s]",buff);	//TODO:remove
 						buff = hexadecToDecLex(buff, isDouble, hasDot, hasHaxE);
 					}
 					if((isDouble) || (!isDouble && hasE)) {
@@ -817,7 +830,6 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					binInt = 0;									//reset
 					octInt = 0;									//reset
 					hexadecInt = 0;								//reset
-					//printf(" buff[%s]",buff);	//TODO:remove
 					return t;
 				}
 				tempc = c;
@@ -1016,7 +1028,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 							buff[position] = c;							//buffer it
 							position++;
 						}else {
-							fprintf(stderr, "Lex error\n");		//TODO: not sure
+							fprintf(stderr, "Lexical Error.\n");
 							memfreeall();
 							exit(1);
 						}
