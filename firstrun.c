@@ -16,11 +16,25 @@ extern resourceStruct* resources;
 
 /*Functions for inserting items to global symbol tables*/
 void functionInsert(Token * tokenName, Token * tokenType,Token * tokenClass){
+	if(tokenClass!=NULL){
 	htabInsertReturnType(resources->functionTable, tokenName->name, tokenClass->name, tokenType->type);		//insert function to function symbol table
+	}
+	else{
+		memfreeall();
+		fprintf(stderr, "syntax error, class not declared\n");
+		exit(2);
+	}
 }
 
 void globalVarInsert(Token * tokenName, Token * tokenType,Token * tokenClass){
-	htabInsertVarType(tokenName->name, tokenClass->name, tokenType->type);							//insert static variable to global variable symbol table
+	if(tokenClass!=NULL){
+	htabInsertVarType(tokenName->name, tokenClass->name, tokenType->type);
+	}							//insert static variable to global variable symbol table
+	else{
+		memfreeall();
+		fprintf(stderr, "syntax error, class not declared\n");
+		exit(2);
+	}
 }
 
 /*First time run through program, storing global variables and functions to hashtables, checking for class redefinitions*/
