@@ -44,7 +44,6 @@ return 0;
 }
 
 thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
-	fprintf(stderr,"ahoj\n");
 	struct listItem *lastActive;	//pointer to reset position on instruction lost
 	thTable * nextCallTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);		//Alocate memory for var table, which will be passed to new function
 	htabInit(nextCallTable);		//initialize new variable table for future function call
