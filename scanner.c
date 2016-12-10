@@ -17,7 +17,6 @@
 #include <string.h>
 #include "scanner.h"
 #include <math.h>
-//#include "htab.c"
 
 //#define memalloc malloc
 //#define memrealloc realloc

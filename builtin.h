@@ -10,7 +10,7 @@
 * Variant: b/1/II
 */
 
-#include <stdio.h>			//TODO check if this is ok or BS
+#include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -19,7 +19,7 @@
 #include "math.h"
 //#include "ial.h"
 
-#define String char*  //Is this rhe right solution?
+#define String char*
 #define LOCAL_BUFF_SIZE 32
 
 int readInt();
