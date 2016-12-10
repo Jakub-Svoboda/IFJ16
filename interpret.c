@@ -104,8 +104,16 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_NEW_VAR******************************//
-			case I_NEW_VAR:
+			case I_NEW_VAR: ;
+			char buffer[2047];
+			sprintf(buffer, "%s%s%s",currentClass,".",list->active->Instruction.addr1);
+				if(htabSearch(resources->functionTable, buffer)==NULL){
 				htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
+				}
+				else{	
+					fprintf(stderr,"Semantic error:Variable name same as function name\n");
+					exit(3);
+				}
 			break;
 
 	//************************I_FN_END******************************//
