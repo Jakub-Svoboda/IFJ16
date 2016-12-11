@@ -414,6 +414,11 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 								oct[1] = c;
 								c = fgetc(f);
 								if(isdigit(c) && c <= '7'){
+                                    if(oct[0] == '0' && oct[1] == '0' && c == '0') {
+                                        memfreeall();
+    									fprintf(stderr, "Lexical Error.\n");
+    									exit(1);
+                                    }
 									buff[position] = '\\';
 									position++;
 									if(position+2 == buffSize) {

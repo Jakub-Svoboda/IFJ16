@@ -354,16 +354,21 @@ char* replaceOctals(char *original) {
     char* backup = original;
     while(*original) {
         if(preC == '\\') {                                      //If there is a chance of escape sequence
-            if(isdigit(*original)){              //first check for octal numbers
+            if(isdigit(*original) && *original <= '3'){              //first check for octal numbers
                 char num[] = "000";
                 num[0] = *original;
                 makeUseOf = *(original)++;
                 makeUseOf = makeUseOf;
-                if(isdigit(*original)){          //still finding if octal number is correct
+                if(isdigit(*original) && *original <= '7'){          //still finding if octal number is correct
                     num[1] = *original;
                     makeUseOf = *(original)++;
                     makeUseOf = makeUseOf;
-                    if(isdigit(*original)){
+                    if(isdigit(*original) && *original <= '7'){
+                        if(num[0] == '0' && num[1] == '0' && *original == '0') {
+                            memfreeall();
+                            fprintf(stderr, "Lexical Error.\n");
+                            exit(1);
+                        }
                         num[2] = *original;
                         char oct = octToDec(atoi(num));         //conver octal to dec so we cen print it as char
                         buff[pos] = oct;
