@@ -87,15 +87,8 @@ Builtin 9.java
  a je středníček b je klopetek
 compare(b,a) -1| (a,b) 1| (a,a) 0| ("klopetek",b) 0| ("klopetek","klopetek") 0
 ---------------------------------------------tests/tests_without_input/correct/breakContine.java---------------------------------------------
-a is : 101
-a is : 102
-a is : 103
-a is : 104
-a is : 105
-a is : 106
-a is : 107
-a is : 108
-a is : 109
+I_WHILE_GOTO. Expression base on non-boolean variable.
+Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/correct/correct.java---------------------------------------------
 Sem_Error. I_SUB nonexistant left operand variable.
 Navratova hodnota: 3
@@ -122,16 +115,8 @@ Navratova hodnota: 3
 0 1 2 3 4 6 7 8 9     8
 0 1 2 3 4 6 7 8 9     9
 ---------------------------------------------tests/tests_without_input/correct/printSquare.java---------------------------------------------
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
-MMMMMMMMMM
+I_WHILE_GOTO. Expression base on non-boolean variable.
+Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/other2/b.f.test.java---------------------------------------------
 
 	Not from the stars do I my judgement pluck,
@@ -160,7 +145,8 @@ Navratova hodnota: 1
 Lexical error. EOF
 Navratova hodnota: 1
 ---------------------------------------------tests/tests_without_input/other2/find.java---------------------------------------------
-Retezec "ahoj" nebyl v "Karel ahroj vola zdola aheoj." nalezen. :(
+I_IF_GOTO. Expression base on non-boolean variable.
+Navratova hodnota: 4
 ---------------------------------------------tests/tests_without_input/other2/lex.java---------------------------------------------
 5000
 ---------------------------------------------tests/tests_without_input/other2/semantictest1.java---------------------------------------------
