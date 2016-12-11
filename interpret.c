@@ -175,6 +175,8 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(3);
 					}
 				}
+				if(itemPtr->varType != 18){fprintf(stderr,"I_IF_GOTO. Expression base on non-boolean variable.\n"); memfreeall();exit(4);}	//According to a forum post, expression in ifs, while etc can only be based on booleans
+					
 				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;											//logical switch is INT
 				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;									//logical switch is double
 				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;									//logical switch is BOOL
@@ -1425,6 +1427,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(3);
 					}
 				}
+				if(itemPtr->varType != 18){fprintf(stderr,"I_WHILE_GOTO. Expression base on non-boolean variable.\n"); memfreeall();exit(4);}	//According to a forum post, expression in ifs, while etc can only be based on booleans
 				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
 				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is double
 				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;	//logical switch is bool
@@ -1902,6 +1905,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(3);
 					}
 				}
+				if(itemPtr->varType != 18){fprintf(stderr,"I_DO_GOTO. Expression base on non-boolean variable.\n"); memfreeall();exit(4);}	//According to a forum post, expression in ifs, while etc can only be based on booleans
 				if(itemPtr->varType == 28 && itemPtr->intValue == 0)jumpBool=1;		//logical switch is INT
 				else if(itemPtr->varType == 23 && itemPtr->doubleValue == 0)jumpBool=1;		//logical switch is double
 				else if(itemPtr->varType == 18 && itemPtr->boolValue == 0)jumpBool=1;	//logical switch is bool
