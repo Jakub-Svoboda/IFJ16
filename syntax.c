@@ -78,6 +78,22 @@ int runSyntaxAnalysis (FILE *f, tListOfInstr * list) {
 	resources->funcPtr= memalloc(sizeof(Token));		//allocate memory for pointer to current function token
 	generateInstruction(I,I_PROGRAM, "", "", "",list);	//beginning of instruction list instruction is generated
 	int result = syntaxCheck(CLASS_BLOCK,f,tokenPtr,lastToken,list);		//syntax check begins
+	thtabItem* ptr =htabSearch(resources->functionTable,"Main.run");				//find Main.run in function table
+	
+	char *key="Main.run";															//initialize variable for Main.run existence check
+	if(htabSearch(resources->functionTable, key)==NULL){						//if function run in class Main does not exist
+		fprintf(stderr, "Cannot find funtion \"run\" in class \"Main\"\n");		//print error and exit
+		memfreeall();
+		fclose(f);
+		exit(3);
+	}			
+	if(ptr->returnType!=token_void){			//check if Main.run returns void
+		fprintf(stderr, "Main.run \n");
+		memfreeall();
+		fclose(f);
+		exit(3);
+	}
+	
 	return result;
 }
 
