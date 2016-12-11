@@ -9,8 +9,8 @@ echo ---------------------------------------------$i----------------------------
 #./project $i
 retval=$?
 if [ "$retval" -ne "0" ]
-then 
-echo Navratova hodnota: $retval >> tests/testoutput.txt
+then
+echo  Navratova hodnota: $retval >> tests/testoutput.txt
 fi
 done
 
@@ -22,7 +22,7 @@ echo ---------------------------------------------$i----------------------------
 #./project $i
 retval=$?
 if [ "$retval" -ne "0" ]
-then 
+then
 echo Navratova hodnota: $retval >> tests/testoutput.txt
 fi
 done

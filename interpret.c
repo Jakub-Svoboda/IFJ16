@@ -22,13 +22,13 @@ extern resourceStruct * resources;
 int runInterpret(tListOfInstr *list){
 	listFirst(list);
 
-//	while(list->active->nextItem !=NULL){											//test output for instruction list
-//		printInstType(list->active->Instruction.instType);
-//		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
-//		listNext(list);
-//	}
-//	printInstType(list->active->Instruction.instType);	//print the very last instr
-//	fprintf(stderr,"\n");
+	/*while(list->active->nextItem !=NULL){											//test output for instruction list
+		printInstType(list->active->Instruction.instType);
+		fprintf(stderr,": %s, %s, %s\n", (list->active->Instruction.addr1),(list->active->Instruction.addr2),(list->active->Instruction.addr3));
+		listNext(list);
+	}
+	printInstType(list->active->Instruction.instType);	//print the very last instr
+	fprintf(stderr,"\n");*/
 
 	listFirst(list);					//resets instruction pointer
 	thTable * localVarTable = memalloc(sizeof(struct thtabItem) * HTAB_SIZE);	//allocates memory for variable table
@@ -104,8 +104,24 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 			break;
 
 	//************************I_NEW_VAR******************************//
-			case I_NEW_VAR:
-				htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
+			case I_NEW_VAR: ;
+			char buffer[2047];
+			if(!strstr(list->active->Instruction.addr1,dot)){
+				sprintf(buffer, "%s%s%s",currentClass,".",list->active->Instruction.addr1);
+				if(htabSearch(resources->functionTable, buffer)==NULL){
+					htabInsert(localVarTable, list->active->Instruction.addr1, atoi(list->active->Instruction.addr2));
+				}
+				else{	
+					fprintf(stderr,"Semantic error:Variable name same as function name\n");
+					memfreeall();
+					exit(3);
+				}
+			}else{	
+					fprintf(stderr,"Syntax error:Fully qualified identifier in local var declaration\n");
+					memfreeall();
+					exit(3);
+				}
+
 			break;
 
 	//************************I_FN_END******************************//
@@ -1361,7 +1377,6 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 					memfreeall();
 					exit(8);
 				}
-
 				itemPtr->isInit=1;					//Mark the variable as initialized. It can be now used in expressions.
 				switch (itemPtr2->varType){
 					case 28:			//source is type int
@@ -1387,6 +1402,7 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						}
 						itemPtr->doubleValue=itemPtr2->doubleValue;
 						break;
+
 					
 						
 					default:
@@ -1518,7 +1534,11 @@ thtabItem* interpretEval(tListOfInstr *list, thTable* localVarTable){
 						exit(3);
 					}
 				}
-
+				if(returnPtr==NULL){
+						fprintf(stderr,"Error:Assignment from void function\n");
+						memfreeall();
+						exit(8);
+				}
 				if(itemPtr->varType != returnPtr->varType){		//Types are not matching, error4
 					if((itemPtr->varType != 23 && itemPtr->varType != 28) ||  (returnPtr->varType != 23 && returnPtr->varType != 28)){
 						//printHtabLocal(localVarTable);

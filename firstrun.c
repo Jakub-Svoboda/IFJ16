@@ -98,7 +98,7 @@ int firstRun(FILE * f){
 							fprintf(stderr,"Fully qualified identifier in declaration\n");
 							memfreeall();
 							fclose(f);
-							exit(2);				//TODO check if right exit value
+							exit(3);				//TODO check if right exit value
 						}
 						else{
 							globalVarInsert(tokenPtr1, tokenPtr2, classPtr);

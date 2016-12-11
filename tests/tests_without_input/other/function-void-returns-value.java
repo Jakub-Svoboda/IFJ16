@@ -9,14 +9,14 @@ class Main
 
    static void min(int a, int b)
    {
-      int min;
+      int ahoj;
       if (a > b) {
-         min = b;
+         ahoj = b;
       }
       else {
-         min = a;
+         ahoj = a;
       }
 
-      return(min);
+      return(ahoj);
    }
 }

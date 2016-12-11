@@ -9,12 +9,12 @@ class Main
 
    static int min(int a, int b)
    {
-      int min;
+      int ahoj;
       if (a > b) {
-         min = b;
+         ahoj = b;
       }
       else {
-         min = a;
+         ahoj = a;
       }
    }
 }
