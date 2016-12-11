@@ -18,9 +18,6 @@
 #include "scanner.h"
 #include <math.h>
 
-//#define memalloc malloc
-//#define memrealloc realloc
-//#define memfreeall() ;
 
 #define true 1
 #define false 0
@@ -83,7 +80,6 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 	double decDouble = 0, mantissa = 0;
 	char* temp = hexadec;
 	if(isDouble == 0) {					//number is integer
-		//printf("kek\n" );
 		while(*temp != '\0'){			//get position of end of string
 			;
 			quiet = *temp++;
@@ -183,7 +179,6 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 				expNum *= 10;
 			}
 	    }
-        //printf("%d %d expnum",expNum, expSign);
 
 		decDouble = decDouble + mantissa;		//link it together
 		if(expSign == 1) {						//and apply exponent
@@ -222,9 +217,7 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		}
 
 		count = 0; 					//reset counter
-		//printf(" dot je [%c]",*dot);
 		dot++; 						//skip the p or P
-		//printf(" a pak  [%c]",*dot);
 		if(*dot == '+') {			//get sign
 			expSign = 1;
 			dot++;
@@ -235,7 +228,6 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 			expSign = 1;
 		}
 
-		//printf(" nakonec je [%c]",*dot);
 		while(*dot != '\0') {		//read the exponent
 	        expNum += (*dot) - '0';
 			dot++;
@@ -243,7 +235,6 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 				expNum *= 10;
 			}
 	    }
-		//printf(" expnum je %d ", expNum);
 
 		decDouble = (double)dec;
 		if(expSign == 1) {			//pretty the same as above..
@@ -251,13 +242,11 @@ char* hexadecToDecLex(char* hexadec, int isDouble, int hasDot, int hasHaxE)
 		}else if(expSign == -1) {
 			decDouble *= pow(2, -expNum);
 		}
-		//printf(" a dec double je {%lf} ",decDouble);
 	}
 	char* tempDouble = memalloc(2048 * sizeof(char));
 	char* buffDouble;
 	int len = 0;
 	if(decDouble != 0) {		//if number is double
-		//printf("jdu tudy\n");
 		len = sprintf(tempDouble,"%lf",decDouble);	//get number of digits
 		buffDouble = memalloc(len * sizeof(char));	//allocate buffer with ideal length
 		sprintf(buffDouble,"%lf",decDouble);
@@ -401,7 +390,7 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 					position = 0;								//reset position of buffer
 					isComplex = 0;								//reset isComplex
 					complexPos = 0;
-					//printf(" [%s]",buff);	//TODO:remove
+
 					return t;
 				}
 				break;
@@ -956,18 +945,12 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 						fprintf(stderr, "Lexical error.\n");
 						memfreeall();
 						exit(1);
-						//t->type = token_bracketLeftSquare;
-						//name2 = "[";
-						//t->name = name2;
-						//return t;
+
 					case ']':
 						fprintf(stderr, "Lexical error.\n");
 						memfreeall();
 						exit(1);
-						//t->type = token_bracketRightSquare;
-						//name2 = "]";
-						//t->name = name2;
-						//return t;
+
 					//assign =, equal ==
 					case '=':
 						c = fgetc(f);
@@ -1049,74 +1032,3 @@ Token *getToken(FILE *f) { 								//Call lookAhead instead of getToken();
 		}
 	}
 }
-
-///TESTING SECTION DON'T DELETE
-/*
-void identifyToken(Token *tempTok) {
-   if(tempTok->type == token_identifier) printf("id ");
-   if(tempTok->type == token_invalid) printf("invalid ");
-   if(tempTok->type == token_assign) printf("= ");
-   if(tempTok->type == token_EOF) printf("EOF ");
-   if(tempTok->type == token_boolean) printf("boolean ");
-   if(tempTok->type == token_break) printf("break ");
-   if(tempTok->type == token_class) printf("class ");
-   if(tempTok->type == token_continue) printf("continue ");
-   if(tempTok->type == token_do) printf("do ");
-   if(tempTok->type == token_double) printf("double ");
-   if(tempTok->type == token_else) printf("else ");
-   if(tempTok->type == token_false) printf("false ");
-   if(tempTok->type == token_for) printf("for ");
-   if(tempTok->type == token_if) printf("if ");
-   if(tempTok->type == token_int) printf("int ");
-   if(tempTok->type == token_return) printf("return ");
-   if(tempTok->type == token_String) printf("String ");
-   if(tempTok->type == token_static) printf("static ");
-   if(tempTok->type == token_true) printf("true ");
-   if(tempTok->type == token_void) printf("void ");
-   if(tempTok->type == token_while) printf("while ");
-   if(tempTok->type == token_equal) printf("equal ");
-   if(tempTok->type == token_greater) printf("greater ");
-   if(tempTok->type == token_less) printf("less ");
-   if(tempTok->type == token_notEqual) printf("notEqual ");
-   if(tempTok->type == token_greaterEqual) printf("greaterEqual ");
-   if(tempTok->type == token_lessEqual) printf("lessEqual ");
-   if(tempTok->type == token_add) printf("add ");
-   if(tempTok->type == token_subtract) printf("subtract ");
-   if(tempTok->type == token_multiply) printf("multiply ");
-   if(tempTok->type == token_divide) printf("divide ");
-   if(tempTok->type == token_dot) printf("dot ");
-   if(tempTok->type == token_bracketLeftRound) printf("bracketLeftRound ");
-   if(tempTok->type == token_bracketRightRound) printf("bracketRightRound ");
-   if(tempTok->type == token_comma) printf("comma ");
-   if(tempTok->type == token_bracketLeftCurly) printf("bracketLeftCurly ");
-   if(tempTok->type == token_bracketRightCurly) printf("bracketRightCurly ");
-   if(tempTok->type == token_semicolon) printf("semicolon ");
-   if(tempTok->type == token_bracketLeftSquare) printf("bracketLeftSquare ");
-   if(tempTok->type == token_bracketRightSquare) printf("bracketRightSquare ");
-   if(tempTok->type == token_quotesSingle) printf("quotesSingle ");
-   if(tempTok->type == token_quotesDouble) printf("quotesDouble ");
-   if(tempTok->type == token_string) printf("string ");
-   if(tempTok->type == token_intNumber) printf("intNumber ");
-   if(tempTok->type == token_doubleNumber) printf("doubleNumber ");
-   printf("\n");
-}
-
-int main(int argc, char *argv[]) {
-
-   FILE *f;
-   f = fopen("tests/correct/printSquare.java", "r");
-   Token *tempTok = lookAhead(f, 0);
-
-
-   while(tempTok->type != token_EOF) {
-	   printf("\t\t%d",tempTok->type);
-	   //if (tempTok->name != NULL) printf("@@@%s@@@",tempTok->name);
-	   identifyToken(tempTok);
-	   tempTok = lookAhead(f, 0);
-   }
-   fclose(f);
-   printf("\n");
-   return 1;
-
-}
-*/
